@@ -6,26 +6,17 @@ Last updated: 2026-08-15
 |-------|--------|-------|
 | Research docs (nawab v2) | done | PR #2 |
 | P0 — Agnostic core | done | PR #3 merged |
-| P1 — LangGraph adapter | done | PR #4 (open) |
-| P2 — Lang ecosystem + other stacks | done | PR #5 (open) |
-| Leftover polish + README | done | this branch |
+| P1 — LangGraph adapter | done | PR #4 |
+| P2 — Lang ecosystem + other stacks | done | PR #5 |
+| Leftover polish + README | done | PR #6 |
+| P3 — Role lattice + orchestrator | done | this branch |
 
-## Leftover polish commit matrix
+## P3 done when
 
-| # | Commit | Status |
-|---|--------|--------|
-| 1 | nawab contract | done |
-| 2 | canary checklist | done |
-| 3 | extras-free CI | done |
-| 4 | extensive README | done |
-| 5 | contributing / examples / env / P2 exit | this commit |
-
-## Leftover polish done when
-
-- [x] JSON/MD/scaffold reports include a canary checklist (text)
-- [x] `.github/workflows/ci.yml` runs extras-free pytest
-- [x] README matches the tree (no invented features)
-- [x] CONTRIBUTING, examples/README, `.env.example`, pyproject metadata
-- [x] P2 exit-criteria checkboxes marked
-- [x] extras-free pytest green (36 passed, 2 skipped)
-- [x] stacked PR open (#6)
+- [x] Doctrine docs + ADR 0005
+- [x] Front doors say Architecture Advisor
+- [x] Role actions + path-shape / next-hop metrics
+- [x] Orchestrator report block
+- [x] Planted lattice tests
+- [x] extras-free pytest green (45 passed, 2 skipped)
+- [ ] stacked PR open

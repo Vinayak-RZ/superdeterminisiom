@@ -2,20 +2,20 @@
 
 This repository vendors [cursor-config-coding](https://github.com/Vinayak-RZ/cursor-config-coding) at `.cursor/` (rules, skills, MCP). Pin: see [`.cursor/VENDOR.md`](.cursor/VENDOR.md).
 
-Project name: **Superdeterminism**. Capability: **Determinism Advisor**.
+Project name: **Superdeterminism**. Capability: **Architecture Advisor**.
 GitHub repo name remains `superdeterminisiom`.
 
 ## What this repo is
 
-An open-source **design-time advisor** for agentic architectures. It will ingest production traces (OTLP / GenAI semconv), reconstruct the agent graph, estimate counterfactual **determinism-class** flips (tool ↔ LLM/subagent), and recommend a refactor with evidence.
+An open-source **design-time advisor** for agentic architectures. It ingests production traces (OTLP / GenAI semconv), reconstructs the agent graph (including who owns control flow), estimates counterfactual **role** flips (workflow ↔ subagent ↔ tool ↔ router ↔ LLM, plus orchestrator bound/collapse/code-route), and recommends a refactor with evidence.
 
 Differentiation (do not weaken this):
 
-> Counterfactual *re-typing* of nodes between deterministic tools and stochastic LLM/subagents, on ingested production graphs — not “score the path you already ran,” and not “search a new workflow from scratch.”
+> Counterfactual *re-typing* of nodes — and of the orchestrator that owns control flow — on ingested production graphs — not “score the path you already ran,” and not “search a new workflow from scratch.”
 
 ## Current status
 
-**P0, P1, and P2 are implemented.** Core has no LangChain import. Adapters live under `src/superdeterminism/adapters/`.
+**P0, P1, P2, and P3 (role lattice + orchestrator) are implemented.** Core has no LangChain import. Adapters live under `src/superdeterminism/adapters/`.
 
 ```bash
 python -m superdeterminism recommend traces.json --stdout json
@@ -33,15 +33,17 @@ Read before any product work:
 2. [docs/overview.md](docs/overview.md)
 3. [docs/landscape.md](docs/landscape.md) — claim hygiene
 4. [docs/methodology.md](docs/methodology.md)
-5. [docs/decisions/](docs/decisions/)
-6. [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md)
+5. [docs/agent-architectures.md](docs/agent-architectures.md) / [docs/type-lattice.md](docs/type-lattice.md) / [docs/orchestrator.md](docs/orchestrator.md)
+6. [docs/decisions/](docs/decisions/)
+7. [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md)
 
 ## Claim hygiene
 
 - Do **not** say “nobody does counterfactual agent simulation.”
-- Do say “nobody flips *determinism class* on an ingested production graph and recommends a refactor.”
+- Do **not** say “nobody advises workflow vs agent” or “nobody does orchestration.”
+- Do say “nobody re-types architectural roles (including the orchestrator) on an ingested production graph and recommends a refactor.”
 - Mark OpenTelemetry GenAI conventions as **Development**. Pin a commit, not a tag.
-- Advisor-owned fields live in `advisor.*` / `det.*`. Never invent `gen_ai.*` keys.
+- Advisor-owned fields live in `advisor.*` / `det.*`. Never invent `gen_ai.*` keys (including `gen_ai.orchestrator.*`).
 - Temperature 0 is not a seed. Do not promise bit-exact architecture advice from a single replay.
 - Simulation ≠ production. A canary with the same outcome vector is confirmatory.
 
@@ -50,6 +52,7 @@ Read before any product work:
 - **P0 (now):** agnostic core — OTLP/flat ingest, L0 recommend, JSON/MD report
 - **P1 (now):** LangGraph / LangChain adapter — [docs/p1-langgraph.md](docs/p1-langgraph.md)
 - **P2 (now):** Langfuse / custom / CrewAI / MAF + batch + L1 gate — [docs/p2-ecosystem.md](docs/p2-ecosystem.md)
+- **P3 (now):** role lattice + first-class orchestrator — [docs/type-lattice.md](docs/type-lattice.md), [docs/orchestrator.md](docs/orchestrator.md)
 - No auto-apply, no in-place `graph.py` rewrite, no live production-LLM re-runs by default
 
 ---
