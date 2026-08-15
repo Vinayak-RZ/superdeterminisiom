@@ -22,6 +22,13 @@ Phase notes per [learn-while-building](.cursor/skills/learn-while-building/SKILL
 - Agents need JSON stdout and exit-2-on-bad-input more than they need a pretty TUI.
 - `n_min=30` plus Wilson lower-bound stops a 30-identical-JSON fixture from looking more confident than it is when n is small; tests pass `--n-min` explicitly.
 
+## P1 — LangGraph adapter (2026-08-15)
+
+- The mapper does not need to import LangChain. Pins + `find_spec` are enough for `--adapter langgraph` presence; attribute rewrite is the whole adapter.
+- Python binds `adapters.langgraph` onto the parent package after a submodule import. “Lazy” is “`__init__.py` does not import it,” not “`sys.modules` stays empty.”
+- `create_react_agent` as a forbidden *token* in `src/` fights the “do not use this API” warning. Say “deprecated ReAct prebuilt” in docs; keep the token out of source and out of emitted diffs.
+- Extras-on pytest skips the missing-extra exit-2 tests. Both modes are required: extras-free for that path, extras-on for `--adapter langgraph` end-to-end.
+
 ## P1 / P2 specs (2026-08-15)
 
 - Specifying adapters *before* code is what keeps the core honest: P1 is allowed one LangGraph file; P2 is when a `Protocol` is justified (second adapter).

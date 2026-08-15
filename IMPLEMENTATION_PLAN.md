@@ -272,15 +272,15 @@ N/A — no production consumer switch. Ship is a draft PR on `cursor/p1-langgrap
 
 **Must pass:**
 
-- [ ] `pip install -e ".[dev]"` ; `python -m pytest -q` green (no langgraph extra)
-- [ ] `--adapter langgraph` without extra → exit 2
-- [ ] `--adapter langgraph` maps `create_agent` and custom `StateGraph` fixtures
-- [ ] LangSmith retriever quirk → `retriever`
-- [ ] `scaffold` writes REPORT + illustrative diff; never touches user source; ABSTAIN has no patch
-- [ ] Agent docs: one command, JSON, no prompts
-- [ ] No LangChain import outside `adapters/langgraph.py`
-- [ ] P0 decision rules unchanged
-- [ ] Draft P1 PR with gate evidence
+- [x] `pip install -e ".[dev]"` ; `python -m pytest -q` green (no langgraph extra)
+- [x] `--adapter langgraph` without extra → exit 2
+- [x] `--adapter langgraph` maps `create_agent` and custom `StateGraph` fixtures
+- [x] LangSmith retriever quirk → `retriever`
+- [x] `scaffold` writes REPORT + illustrative diff; never touches user source; ABSTAIN has no patch
+- [x] Agent docs: one command, JSON, no prompts
+- [x] No LangChain import outside `adapters/langgraph.py`
+- [x] P0 decision rules unchanged
+- [x] Draft P1 PR with gate evidence
 
 **Defer:** Protocol, `--traces-dir`, `--opt-in-l1`, CrewAI/MAF, GitHub Actions.
 
