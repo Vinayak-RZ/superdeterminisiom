@@ -17,9 +17,11 @@ _MODULES = {
     "custom": "examples.custom_adapter",
     "langfuse": "superdeterminism.adapters.langfuse",
     "maf": "superdeterminism.adapters.maf",
+    "crewai": "superdeterminism.adapters.crewai",
 }
 _EXTRAS = {
     "langgraph": ("langgraph", "langchain"),
+    "crewai": ("crewai",),
 }
 
 

@@ -19,6 +19,7 @@ langgraph = [
     "langgraph>=1.2,<2",
     "langchain-core>=1.4,<2",
 ]
+crewai = ["crewai>=0.80"]
 
 [project.scripts]
 superdeterminism = "superdeterminism.cli:main"

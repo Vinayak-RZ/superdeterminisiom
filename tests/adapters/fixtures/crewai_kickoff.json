@@ -1,0 +1,21 @@
+{
+  "traces": [
+    {
+      "spans": [
+        {
+          "name": "crew.kickoff",
+          "attributes": {
+            "crewai.kickoff": true
+          }
+        },
+        {
+          "name": "chat researcher",
+          "attributes": {
+            "gen_ai.operation.name": "chat"
+          },
+          "output": {"notes": "ok"}
+        }
+      ]
+    }
+  ]
+}
