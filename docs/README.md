@@ -2,6 +2,8 @@
 
 Project: **Superdeterminism**. Capability: **Determinism Advisor**.
 
+Execution contract: [IMPLEMENTATION_PLAN.md](../IMPLEMENTATION_PLAN.md). Status: [PROGRESS.md](../PROGRESS.md).
+
 Read in this order if you are new:
 
 1. [overview.md](overview.md) — what the product is and is not

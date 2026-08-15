@@ -42,7 +42,9 @@ None of them flip *determinism class* on an ingested production graph and recomm
 
 **Documentation and research only.** There is no simulator, CLI, or adapter code in this repository yet.
 
-v0 (when implemented) is LangGraph/LangChain only, read-only OTLP ingest, recommendation as a report. See [docs/roadmap.md](docs/roadmap.md).
+Execution contract: [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md). Live status: [PROGRESS.md](PROGRESS.md).
+
+v0 (when implemented) is LangGraph/LangChain only, read-only OTLP ingest, recommendation as a report. See [docs/roadmap.md](docs/roadmap.md) after Phase A lands.
 
 ## Cursor coding config
 
