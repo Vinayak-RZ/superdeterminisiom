@@ -7,6 +7,7 @@ from pathlib import Path
 
 from superdeterminism.adapters import AdapterError, resolve
 from superdeterminism.models import Action
+from superdeterminism.scaffold import write_scaffold
 from superdeterminism.pipeline import (
     N_MIN_DEFAULT,
     load_traces_path,
@@ -38,11 +39,16 @@ def build_parser() -> argparse.ArgumentParser:
         default=None,
         help="optional ingest adapter (e.g. langgraph). omitted = P0 generic ingest",
     )
+    scaf = sub.add_parser("scaffold", help="write illustrative scaffold; never edits user source")
+    scaf.add_argument("report", type=Path, help="recommend JSON report")
+    scaf.add_argument("--out", type=Path, required=True, help="directory to write (created)")
     return parser
 
 
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
+    if args.cmd == "scaffold":
+        return _scaffold(args)
     if args.cmd != "recommend":
         return 2
     try:
@@ -72,6 +78,18 @@ def main(argv: list[str] | None = None) -> int:
             sys.stdout.write("\n")
     # ponytail: nonzero only on input failure; ABSTAIN is a valid report
     _ = Action
+    return 0
+
+
+def _scaffold(args: argparse.Namespace) -> int:
+    try:
+        report = json.loads(args.report.read_text(encoding="utf-8"))
+        if not isinstance(report, dict):
+            raise ValueError("report must be a JSON object")
+        write_scaffold(report, args.out)
+    except (OSError, ValueError, json.JSONDecodeError) as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 2
     return 0
 
 
