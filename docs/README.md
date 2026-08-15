@@ -34,7 +34,7 @@ Read in this order if you are new:
 | [adapters.md](adapters.md) | LangGraph v0 |
 | [refactor.md](refactor.md) | Report + scaffold; no auto-apply |
 | [roadmap.md](roadmap.md) | P0 / P1 / P2 index |
-| [p1-langgraph.md](p1-langgraph.md) | LangGraph adapter spec |
+| [p1-langgraph.md](p1-langgraph.md) | LangGraph adapter spec (implemented) |
 | [p2-ecosystem.md](p2-ecosystem.md) | Lang ecosystem + other stacks spec |
 | [usage.md](usage.md) | P0 CLI for agents and humans |
 | [references.md](references.md) | Bibliography |
