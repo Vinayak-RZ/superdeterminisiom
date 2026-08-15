@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -51,6 +52,11 @@ def build_parser() -> argparse.ArgumentParser:
         default=None,
         help="optional ingest adapter (e.g. langgraph). omitted = P0 generic ingest",
     )
+    rec.add_argument(
+        "--opt-in-l1",
+        action="store_true",
+        help="opt-in L1 on high-EV candidates; warns; no live call unless SUPERDETERMINISM_L1_MODEL",
+    )
     scaf = sub.add_parser("scaffold", help="write illustrative scaffold; never edits user source")
     scaf.add_argument("report", type=Path, help="recommend JSON report")
     scaf.add_argument("--out", type=Path, required=True, help="directory to write (created)")
@@ -73,6 +79,7 @@ def main(argv: list[str] | None = None) -> int:
         print(f"error: {exc}", file=sys.stderr)
         return 2
     payload = recommendations_to_dict(recs)
+    payload = apply_l1(payload, opt_in=args.opt_in_l1)
     markdown = recommendations_to_markdown(recs)
     if args.json_out:
         args.json_out.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
@@ -88,6 +95,35 @@ def main(argv: list[str] | None = None) -> int:
     # ponytail: nonzero only on input failure; ABSTAIN is a valid report
     _ = Action
     return 0
+
+
+L1_MODEL_ENV = "SUPERDETERMINISM_L1_MODEL"
+_L1_WARNING = (
+    "warning: simulation != production; --opt-in-l1 is not a production A/B test"
+)
+
+
+def call_model(prompt: str) -> str:
+    # ponytail: live tail not implemented; symbol exists so tests can assert it is not called
+    raise RuntimeError("live L1 tail is not implemented")
+
+
+def apply_l1(payload: dict, *, opt_in: bool) -> dict:
+    if not opt_in:
+        return payload
+    print(_L1_WARNING, file=sys.stderr)
+    note = (
+        "L1 model configured; live tail not implemented; no network"
+        if os.environ.get(L1_MODEL_ENV)
+        else "L1 requested; no SUPERDETERMINISM_L1_MODEL; no live call"
+    )
+    if os.environ.get(L1_MODEL_ENV):
+        # reserved: call_model() only when a live tail exists
+        _ = call_model
+    for row in payload.get("recommendations") or []:
+        if row.get("action") != "ABSTAIN":
+            row.setdefault("reasons", []).append(note)
+    return payload
 
 
 def _load_recommend_input(args: argparse.Namespace):
