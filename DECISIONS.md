@@ -8,9 +8,9 @@ Index of significant choices. Formal ADRs land in `docs/decisions/` during Phase
 | D1 | Apache-2.0 license | accepted | [LICENSE](LICENSE) |
 | D2 | Vendor cursor-config-coding into `.cursor/` (copy, not symlink) | accepted | [.cursor/VENDOR.md](.cursor/VENDOR.md) |
 | D3 | Vendor guides live under `docs/cursor-config/` | accepted | this file |
-| D4 | Ingest OTLP; Advisor fields in `advisor.*` / `det.*` | accepted, ADR pending | Phase A `docs/decisions/0001-otel-ingest.md` |
-| D5 | v0 simulation is offline L0; no production-LLM re-run by default | accepted, ADR pending | Phase A `docs/decisions/0002-v0-offline-first.md` |
-| D6 | Report + optional scaffold; never auto-apply | accepted, ADR pending | Phase A `docs/decisions/0003-no-auto-apply.md` |
+| D4 | Ingest OTLP; Advisor fields in `advisor.*` / `det.*` | accepted | [0001-otel-ingest.md](docs/decisions/0001-otel-ingest.md) |
+| D5 | v0 simulation is offline L0; no production-LLM re-run by default | accepted | [0002-v0-offline-first.md](docs/decisions/0002-v0-offline-first.md) |
+| D6 | Report + optional scaffold; never auto-apply | accepted | [0003-no-auto-apply.md](docs/decisions/0003-no-auto-apply.md) |
 | D7 | Product code requires a later project-mode nawab plan | accepted | [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md) |
 
 ## D0 — Naming
@@ -43,7 +43,7 @@ Index of significant choices. Formal ADRs land in `docs/decisions/` during Phase
 
 ## D4–D6
 
-Accepted in research; written as ADRs in Phase A so the decision text and the ingest/methodology docs stay aligned.
+Written as ADRs in `docs/decisions/`. Do not silently override them.
 
 ## D7 — No product code in this plan
 

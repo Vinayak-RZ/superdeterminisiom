@@ -80,4 +80,4 @@ Confounding in historical variance; selection on the current architecture’s tr
 
 LLM-as-judge attribution is correlational. Do not ship a report that only says “the model thinks this step caused it.”
 
-ADR: offline-first is `docs/decisions/0002-v0-offline-first.md` (commit 6).
+ADR: [0002-v0-offline-first.md](decisions/0002-v0-offline-first.md).

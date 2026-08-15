@@ -72,4 +72,4 @@ LangGraph injects `langgraph_node`, `langgraph_step`, `langgraph_triggers`, `lan
 
 Message bodies, tool args/results, and retrieval docs are **Opt-In**. Do not require content capture for v0 mapping. Content helps L0 splice; if absent, abstain on that step.
 
-Formal ADR lands in Phase A commit 6 (`docs/decisions/0001-otel-ingest.md`).
+ADR: [0001-otel-ingest.md](decisions/0001-otel-ingest.md).
