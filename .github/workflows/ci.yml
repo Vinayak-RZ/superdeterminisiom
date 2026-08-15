@@ -1,0 +1,31 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  extras-free:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install extras-free
+        run: python -m pip install -e ".[dev]"
+      - name: Test
+        run: python -m pytest -q
+      - name: Forbidden tokens
+        run: |
+          if grep -R --include='*.py' -n 'create_react_agent' src/; then
+            echo "create_react_agent must not appear in src/" >&2
+            exit 1
+          fi
