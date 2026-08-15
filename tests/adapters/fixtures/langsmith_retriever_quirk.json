@@ -1,0 +1,20 @@
+{
+  "resourceSpans": [
+    {
+      "scopeSpans": [
+        {
+          "spans": [
+            {
+              "name": "embeddings",
+              "attributes": [
+                {"key": "gen_ai.operation.name", "value": {"stringValue": "embeddings"}},
+                {"key": "langsmith.span.kind", "value": {"stringValue": "retriever"}},
+                {"key": "langgraph_node", "value": {"stringValue": "search_kb"}}
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

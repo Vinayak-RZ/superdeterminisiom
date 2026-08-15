@@ -1,14 +1,18 @@
 from __future__ import annotations
 
-import sys
+from pathlib import Path
 
+import superdeterminism.adapters as adapters_pkg
 import pytest
 
 from superdeterminism.adapters import AdapterError, extra_installed, resolve
 
 
-def test_adapters_package_does_not_import_langgraph() -> None:
-    assert "superdeterminism.adapters.langgraph" not in sys.modules
+def test_registry_does_not_eager_import_langgraph() -> None:
+    text = Path(adapters_pkg.__file__).read_text(encoding="utf-8")
+    assert "from .langgraph" not in text
+    assert "from . import langgraph" not in text
+    assert "importlib.import_module" in text
 
 
 def test_resolve_unknown_adapter() -> None:

@@ -1,0 +1,45 @@
+{
+  "resourceSpans": [
+    {
+      "scopeSpans": [
+        {
+          "spans": [
+            {
+              "name": "__start__",
+              "attributes": [
+                {"key": "langgraph_node", "value": {"stringValue": "__start__"}}
+              ]
+            },
+            {
+              "name": "model",
+              "attributes": [
+                {"key": "gen_ai.operation.name", "value": {"stringValue": "chat"}},
+                {"key": "langgraph_node", "value": {"stringValue": "model"}}
+              ]
+            },
+            {
+              "name": "tools",
+              "attributes": [
+                {"key": "langgraph_node", "value": {"stringValue": "tools"}}
+              ]
+            },
+            {
+              "name": "execute_tool lookup_order",
+              "attributes": [
+                {"key": "gen_ai.operation.name", "value": {"stringValue": "execute_tool"}},
+                {"key": "gen_ai.tool.name", "value": {"stringValue": "lookup_order"}},
+                {"key": "langgraph_node", "value": {"stringValue": "tools"}}
+              ]
+            },
+            {
+              "name": "__end__",
+              "attributes": [
+                {"key": "langgraph_node", "value": {"stringValue": "__end__"}}
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

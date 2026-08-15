@@ -1,0 +1,34 @@
+{
+  "resourceSpans": [
+    {
+      "scopeSpans": [
+        {
+          "spans": [
+            {
+              "name": "llm_call",
+              "attributes": [
+                {"key": "gen_ai.operation.name", "value": {"stringValue": "chat"}},
+                {"key": "langgraph_node", "value": {"stringValue": "classify"}}
+              ]
+            },
+            {
+              "name": "should_continue",
+              "attributes": [
+                {"key": "langgraph_node", "value": {"stringValue": "should_continue"}},
+                {"key": "langgraph_triggers", "value": {"stringValue": "tools,__end__"}}
+              ]
+            },
+            {
+              "name": "execute_tool lookup_order",
+              "attributes": [
+                {"key": "gen_ai.operation.name", "value": {"stringValue": "execute_tool"}},
+                {"key": "gen_ai.tool.name", "value": {"stringValue": "lookup_order"}},
+                {"key": "langgraph_node", "value": {"stringValue": "tools"}}
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
