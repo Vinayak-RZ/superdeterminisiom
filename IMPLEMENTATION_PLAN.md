@@ -1,6 +1,6 @@
-# P2 ecosystem — nawab execution contract
+# Leftover polish + README — nawab execution contract
 
-Approved feature-mode plan. Authority for product behaviour is [docs/p2-ecosystem.md](docs/p2-ecosystem.md). Lead follows §18. P1 contract is superseded for execution; keep P0/P1 code as the base.
+Approved feature-mode plan. User: plan first, then implement; do not wait. Authority for product behaviour stays in the research docs and ADRs. This slice closes leftover P2 deliverables and rewrites the front door.
 
 ---
 
@@ -9,22 +9,36 @@ Approved feature-mode plan. Authority for product behaviour is [docs/p2-ecosyste
 | Field | Value |
 |-------|-------|
 | **Mode** | feature |
-| **Stack** | Python 3.10+, P0 core + P1 lazy registry; pytest via `[dev]` |
-| **Base branch** | `cursor/p1-langgraph-adapter-329f` until PR #4 merges, then `main` |
-| **Feature branch** | `cursor/p2-ecosystem-329f` |
-| **Authority docs** | [docs/p2-ecosystem.md](docs/p2-ecosystem.md), [docs/p1-langgraph.md](docs/p1-langgraph.md), [docs/ingestion.md](docs/ingestion.md), [docs/decisions/0004-agnostic-core.md](docs/decisions/0004-agnostic-core.md), this file |
-| **Estimated commits** | 12 |
+| **Stack** | Python 3.10+, stdlib core, pytest via `[dev]` |
+| **Base branch** | `cursor/p2-ecosystem-329f` (P2 tip; P2 PR still open) |
+| **Feature branch** | `cursor/oss-polish-readme-329f` |
+| **Authority docs** | [docs/p2-ecosystem.md](docs/p2-ecosystem.md), [docs/methodology.md](docs/methodology.md), [docs/refactor.md](docs/refactor.md), [ADR 0003](docs/decisions/0003-no-auto-apply.md), [extensive-readme](.cursor/skills/extensive-readme/SKILL.md) |
+| **Estimated commits** | 5 |
 | **Lead agent** | Orchestrate, write, test, commit, push, PR |
 
 ---
 
 ## §1 North star and scope
 
-**Objective:** The same P0 recommender becomes pluggable. A third party can add `--adapter custom` from the contract + example. Lang teams can batch files and ingest Langfuse (or MLflow). CrewAI/MAF have a path that is not “pretend this is LangGraph.” L1 stays opt-in.
+**Objective:** Ship the leftover features that the specs already promised, and make the README a technical front door that matches what is actually in the tree.
 
-**Deliverables:** Protocol + custom example; `--traces-dir`; Langfuse mapper + MLflow docs; MAF refuse-on-langgraph; CrewAI kickoff→workflow; `--opt-in-l1` gate; planted fixtures; usage docs.
+**Deliverables**
 
-**Non-goals:** second recommender; live collector; L2 default; auto-apply; inventing `gen_ai.*`; full live L1 replay engine; GitHub Actions.
+- Canary checklist text on JSON and Markdown reports (and scaffold `REPORT.md`)
+- Extras-free GitHub Actions CI
+- Extensive README (trending technical shape + extensive-readme skill)
+- CONTRIBUTING, `examples/README.md`, `.env.example`, `pyproject.toml` metadata
+- P2 exit-criteria checkboxes marked; stale “docs-only / P2 is a spec” rows fixed
+
+**Non-goals**
+
+- Live L1 tail / network model client
+- L2 `do_policy`
+- Hosted collector, HTTP API, Docker, PyPI publish
+- MLflow live API
+- Auto-apply / in-place `graph.py` rewrite
+- Invented `gen_ai.*` keys
+- Fake badges, demo GIFs, or engagement bait
 
 ---
 
@@ -32,165 +46,159 @@ Approved feature-mode plan. Authority for product behaviour is [docs/p2-ecosyste
 
 | Item | Status | Blocks |
 |------|--------|--------|
-| P0 core | done (PR #3) | all |
-| P1 adapter + registry | done on PR #4 (open) | all |
-| P2 spec | done | Phase A |
-| This plan approved | done | commit 1 |
+| P0 / P1 / P2 code | done on P2 tip | all |
+| User approval to implement without waiting | done | this plan |
 
 ---
 
 ## §3 Authority and artifact map
 
-- `docs/p2-ecosystem.md` — read-only spec
-- `docs/methodology.md` — read-only L0/L1/L2
-- this file — writable contract
-- `models.py` / `pipeline.py` — read-only unless a one-line hook is unavoidable
-- `adapters/__init__.py` + `cli.py` — writable
-- `adapters/langgraph.py` — writable only for MAF refuse
+| Document | Path | Role |
+|----------|------|------|
+| P2 spec (canary + CI rows) | `docs/p2-ecosystem.md` | leftover feature truth |
+| Methodology | `docs/methodology.md` | canary is confirmatory |
+| Refactor | `docs/refactor.md` | no auto-apply |
+| Extensive README skill | `.cursor/skills/extensive-readme/` | README shape |
+| This file | `IMPLEMENTATION_PLAN.md` | execution contract |
+| Progress | `PROGRESS.md` | live status |
 
 ---
 
 ## §4 Architecture
 
-```text
-traces|dir → cli.recommend → resolve(adapter)|load_traces
-  → list[Trace] → recommend_traces → opt-in-l1 gate → one JSON
-```
+No new recommender. Canary is a static text list attached to the existing report payload. CI runs the extras-free pytest gate already used locally.
 
-Adapters: langgraph, langfuse, crewai, maf, custom (example). One recommender. Attribute-only mappers. `custom` needs no extra. `--opt-in-l1` without flag never calls a model.
+```text
+recommend → recommendations_to_dict / _markdown
+  + disclaimer
+  + canary[]          # leftover: confirmatory checklist, not a deploy button
+scaffold REPORT.md renders the same list
+```
 
 ---
 
 ## §5 Workstreams
 
-WS-A Ecosystem — lead only. Shared CLI + registry; do not parallelize writers.
+| ID | Name | Owns paths |
+|----|------|------------|
+| WS-A | Report canary | `src/superdeterminism/pipeline.py`, `scaffold.py`, tests |
+| WS-B | CI | `.github/workflows/ci.yml` |
+| WS-C | Front door | `README.md`, CONTRIBUTING, examples, env, pyproject, P2 docs |
+
+N/A — no parallel subagents. Lead owns every file.
 
 ---
 
-## §6 Spawn map
+## §6 Agent orchestration
 
-- S1 Phase A — explore resolve/CLI hooks
-- S2 Phase C — Langfuse OTLP attribute names
-- S3 Phase N — import-leak + no live call without flag
-
-Parallel limit 2. Lead commits.
+N/A — single lead, no spawn map.
 
 ---
 
 ## §7 Phase map
 
-```text
-0 plan → A Protocol → B batch → C Langfuse → D Track B → E L1 → N validate → PR
-```
+| Phase | Objective | Exit gate |
+|-------|-----------|-----------|
+| A | Canary checklist on reports | pytest asserts `canary` on JSON/MD/scaffold |
+| B | Extras-free CI workflow | workflow file + hygiene grep |
+| C | README + leftover docs | extensive-readme checklist; no invented features |
+| N | Validate | extras-free pytest green; commit; push; PR |
 
 ---
 
-## §8 Todos
+## §8 Todo registry
 
-- phase-0-impl-plan (this commit)
-- phase-a-protocol (commits 2–3)
-- phase-b-batch (4)
-- phase-c-langfuse (5–6)
-- phase-d-track-b (7–8)
-- phase-e-l1 (9–10)
-- phase-n-validate (11–12)
+```yaml
+todos:
+  - id: canary
+    content: "Canary checklist on JSON/MD/scaffold + tests"
+    status: pending
+  - id: ci
+    content: "Extras-free GitHub Actions CI"
+    status: pending
+  - id: readme
+    content: "Extensive technical README"
+    status: pending
+  - id: docs
+    content: "CONTRIBUTING, examples, env, pyproject, P2 checkboxes"
+    status: pending
+  - id: validate
+    content: "pytest, commit, push, PR"
+    status: pending
+```
 
 ---
 
 ## §9 Commit matrix
 
-1. `docs: replace implementation plan with P2 nawab contract`
-2. `feat(adapters): add Adapter protocol and extra-optional resolve`
-3. `feat(adapters): add custom adapter example`
-4. `feat(cli): add --traces-dir batch report`
-5. `feat(adapters): map Langfuse OTLP attributes`
-6. `docs: document MLflow ingest gaps`
-7. `feat(adapters): refuse MAF traces on langgraph`
-8. `feat(adapters): map CrewAI kickoff to workflow`
-9. `feat(cli): add --opt-in-l1 gate`
-10. `test: add planted DET vs open-ended fixtures`
-11. `docs: document P2 CLI and adapter contract`
-12. `docs: validate P2 and record learnings`
-
-One row per commit.
+| # | Message | Files |
+|---|---------|-------|
+| 1 | `docs: plan leftover polish and README rewrite` | IMPLEMENTATION_PLAN, PROGRESS |
+| 2 | `feat(report): add canary checklist to JSON/MD reports` | pipeline, scaffold, tests, usage |
+| 3 | `ci: extras-free pytest workflow` | `.github/workflows/ci.yml` |
+| 4 | `docs: rewrite README as extensive technical front door` | README.md |
+| 5 | `docs: refresh contributing, examples, env, and P2 exit` | remaining docs + pyproject |
 
 ---
 
 ## §10 Test strategy
 
-`python -m pytest -q` extras-free every commit after 2. Extra tests skip. No network. No CI workflow this plan.
+- Existing CLI tests still see `disclaimer` starting with `simulation`
+- New asserts: `canary` is a non-empty list of strings; Markdown has a Canary section
+- Scaffold `REPORT.md` includes the checklist
+- Extras-free `python -m pytest -q` stays green
+- Do not add a live L1 or network test
 
 ---
 
 ## §11 Research log
 
-- Pluggability is the P2 bar (custom + Protocol)
-- Langfuse is the tested Track A path; MLflow = document omitted ops
-- L1 is a gate, not a live runner unless `SUPERDETERMINISM_L1_MODEL` is set
-- `resolve()` extra-optional: missing `_EXTRAS` means no extra required
+- extensive-readme: discover first; numbered `## 1.`…`## N.`; skip HTTP API / deploy
+- Trending technical READMEs: 4–7 badges, one-liner, 30-second quickstart, mermaid, comparison table, no fake GIF
+- P2 leftover: canary checklist (text) and extras-free CI were deliverables deferred as YAGNI
 
 ---
 
-## §12 Doc sync
+## §12 Risks
 
-Plan → this file. Phases → PROGRESS + LEARNING. Phase 11 → usage/roadmap. Phase 12 → PR.
-
----
-
-## §13 Gates
-
-Phase 0: §0–§18 present. A: custom + extras-free pytest. B: batch one JSON. C: Langfuse fixture. D: langgraph-refuses-MAF. E: no model without flag. N: grep + PR.
+| Risk | Mitigation |
+|------|------------|
+| README invents features | Catalog only CLI flags and adapters that exist |
+| Canary looks like a deploy button | Static text; no apply command |
+| CI installs extras | `pip install -e ".[dev]"` only |
 
 ---
 
-## §14 Hardening
+## §13 Documentation sync
 
-```text
-python -m pytest -q
-rg -n "import langchain|import langgraph|import crewai|import langfuse" src/superdeterminism --glob '!adapters/*.py'
-rg -n "create_react_agent" src
-```
+README, usage JSON example, P2 exit checkboxes, CONTRIBUTING, LEARNING, PROGRESS, DECISIONS D9.
+
+---
+
+## §14 Validation hardening
+
+`python -m pytest -q`. Import hygiene still forbids LangChain outside the attribute-only LangGraph file.
 
 ---
 
 ## §15 Cutover
 
-N/A. Draft PR on this branch. Rollback = revert.
+N/A — no production deploy. Done when the PR is up and extras-free tests pass.
 
 ---
 
-## §16 Exit criteria
+## §16 Rollback
 
-- [x] `--adapter custom` from contract + example
-- [x] Non-Lang adapter fixtures
-- [x] Langfuse or MLflow tested
-- [x] `--traces-dir` → one JSON
-- [x] langgraph refuses MAF
-- [x] `--opt-in-l1` omitted never calls a model
-- [x] extras-free pytest green
-- [x] simulation ≠ production
-- [x] Draft P2 PR
+Revert the branch. Canary is additive; CI is additive.
 
 ---
 
-## §17 Risks
+## §17 Open questions
 
-P1 unmerged → branch from P1 tip. Silent MAF-as-LangGraph → commit 7 fixture. Live L1 temptation → annotate-only default.
-
----
-
-## §18 Execution protocol
-
-```text
-1. Approval received. Ponytail on every edit.
-2. Branch cursor/p2-ecosystem-329f from P1 tip.
-3. Commit 1. Push. Open draft P2 PR.
-4. Commits 2–12 per §9. One row per commit.
-5. Stop. No L2. No collector.
-```
+None that block. Live L1 remains reserved (`SUPERDETERMINISM_L1_MODEL`).
 
 ---
 
-## Approval
+## §18 Lead agent instructions
 
-Mode: feature. Approved. Lead follows §18.
+Implement this contract without waiting. Ponytail on every code edit. Conventional commits. Push the branch. Open a stacked PR against `cursor/p2-ecosystem-329f` so the diff is only this slice. Do not claim L0/L1 is a production A/B.
