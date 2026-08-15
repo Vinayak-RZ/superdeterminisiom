@@ -24,7 +24,19 @@ def build_parser() -> argparse.ArgumentParser:
     )
     sub = parser.add_subparsers(dest="cmd", required=True)
     rec = sub.add_parser("recommend", help="ingest traces and emit L0 recommendations")
-    rec.add_argument("traces", type=Path, help="OTLP JSON or advisor {traces:[...]}")
+    rec.add_argument(
+        "traces",
+        type=Path,
+        nargs="?",
+        default=None,
+        help="OTLP JSON or advisor {traces:[...]}",
+    )
+    rec.add_argument(
+        "--traces-dir",
+        type=Path,
+        default=None,
+        help="load every *.json in DIR; one report",
+    )
     rec.add_argument("--json", dest="json_out", type=Path, default=None)
     rec.add_argument("--md", dest="md_out", type=Path, default=None)
     rec.add_argument("--n-min", type=int, default=N_MIN_DEFAULT)
@@ -52,10 +64,7 @@ def main(argv: list[str] | None = None) -> int:
     if args.cmd != "recommend":
         return 2
     try:
-        if args.adapter:
-            traces = resolve(args.adapter)(args.traces)
-        else:
-            traces = load_traces_path(args.traces)
+        traces = _load_recommend_input(args)
         recs = recommend_traces(traces, n_min=args.n_min)
     except AdapterError as exc:
         print(f"error: {exc}", file=sys.stderr)
@@ -79,6 +88,25 @@ def main(argv: list[str] | None = None) -> int:
     # ponytail: nonzero only on input failure; ABSTAIN is a valid report
     _ = Action
     return 0
+
+
+def _load_recommend_input(args: argparse.Namespace):
+    paths: list[Path]
+    if args.traces_dir is not None:
+        if not args.traces_dir.is_dir():
+            raise ValueError(f"not a directory: {args.traces_dir}")
+        paths = sorted(args.traces_dir.glob("*.json"))
+        if not paths:
+            raise ValueError(f"no *.json in {args.traces_dir}")
+    elif args.traces is not None:
+        paths = [args.traces]
+    else:
+        raise ValueError("provide a traces file or --traces-dir")
+    loader = resolve(args.adapter) if args.adapter else load_traces_path
+    traces = []
+    for path in paths:
+        traces.extend(loader(path))
+    return traces
 
 
 def _scaffold(args: argparse.Namespace) -> int:
