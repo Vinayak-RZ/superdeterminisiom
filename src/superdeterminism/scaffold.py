@@ -66,7 +66,7 @@ def _wiring_md(recs: list[dict[str, Any]]) -> str:
         "",
         "Keep the node name. Change the callable. Human (or a coding agent) copies the diff.",
         "",
-        "Use `langchain.agents.create_agent`. Do not use `create_react_agent`.",
+        "Use `langchain.agents.create_agent`. Do not emit the deprecated ReAct prebuilt.",
         "",
     ]
     for rec in recs:
