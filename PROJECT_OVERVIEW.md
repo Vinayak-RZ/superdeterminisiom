@@ -35,6 +35,6 @@ Differentiation: counterfactual *re-typing* of nodes on ingested production grap
 - Temperature 0 is not a seed. Simulation ≠ production.
 - Commit / spend / PII / auth nodes stay deterministic gates regardless of accuracy.
 - Core never imports LangChain / LangGraph / CrewAI / MAF. Adapters only translate.
-- P1 adapter: LangGraph/LangChain 1.x `create_agent` (not `create_react_agent`) + custom `StateGraph`. Specified, not built.
+- P1 adapter: LangGraph/LangChain 1.x `create_agent` (not `create_react_agent`) + custom `StateGraph`. Implemented.
 - P2: Lang sinks + CrewAI / MAF / custom via one adapter contract. Specified, not built.
 - No auto-apply. License: Apache-2.0.

@@ -1,6 +1,6 @@
 # P1 — LangGraph / LangChain adapter
 
-**Status:** specified, not implemented.  
+**Status:** implemented.  
 **Depends on:** P0 core (`src/superdeterminism/`).  
 **Normative for:** the next implementation PR. Do not start P1 code until this spec is the source of truth.  
 **Index:** [roadmap.md](roadmap.md). Adjacent: [adapters.md](adapters.md), [refactor.md](refactor.md), [0003-no-auto-apply.md](decisions/0003-no-auto-apply.md), [0004-agnostic-core.md](decisions/0004-agnostic-core.md).
