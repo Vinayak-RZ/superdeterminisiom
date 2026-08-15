@@ -19,7 +19,7 @@ Read in this order if you are new:
 7. [roadmap.md](roadmap.md) — P0 / P1 / P2 index
 8. [p1-langgraph.md](p1-langgraph.md) — P1 spec (implemented)
 9. [p2-ecosystem.md](p2-ecosystem.md) — P2 spec (implemented)
-10. [usage.md](usage.md) — P0 CLI
+10. [usage.md](usage.md) — P0/P1/P2 CLI
 11. [references.md](references.md) — sources (dated 2026-08-15)
 
 ## Research docs
@@ -35,8 +35,8 @@ Read in this order if you are new:
 | [refactor.md](refactor.md) | Report + scaffold; no auto-apply |
 | [roadmap.md](roadmap.md) | P0 / P1 / P2 index |
 | [p1-langgraph.md](p1-langgraph.md) | LangGraph adapter spec (implemented) |
-| [p2-ecosystem.md](p2-ecosystem.md) | Lang ecosystem + other stacks spec |
-| [usage.md](usage.md) | P0/P1 CLI for agents and humans |
+| [p2-ecosystem.md](p2-ecosystem.md) | Lang ecosystem + other stacks spec (implemented) |
+| [usage.md](usage.md) | P0/P1/P2 CLI for agents and humans |
 | [references.md](references.md) | Bibliography |
 
 ## Architecture decisions
