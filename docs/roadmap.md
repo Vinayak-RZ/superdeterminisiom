@@ -1,37 +1,61 @@
-# Roadmap
+# Roadmap — P0 / P1 / P2
 
-## v0 (this research contract, then a later product plan)
+This repo is an open-source advisor that **agents** (and humans) run against existing agent traces to decide where determinism belongs, then improve the architecture. It is not a LangChain plugin that only works inside one framework.
 
-- LangGraph / LangChain 1.x adapter only
-- Read-only OTLP ingest
-- Architecture map (`node_kind`, `det.class`)
-- Offline L0 recommendations as a report
-- Optional scaffold (not auto-apply)
+Layering:
 
-## Explicit non-goals (v0)
+```text
+P2  Lang ecosystem sinks + other frameworks (CrewAI, MAF, raw/custom)
+P1  LangGraph / LangChain adapter (easy drop-in)
+P0  Agnostic core  ← no framework dependency
+```
 
-- Live agent control
-- Production-LLM re-runs by default (L2)
-- CrewAI / MAF adapters
-- Auto-merge PRs
-- Wrapping CAR / Tracefork / counterfact as hard dependencies (needs its own ADR)
-- Renaming the GitHub repository
+The **core never imports LangChain**. Adapters only translate traces and (later) scaffolds into the core model.
 
-## Open risks
+## P0 — Agnostic core (this implementation)
 
-- GenAI semantic conventions are **Development**. Schema must track commits, not assume stability.
-- L0 estimates can look more confident than they are. ABSTAIN is first-class.
-- Distribution shift after refactor is the large validity threat. Canary is confirmatory.
-- Adjacent tools will keep shipping. Re-date [landscape.md](landscape.md) before claiming whitespace.
-- Validating that recommendations improve real systems needs pilot users in staging.
+A Python package any agent or human can run on exported traces.
 
-## After v0 (not scheduled)
+- Ingest OTLP JSON **or** a flat advisor trace list (no live collector)
+- Map spans → `node_kind` + `det.class` from GenAI ops (and dual keys)
+- L0 recommend: historical variance, Wilson intervals, FlipToDet / FlipToNondet / STRENGTHEN_SDB / ABSTAIN
+- Hard override for commit / spend / PII / auth node names
+- CLI + JSON report (stable for agents) and Markdown (for humans)
+- Stdlib only. No LangChain, no live LLM, no auto-apply
+- Tests on fixtures
 
-- L1 hybrid fork for high-EV candidates
-- CrewAI adapter
-- MAF ingest (only with a dedicated mapper)
-- Planted-truth CI gate as a product feature
-- Spec Kit `.specify/` for the simulator
-- CI + Cloud Agent environment build
+**Who runs it:** `python -m superdeterminism recommend traces.json --json`
 
-Product code does **not** start from this document. It needs a separate approved project-mode nawab plan.
+**Non-goals for P0:** LangGraph remapping, scaffolds, LangSmith/Langfuse APIs, L1/L2 replay, other frameworks.
+
+## P1 — LangGraph / LangChain adapter
+
+Thin layer **on top of** P0. Core stays framework-free.
+
+- Map `langgraph_node`, `create_agent` (`model` / `tools`), LangSmith OTLP quirks
+- Optional scaffold (keep node name, change callable). Never auto-apply
+- Agent-oriented docs: “here is the one command and the JSON schema”
+- Extra: `superdeterminism[langgraph]` optional extra only
+
+Does **not** put LangChain types in the core graph.
+
+## P2 — Lang ecosystem + other agent systems
+
+By P2 the same core should plug into:
+
+| Track | What |
+|---|---|
+| Lang development system | LangSmith / Langfuse / MLflow OTLP sinks, more of LangChain than LangGraph |
+| Other stacks | CrewAI, Microsoft Agent Framework, raw/custom agents via a documented adapter contract |
+| Simulation depth | L1 hybrid fork for high-EV candidates; batch many traces |
+| Robustness | planted-truth fixtures in CI, coverage reports, canary checklist |
+
+Adapter contract (P2, not implemented in P0): ingest bytes/spans → core `Trace` list. One extra per framework. Core still has zero framework imports.
+
+## Shared rules (all tiers)
+
+- Simulation ≠ production
+- Never invent `gen_ai.*` keys
+- No auto-apply / no in-place `graph.py` rewrite
+- ABSTAIN is first-class
+- Designed so **agents** can drive the CLI (JSON in/out, no prompts); humans can too

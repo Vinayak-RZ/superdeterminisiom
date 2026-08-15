@@ -224,7 +224,7 @@ N/A — documentation feature.
 - [x] Methodology names L0/L1/L2 and ABSTAIN
 - [x] ADRs 0001–0003 exist
 - [x] LEARNING.md has Phase R and Phase A notes
-- [ ] PR #1 updated
+- [x] PR #1 updated
 
 P1: product project-mode plan; CI; environment build.
 
