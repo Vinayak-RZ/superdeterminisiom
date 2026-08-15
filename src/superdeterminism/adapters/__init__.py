@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import importlib
 import importlib.util
+import sys
 from collections.abc import Callable
 from pathlib import Path
 from typing import Any, Protocol, runtime_checkable
@@ -13,6 +14,7 @@ from superdeterminism.models import Trace
 # ponytail: name → module path; never import adapter modules at package load
 _MODULES = {
     "langgraph": "superdeterminism.adapters.langgraph",
+    "custom": "examples.custom_adapter",
 }
 _EXTRAS = {
     "langgraph": ("langgraph", "langchain"),
@@ -46,7 +48,12 @@ def resolve(name: str) -> Callable[..., Any]:
         raise AdapterError(
             f"adapter {name} requires: pip install 'superdeterminism[{name}]'"
         )
-    mod = importlib.import_module(_MODULES[name])
+    target = _MODULES[name]
+    if target.startswith("examples."):
+        root = str(Path(__file__).resolve().parents[3])
+        if root not in sys.path:
+            sys.path.insert(0, root)
+    mod = importlib.import_module(target)
     load = getattr(mod, "load", None)
     if load is None:
         raise AdapterError(f"adapter {name} has no load()")
