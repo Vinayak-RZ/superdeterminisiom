@@ -14,6 +14,7 @@ Index of significant choices. Formal ADRs land in `docs/decisions/` during Phase
 | D7 | Product code requires a later project-mode nawab plan | superseded | P0 started; see D8 |
 | D8 | Agnostic core; LangGraph and other stacks are adapters | accepted | [0004-agnostic-core.md](docs/decisions/0004-agnostic-core.md) |
 | D9 | Leftover P2 items (canary text + extras-free CI) ship as OSS polish | accepted | this file |
+| D10 | Widen re-typing to roles + first-class orchestrator | accepted | [0005-architecture-role-lattice.md](docs/decisions/0005-architecture-role-lattice.md) |
 
 ## D0 — Naming
 
@@ -53,6 +54,13 @@ Written as ADRs in `docs/decisions/`. Do not silently override them.
 - **Alternatives:** LangGraph-only package; if-import every framework.
 - **Selected:** P0 core with zero framework deps; P1 LangGraph extra; P2 other stacks.
 - **Rationale:** Adapters translate. Agents and humans call one CLI.
+
+## D10 — Role lattice and orchestrator
+
+- **Context:** Tool-vs-LLM is too narrow; the hub that owns control flow was never a recommendation target.
+- **Alternatives:** Stay narrow; become a linter/searcher; widen re-typing on traces.
+- **Selected:** Role lattice + graph-level orchestrator. ADR 0005.
+- **Rationale:** Keeps the differentiator. Matches workflow vs subagent vs tool plus “improve the orchestrator.”
 
 ## D9 — Leftover polish, not a new product tier
 

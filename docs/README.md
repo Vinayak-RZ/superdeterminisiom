@@ -1,12 +1,12 @@
 # Superdeterminism documentation
 
-Project: **Superdeterminism**. Capability: **Determinism Advisor**.
+Project: **Superdeterminism**. Capability: **Architecture Advisor**.
 
 Execution contract: [IMPLEMENTATION_PLAN.md](../IMPLEMENTATION_PLAN.md). Status: [PROGRESS.md](../PROGRESS.md). Overview: [PROJECT_OVERVIEW.md](../PROJECT_OVERVIEW.md).
 
 Positioning sentence:
 
-> Counterfactual *re-typing* of nodes between deterministic tools and stochastic LLM/subagents, on ingested production graphs.
+> Counterfactual *re-typing* of nodes — and of the orchestrator that owns control flow — on ingested production graphs.
 
 Read in this order if you are new:
 
@@ -15,12 +15,15 @@ Read in this order if you are new:
 3. [ingestion.md](ingestion.md) — how traces enter
 4. [architecture.md](architecture.md) — the domain graph
 5. [methodology.md](methodology.md) — how a flip is estimated
-6. [adapters.md](adapters.md) and [refactor.md](refactor.md) — LangGraph v0 surface
-7. [roadmap.md](roadmap.md) — P0 / P1 / P2 index
-8. [p1-langgraph.md](p1-langgraph.md) — P1 spec (implemented)
-9. [p2-ecosystem.md](p2-ecosystem.md) — P2 spec (implemented)
-10. [usage.md](usage.md) — P0/P1/P2 CLI
-11. [references.md](references.md) — sources (dated 2026-08-15)
+6. [agent-architectures.md](agent-architectures.md) — workflow vs agent doctrine
+7. [type-lattice.md](type-lattice.md) — role actions
+8. [orchestrator.md](orchestrator.md) — control-flow owner
+9. [adapters.md](adapters.md) and [refactor.md](refactor.md) — LangGraph v0 surface
+10. [roadmap.md](roadmap.md) — P0 / P1 / P2 / P3 index
+11. [p1-langgraph.md](p1-langgraph.md) — P1 spec (implemented)
+12. [p2-ecosystem.md](p2-ecosystem.md) — P2 spec (implemented)
+13. [usage.md](usage.md) — CLI
+14. [references.md](references.md) — sources (dated 2026-08-15)
 
 ## Research docs
 
@@ -31,6 +34,9 @@ Read in this order if you are new:
 | [ingestion.md](ingestion.md) | OTel GenAI substrate |
 | [architecture.md](architecture.md) | `node_kind`, `det.class` |
 | [methodology.md](methodology.md) | How a flip is estimated |
+| [agent-architectures.md](agent-architectures.md) | Workflow vs agent doctrine |
+| [type-lattice.md](type-lattice.md) | Role × mechanism lattice |
+| [orchestrator.md](orchestrator.md) | Control-flow owner |
 | [adapters.md](adapters.md) | LangGraph v0 |
 | [refactor.md](refactor.md) | Report + scaffold; no auto-apply |
 | [roadmap.md](roadmap.md) | P0 / P1 / P2 index |
@@ -47,6 +53,7 @@ Read in this order if you are new:
 | [0002-v0-offline-first.md](decisions/0002-v0-offline-first.md) | Offline L0 / historical estimators before live L2 replay |
 | [0003-no-auto-apply.md](decisions/0003-no-auto-apply.md) | Report + optional scaffold; never auto-apply |
 | [0004-agnostic-core.md](decisions/0004-agnostic-core.md) | Core has zero framework deps; adapters later |
+| [0005-architecture-role-lattice.md](decisions/0005-architecture-role-lattice.md) | Role lattice + orchestrator object |
 
 Index: [DECISIONS.md](../DECISIONS.md).
 
