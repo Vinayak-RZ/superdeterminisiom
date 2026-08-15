@@ -11,9 +11,16 @@ from superdeterminism.models import (
     Action,
     DetClass,
     NodeKind,
+    OrchestratorReport,
     Recommendation,
     Span,
     Trace,
+)
+from superdeterminism.orchestrator import (
+    decide_orchestrator,
+    empty_orchestrator,
+    hub_metrics,
+    identify_hub,
 )
 
 N_MIN_DEFAULT = 30
@@ -211,16 +218,47 @@ def wilson_lower(successes: int, n: int, z: float = 1.96) -> float:
     return max(0.0, (centre - spread) / denom)
 
 
+def _to_kind(action: Action, current: NodeKind) -> str:
+    return {
+        Action.FLIP_TO_DET: NodeKind.DETERMINISTIC_TOOL.value,
+        Action.FLIP_TO_NONDET: NodeKind.LLM_REASONER.value,
+        Action.FLIP_TO_WORKFLOW: NodeKind.WORKFLOW.value,
+        Action.FLIP_TO_SUBAGENT: NodeKind.SUBAGENT.value,
+        Action.FLIP_TO_ROUTER: NodeKind.ROUTER.value,
+    }.get(action, current.value)
+
+
+def _is_nested(span: Span) -> bool:
+    ns = str((span.attributes or {}).get("langgraph_checkpoint_ns") or "")
+    return ns.count(":") >= 1 or ns.count("|") >= 1 or bool(
+        (span.attributes or {}).get("advisor.nested")
+    )
+
+
 def recommend_traces(
     traces: list[Trace],
     *,
     n_min: int = N_MIN_DEFAULT,
 ) -> list[Recommendation]:
     """L0 / observational recommend. Estimator is proxy, not L2 do_policy."""
+    recs, _orch = recommend_full(traces, n_min=n_min)
+    return recs
+
+
+def recommend_full(
+    traces: list[Trace],
+    *,
+    n_min: int = N_MIN_DEFAULT,
+) -> tuple[list[Recommendation], OrchestratorReport]:
+    classified: list[list[tuple[str, NodeKind, DetClass, Span]]] = []
     buckets: dict[str, dict[str, Any]] = {}
+    nexts: dict[str, list[str]] = defaultdict(list)
+    paths: list[str] = []
     for trace in traces:
+        hops: list[tuple[str, NodeKind, DetClass, Span]] = []
         for span in trace.spans:
             node_id, kind, det = classify_span(span)
+            hops.append((node_id, kind, det, span))
             bucket = buckets.setdefault(
                 node_id,
                 {
@@ -229,14 +267,34 @@ def recommend_traces(
                     "outputs": [],
                     "errors": 0,
                     "n": 0,
+                    "nested": False,
                 },
             )
             bucket["n"] += 1
             bucket["outputs"].append(span.output)
             bucket["errors"] += int(span.error)
+            bucket["nested"] = bucket["nested"] or _is_nested(span)
             # ponytail: last-write kind/det; mixed ops on one name need P1 split
             bucket["kind"] = kind
             bucket["det"] = det
+        classified.append(hops)
+        seq = [h[0] for h in hops]
+        paths.append(_canonical(seq))
+        for i, (node_id, _k, _d, _s) in enumerate(hops[:-1]):
+            nexts[node_id].append(hops[i + 1][0])
+
+    path_counts = Counter(paths)
+    path_mode_n = path_counts.most_common(1)[0][1] if path_counts else 0
+    n_traces = len(traces)
+    p_path = path_mode_n / n_traces if n_traces else 0.0
+    p_path_lower = wilson_lower(path_mode_n, n_traces)
+    path_len = 0
+    if path_counts:
+        mode_path = path_counts.most_common(1)[0][0]
+        try:
+            path_len = len(json.loads(mode_path))
+        except (json.JSONDecodeError, TypeError):
+            path_len = 0
 
     recs: list[Recommendation] = []
     for node_id, bucket in sorted(buckets.items()):
@@ -252,6 +310,11 @@ def recommend_traces(
         p_lower = wilson_lower(mode_n, n)
         schema_ok = sum(_is_schema(o) for o in outputs) / n if n else 0.0
         failure_rate = errors / n if n else 0.0
+        nxt = nexts.get(node_id) or []
+        nxt_counts = Counter(nxt)
+        nxt_mode = nxt_counts.most_common(1)[0][1] if nxt_counts else 0
+        p_next = nxt_mode / len(nxt) if nxt else 0.0
+        p_next_lower = wilson_lower(nxt_mode, len(nxt)) if nxt else 0.0
         sensitive = bool(HARD_OVERRIDE.search(node_id))
         action, reasons = _decide(
             kind=kind,
@@ -263,6 +326,12 @@ def recommend_traces(
             schema_ok=schema_ok,
             failure_rate=failure_rate,
             sensitive=sensitive,
+            p_path=p_path,
+            p_path_lower=p_path_lower,
+            path_len=path_len,
+            p_next=p_next,
+            p_next_lower=p_next_lower,
+            nested=bool(bucket["nested"]),
         )
         recs.append(
             Recommendation(
@@ -277,9 +346,68 @@ def recommend_traces(
                 failure_rate=round(failure_rate, 4),
                 estimator="observational_l0_proxy",
                 reasons=tuple(reasons),
+                from_kind=kind.value,
+                to_kind=_to_kind(action, kind),
+                p_path=round(p_path, 4),
+                p_path_lower=round(p_path_lower, 4),
+                p_next=round(p_next, 4),
+                p_next_lower=round(p_next_lower, 4),
             )
         )
-    return recs
+    orch = _orchestrator_report(
+        classified,
+        n_min=n_min,
+        p_path=p_path,
+        p_path_lower=p_path_lower,
+    )
+    return recs, orch
+
+
+def _orchestrator_report(
+    classified: list[list[tuple[str, NodeKind, DetClass, Span]]],
+    *,
+    n_min: int,
+    p_path: float,
+    p_path_lower: float,
+) -> OrchestratorReport:
+    n = len(classified)
+    hub_id, kind = identify_hub(classified)
+    if hub_id is None:
+        return empty_orchestrator(n=n, reasons=["no single control-flow owner"])
+    metrics = hub_metrics(classified, hub_id)
+    p_next = float(metrics["p_next"])
+    p_next_lower = wilson_lower(int(metrics["next_successes"]), int(metrics["next_n"]))
+    action, reasons = decide_orchestrator(
+        hub_id=hub_id,
+        kind=kind,
+        n=n,
+        n_min=n_min,
+        hops=float(metrics["hops"]),
+        fan_out=int(metrics["fan_out"]),
+        revisit_rate=float(metrics["revisit_rate"]),
+        p_next=p_next,
+        p_next_lower=p_next_lower,
+        p_path=p_path,
+        p_path_lower=p_path_lower,
+        hits_sensitive_ungated=bool(metrics["hits_sensitive_ungated"]),
+    )
+    return OrchestratorReport(
+        node_id=hub_id,
+        kind=kind,
+        action=action,
+        n=n,
+        hops=round(float(metrics["hops"]), 4),
+        fan_out=int(metrics["fan_out"]),
+        revisit_rate=round(float(metrics["revisit_rate"]), 4),
+        p_next=round(p_next, 4),
+        p_next_lower=round(p_next_lower, 4),
+        p_path=round(p_path, 4),
+        p_path_lower=round(p_path_lower, 4),
+        token_share=round(float(metrics["token_share"]), 4),
+        hits_sensitive_ungated=bool(metrics["hits_sensitive_ungated"]),
+        estimator="observational_l0_proxy",
+        reasons=tuple(reasons),
+    )
 
 
 def _decide(
@@ -293,6 +421,12 @@ def _decide(
     schema_ok: float,
     failure_rate: float,
     sensitive: bool,
+    p_path: float = 0.0,
+    p_path_lower: float = 0.0,
+    path_len: int = 0,
+    p_next: float = 0.0,
+    p_next_lower: float = 0.0,
+    nested: bool = False,
 ) -> tuple[Action, list[str]]:
     reasons: list[str] = []
     is_llm = det in {DetClass.LLM, DetClass.LLM_SEEDED, DetClass.COMPOSITE} or kind in {
@@ -318,6 +452,27 @@ def _decide(
             f"p_mode={p_mode:.2f} (wilson_lower={p_lower:.2f}) >= {P_MODE_MIN}",
         ]
         return Action.FLIP_TO_DET, reasons
+    if (
+        is_llm
+        and path_len >= 3
+        and p_path >= P_MODE_MIN
+        and p_path_lower >= P_MODE_MIN
+        and p_mode < P_MODE_MIN
+    ):
+        return Action.FLIP_TO_WORKFLOW, [
+            f"p_path={p_path:.2f} (wilson_lower={p_path_lower:.2f}) >= {P_MODE_MIN}",
+            f"path_len={path_len} >= 3; output not mode-stable so FlipToDet is not the lower rung",
+        ]
+    if is_llm and nested and schema_ok >= SCHEMA_OK_MIN and p_mode < P_MODE_MIN:
+        return Action.FLIP_TO_SUBAGENT, [
+            "nested checkpoint ns with structured return and unstable output",
+            "isolate the hop; child returns one structured result",
+        ]
+    if is_llm and p_next >= P_MODE_MIN and p_next_lower >= P_MODE_MIN:
+        return Action.FLIP_TO_ROUTER, [
+            f"p_next={p_next:.2f} (wilson_lower={p_next_lower:.2f}) >= {P_MODE_MIN}",
+            "lift the model-chosen branch into a classifier / code edge",
+        ]
     if is_det and failure_rate >= 0.30 and not sensitive:
         return Action.FLIP_TO_NONDET, [
             f"DET node failure_rate={failure_rate:.2f} >= 0.30 on unhandled tail",
@@ -331,20 +486,58 @@ def _decide(
     return Action.ABSTAIN, reasons
 
 
-def recommendations_to_dict(recs: Iterable[Recommendation]) -> dict[str, Any]:
+def _orchestrator_to_dict(orch: OrchestratorReport | None) -> dict[str, Any]:
+    if orch is None:
+        return {
+            "node_id": None,
+            "kind": "unknown",
+            "action": Action.ABSTAIN.value,
+            "reasons": ["orchestrator not computed"],
+        }
+    return {
+        "node_id": orch.node_id,
+        "kind": orch.kind.value,
+        "action": orch.action.value,
+        "n": orch.n,
+        "hops": orch.hops,
+        "fan_out": orch.fan_out,
+        "revisit_rate": orch.revisit_rate,
+        "p_next": orch.p_next,
+        "p_next_lower": orch.p_next_lower,
+        "p_path": orch.p_path,
+        "p_path_lower": orch.p_path_lower,
+        "token_share": orch.token_share,
+        "hits_sensitive_ungated": orch.hits_sensitive_ungated,
+        "estimator": orch.estimator,
+        "reasons": list(orch.reasons),
+        "disclaimer": orch.disclaimer,
+    }
+
+
+def recommendations_to_dict(
+    recs: Iterable[Recommendation],
+    orchestrator: OrchestratorReport | None = None,
+) -> dict[str, Any]:
     return {
         "disclaimer": DISCLAIMER,
         "estimator": "observational_l0_proxy",
         "canary": list(CANARY_CHECKLIST),
+        "orchestrator": _orchestrator_to_dict(orchestrator),
         "recommendations": [
             {
                 "node_id": r.node_id,
                 "node_kind": r.node_kind.value,
                 "det_class": r.det_class.value,
+                "from_kind": r.from_kind or r.node_kind.value,
+                "to_kind": r.to_kind or r.node_kind.value,
                 "action": r.action.value,
                 "n": r.n,
                 "p_mode": r.p_mode,
                 "p_mode_lower": r.p_mode_lower,
+                "p_path": r.p_path,
+                "p_path_lower": r.p_path_lower,
+                "p_next": r.p_next,
+                "p_next_lower": r.p_next_lower,
                 "schema_ok": r.schema_ok,
                 "failure_rate": r.failure_rate,
                 "estimator": r.estimator,
@@ -356,21 +549,39 @@ def recommendations_to_dict(recs: Iterable[Recommendation]) -> dict[str, Any]:
     }
 
 
-def recommendations_to_markdown(recs: list[Recommendation]) -> str:
+def recommendations_to_markdown(
+    recs: list[Recommendation],
+    orchestrator: OrchestratorReport | None = None,
+) -> str:
     lines = [
-        "# Determinism Advisor report",
+        "# Architecture Advisor report",
         "",
         f"> {DISCLAIMER}",
         "",
-        "| node | kind | class | action | n | p_mode | p_mode_lo | schema_ok | fail |",
-        "|---|---|---|---|---:|---:|---:|---:|---:|",
+        "| node | kind | to | action | n | p_mode | p_path | p_next | schema_ok | fail |",
+        "|---|---|---|---|---:|---:|---:|---:|---:|---:|",
     ]
     for r in recs:
         lines.append(
-            f"| {r.node_id} | {r.node_kind.value} | {r.det_class.value} | "
-            f"{r.action.value} | {r.n} | {r.p_mode:.2f} | {r.p_mode_lower:.2f} | "
-            f"{r.schema_ok:.2f} | {r.failure_rate:.2f} |"
+            f"| {r.node_id} | {r.from_kind or r.node_kind.value} | {r.to_kind} | "
+            f"{r.action.value} | {r.n} | {r.p_mode:.2f} | {r.p_path:.2f} | "
+            f"{r.p_next:.2f} | {r.schema_ok:.2f} | {r.failure_rate:.2f} |"
         )
+    if orchestrator is not None:
+        lines.extend(
+            [
+                "",
+                "## Orchestrator",
+                "",
+                f"- id: `{orchestrator.node_id}`",
+                f"- kind: {orchestrator.kind.value}",
+                f"- action: **{orchestrator.action.value}**",
+                f"- hops: {orchestrator.hops:.2f} fan_out: {orchestrator.fan_out} "
+                f"revisit: {orchestrator.revisit_rate:.2f} p_next: {orchestrator.p_next:.2f}",
+            ]
+        )
+        for reason in orchestrator.reasons:
+            lines.append(f"- {reason}")
     lines.extend(["", "## Reasons", ""])
     for r in recs:
         lines.append(f"### {r.node_id} — {r.action.value}")

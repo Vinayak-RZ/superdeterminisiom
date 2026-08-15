@@ -27,8 +27,21 @@ class DetClass(str, Enum):
 class Action(str, Enum):
     FLIP_TO_DET = "FlipToDet"
     FLIP_TO_NONDET = "FlipToNondet"
+    FLIP_TO_WORKFLOW = "FlipToWorkflow"
+    FLIP_TO_SUBAGENT = "FlipToSubagent"
+    FLIP_TO_ROUTER = "FlipToRouter"
     STRENGTHEN_SDB = "STRENGTHEN_SDB"
+    BOUND_ORCHESTRATOR = "BoundOrchestrator"
+    STRENGTHEN_ORCHESTRATOR = "StrengthenOrchestrator"
+    FLIP_ORCHESTRATOR_TO_CODE = "FlipOrchestratorToCode"
+    COLLAPSE_ORCHESTRATOR = "CollapseOrchestrator"
     ABSTAIN = "ABSTAIN"
+
+
+class OrchestratorKind(str, Enum):
+    CODE_WORKFLOW = "code_workflow"
+    LLM_SUPERVISOR = "llm_supervisor"
+    UNKNOWN = "unknown"
 
 
 @dataclass(frozen=True)
@@ -58,6 +71,32 @@ class Recommendation:
     p_mode_lower: float
     schema_ok: float
     failure_rate: float
+    estimator: str
+    reasons: tuple[str, ...]
+    from_kind: str = ""
+    to_kind: str = ""
+    p_path: float = 0.0
+    p_path_lower: float = 0.0
+    p_next: float = 0.0
+    p_next_lower: float = 0.0
+    disclaimer: str = "simulation != production; canary is confirmatory"
+
+
+@dataclass(frozen=True)
+class OrchestratorReport:
+    node_id: str | None
+    kind: OrchestratorKind
+    action: Action
+    n: int
+    hops: float
+    fan_out: int
+    revisit_rate: float
+    p_next: float
+    p_next_lower: float
+    p_path: float
+    p_path_lower: float
+    token_share: float
+    hits_sensitive_ungated: bool
     estimator: str
     reasons: tuple[str, ...]
     disclaimer: str = "simulation != production; canary is confirmatory"
