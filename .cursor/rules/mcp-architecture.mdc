@@ -28,10 +28,10 @@ Endpoint: `https://mcp.agentpatternscatalog.org/mcp` (see `.cursor/mcp.json`)
 
 ## If MCP unavailable
 
-Fall back to `agentic-system-design` skill and [docs/MCP_SETUP.md](../../docs/MCP_SETUP.md). Note in response that live catalog was not queried.
+Fall back to `agentic-system-design` skill and [docs/cursor-config/MCP_SETUP.md](../../docs/cursor-config/MCP_SETUP.md). Note in response that live catalog was not queried.
 
 ## Other MCP servers
 
-Optional: Context7 (library docs), GitHub (repo data) — see [docs/mcp-catalog.json](../../docs/mcp-catalog.json). Use only when task requires live external data.
+Optional: Context7 (library docs), GitHub (repo data) — see [docs/cursor-config/mcp-catalog.json](../../docs/cursor-config/mcp-catalog.json). Use only when task requires live external data.
 
 Do not call MCP for routine CRUD coding with no agentic design component. Minimal-code discipline is enforced by `ponytail.mdc` + the `ponytail` skill — not by MCP.

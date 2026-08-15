@@ -1,78 +1,113 @@
 # Superdeterminism
 
-**Determinism Advisor** — an open-source design-time advisor for agentic architectures.
+**Determinism Advisor** — a design-time advisor for agentic architectures.
 
-It takes an existing agent graph (via production traces), runs **counterfactual re-typing** of nodes between deterministic tools and stochastic LLM/subagents, and tells developers which steps should be hard-coded versus delegated to a model — with evidence, not gut feel.
-
-> Not “score the path you already ran.” Not “search a new workflow from scratch.”
-> Counterfactual *re-typing* of nodes on ingested production graphs.
+> **What it is:** A research contract (and, later, a tool) that estimates which steps in an existing agent graph should be deterministic tools versus stochastic LLM/subagents.
+> **What it is not:** A runtime eval platform, a workflow searcher, or a shipping simulator. There is no application code in this repository yet.
+> **Primary interface today:** Markdown research docs and Cursor agent config.
 
 The GitHub repository is still named `superdeterminisiom`. The project name is **Superdeterminism**.
 
-## The problem
+## TL;DR
 
-Every team on LangChain, LangGraph, CrewAI, or a custom stack eventually asks: *should this step be a typed tool call, or should I hand it to the model?*
+- Problem: teams guess whether a step should be a typed tool or an LLM/subagent.
+- Eval tools score the path you already ran. Architecture-search papers invent new graphs offline. Neither flips *determinism class* on an ingested production graph.
+- v0 (not built): ingest OTLP → map the graph → offline counterfactual → recommend or abstain → optional LangGraph scaffold. No auto-apply.
+- This repo is **docs-first**. Research files land in Phase A of the approved plan.
+- Cursor rules/skills are vendored from [cursor-config-coding](https://github.com/Vinayak-RZ/cursor-config-coding).
 
-Today that decision is intuition, then (maybe) validated after the fact by eval platforms. Those tools score what a trace **did**. They do not simulate what it **would do** under a different determinism split, and they do not recommend a structural change.
+## Table of contents
 
-The failure modes are symmetric:
+1. [Vision](#1-vision)
+2. [Architecture](#2-architecture)
+3. [Quickstart](#3-quickstart)
+4. [Project structure](#4-project-structure)
+5. [Documentation that exists](#5-documentation-that-exists)
+6. [Cursor coding config](#6-cursor-coding-config)
+7. [License](#7-license)
 
-- Over-delegate to LLMs where a function would be cheaper, faster, and auditable.
-- Over-constrain with rigid tools where the task needs judgment, and the agent breaks on the first uncoded edge case.
+## 1. Vision
 
-## What it does
+### What it is
 
-1. **Ingest** — read existing execution traces over OTLP / GenAI semantic conventions. No new instrumentation required if you already emit LangSmith, Langfuse, MLflow, or raw OTel.
-2. **Map** — reconstruct the architecture as a graph. Tag each step as currently deterministic or non-deterministic from observed behavior.
-3. **Simulate** — for ambiguous or high-variance steps, estimate the counterfactual: *what if this node were the other type?* v0 does this offline (historical variance + tape splice). It does not re-run your production LLM by default.
-4. **Recommend** — a ranked list of flips with estimated deltas (cost, latency, failure, variance, auditability, compliance) and confidence intervals. Abstain when the evidence is weak.
-5. **Assist the refactor** — for LangGraph/LangChain, emit a report and an optional scaffold. v0 does **not** rewrite your graph or open a PR.
+An open-source advisor that will take production agent traces, reconstruct the architecture, and estimate counterfactual **re-typing** of nodes between deterministic tools and stochastic LLM/subagents — with evidence, not gut feel.
 
-## Who it is for
+### What it is not
 
-Developers past the prototype stage who need evidence for where determinism belongs — especially in regulated or cost-sensitive systems, where non-determinism has to be justified or minimized.
+- Not “score the path you already ran” (LangSmith, MLflow, DeepEval, Galileo, Langfuse).
+- Not “search a new workflow from scratch” (MaAS, AFlow).
+- Not a claim that nobody does counterfactual agent simulation (CAR, CausalFlow, Tracefork, AgentReplay, and counterfact already do). The unclaimed layer is the **determinism-class flip + refactor recommendation**.
 
-## What already exists (and what does not)
+### Who it is for
 
-Eval and observability platforms (LangSmith, MLflow, DeepEval, Galileo, Langfuse) **observe and score** runs. Counterfactual replay tools (CAR, CausalFlow, Tracefork, AgentReplay, counterfact) **intervene on actions or agents**. Architecture-search papers (MaAS, AFlow) **invent new workflows offline**.
+Developers past prototype, especially in regulated or cost-sensitive systems.
 
-None of them flip *determinism class* on an ingested production graph and recommend a refactor. That is the layer this project claims. See [docs/landscape.md](docs/landscape.md) for the closeness matrix and the claims we will **not** make.
+### Success criteria (docs phase)
 
-## Status
+A later agent can implement v0 without inventing whitespace claims, ingest mappings, or flip methodology.
 
-**Documentation and research only.** There is no simulator, CLI, or adapter code in this repository yet.
+## 2. Architecture
 
-Execution contract: [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md). Live status: [PROGRESS.md](PROGRESS.md).
+Documented target, not implemented:
 
-v0 (when implemented) is LangGraph/LangChain only, read-only OTLP ingest, recommendation as a report. See [docs/roadmap.md](docs/roadmap.md) after Phase A lands.
+```text
+OTLP traces → normalize spans → architecture graph (node_kind, det.class)
+  → L0 offline counterfactual → recommend or ABSTAIN → report + optional scaffold
+```
 
-## Cursor coding config
+Advisor-owned fields live in `advisor.*` / `det.*`. Never invent `gen_ai.*` keys.
 
-This repo vendors [cursor-config-coding](https://github.com/Vinayak-RZ/cursor-config-coding) so Cloud Agents and local Cursor load the same rules and skills:
+## 3. Quickstart
 
-- [AGENTS.md](AGENTS.md) — project facts + engineering workflow
-- [`.cursor/rules/`](.cursor/rules/) — 21 project rules
-- [`.cursor/skills/`](.cursor/skills/) — ponytail, nawab-plans, spec-kit, architecture skills
-- [`.cursor/mcp.json`](.cursor/mcp.json) — Agent Patterns Catalog MCP
-- [`.cursor/environment.json`](.cursor/environment.json) — Cloud Agent bootstrap
-- Pin: [`.cursor/VENDOR.md`](.cursor/VENDOR.md)
+There is nothing to install or run. Clone the repo and read:
 
-## Documentation
+1. [PROJECT_OVERVIEW.md](PROJECT_OVERVIEW.md)
+2. [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md)
+3. [AGENTS.md](AGENTS.md)
+
+Research docs (`docs/overview.md` and siblings) are **not written yet**. They are Phase A of the plan. Do not add links to them until they exist.
+
+## 4. Project structure
+
+```text
+AGENTS.md                 Agent instructions + claim hygiene
+PROJECT_OVERVIEW.md       Purpose, architecture, constraints
+IMPLEMENTATION_PLAN.md    Nawab execution contract
+PROGRESS.md               Live phase status
+DECISIONS.md              Decision index
+LEARNING.md               Phase learnings
+LICENSE                   Apache-2.0
+.cursor/                  Vendored coding config (rules, skills, MCP)
+docs/README.md            Doc map (only files that exist)
+docs/cursor-config/       Vendored cursor-config-coding guides
+scripts/                  Vendor PowerShell helpers
+```
+
+## 5. Documentation that exists
 
 | Doc | What it covers |
 |---|---|
+| [PROJECT_OVERVIEW.md](PROJECT_OVERVIEW.md) | Purpose, architecture, constraints |
+| [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md) | Nawab plan (18 sections) |
+| [PROGRESS.md](PROGRESS.md) | Phase status |
+| [DECISIONS.md](DECISIONS.md) | Decision index |
+| [LEARNING.md](LEARNING.md) | What we learned per phase |
+| [AGENTS.md](AGENTS.md) | Agent workflow + claim hygiene |
+| [CONTRIBUTING.md](CONTRIBUTING.md) | How to contribute |
 | [docs/README.md](docs/README.md) | Doc map |
-| [docs/overview.md](docs/overview.md) | Problem, loop, audience, why now |
-| [docs/landscape.md](docs/landscape.md) | Adjacent tools; safe vs unsafe claims |
-| [docs/ingestion.md](docs/ingestion.md) | OTel GenAI substrate and vendor quirks |
-| [docs/architecture.md](docs/architecture.md) | Domain model: `node_kind`, `det.class` |
-| [docs/methodology.md](docs/methodology.md) | How a determinism flip is estimated |
-| [docs/adapters.md](docs/adapters.md) | LangGraph v0; later CrewAI / MAF |
-| [docs/refactor.md](docs/refactor.md) | Report + scaffold; no auto-apply |
-| [docs/roadmap.md](docs/roadmap.md) | v0 scope, non-goals, risks |
-| [docs/references.md](docs/references.md) | Bibliography (dated 2026-08-15) |
-| [docs/decisions/](docs/decisions/) | ADRs |
+| [docs/cursor-config/](docs/cursor-config/) | Vendored coding-config guides |
 
-## License
+Planned research docs (Phase A): overview, landscape, ingestion, architecture, methodology, adapters, refactor, roadmap, references, ADRs. Listed here as names only until the files exist.
+
+## 6. Cursor coding config
+
+Vendored from [cursor-config-coding](https://github.com/Vinayak-RZ/cursor-config-coding)@437a548. Pin: [`.cursor/VENDOR.md`](.cursor/VENDOR.md).
+
+- [`.cursor/rules/`](.cursor/rules/) — 21 project rules
+- [`.cursor/skills/`](.cursor/skills/) — ponytail, nawab-plans, spec-kit, architecture skills
+- [`.cursor/mcp.json`](.cursor/mcp.json) — Agent Patterns Catalog
+- [`.cursor/environment.json`](.cursor/environment.json) — Cloud Agent presence check
+
+## 7. License
 
 Apache License 2.0. See [LICENSE](LICENSE).

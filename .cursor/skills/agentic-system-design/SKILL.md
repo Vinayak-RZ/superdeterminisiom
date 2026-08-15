@@ -62,7 +62,7 @@ This config includes `.cursor/mcp.json` → [Agent Patterns Catalog](https://www
 | Debug misbehavior | `pattern_for_symptom` |
 | Shared vocabulary | `glossary_term` |
 
-Cite **catalog pattern ids** in design docs and ADRs. See [docs/MCP_SETUP.md](../../../docs/MCP_SETUP.md).
+Cite **catalog pattern ids** in design docs and ADRs. See [docs/cursor-config/MCP_SETUP.md](../../../docs/cursor-config/MCP_SETUP.md).
 
 Example: *"Recommend a recipe for a code-review agent, expand patterns, list anti-patterns."*
 
