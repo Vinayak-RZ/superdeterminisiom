@@ -161,15 +161,15 @@ N/A. Draft PR on this branch. Rollback = revert.
 
 ## §16 Exit criteria
 
-- [ ] `--adapter custom` from contract + example
-- [ ] Non-Lang adapter fixtures
-- [ ] Langfuse or MLflow tested
-- [ ] `--traces-dir` → one JSON
-- [ ] langgraph refuses MAF
-- [ ] `--opt-in-l1` omitted never calls a model
-- [ ] extras-free pytest green
-- [ ] simulation ≠ production
-- [ ] Draft P2 PR
+- [x] `--adapter custom` from contract + example
+- [x] Non-Lang adapter fixtures
+- [x] Langfuse or MLflow tested
+- [x] `--traces-dir` → one JSON
+- [x] langgraph refuses MAF
+- [x] `--opt-in-l1` omitted never calls a model
+- [x] extras-free pytest green
+- [x] simulation ≠ production
+- [x] Draft P2 PR
 
 ---
 

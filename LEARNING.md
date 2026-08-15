@@ -2,6 +2,13 @@
 
 Phase notes per [learn-while-building](.cursor/skills/learn-while-building/SKILL.md). Two to four bullets each.
 
+## P2 — Ecosystem adapters (2026-08-15)
+
+- `resolve()` treated “not in `_EXTRAS`” as “extra missing.” Custom/Langfuse/MAF need the opposite: missing extras entry means no extra required.
+- Pluggability is a file a third party can copy (`examples/custom_adapter.py`), not a Protocol with one implementation. The Protocol is justified only because custom is the second adapter.
+- `--adapter langgraph` must refuse MAF by attribute, not by hoping the caller picked the right flag. Silent remap is the failure mode the agnostic core was built to avoid.
+- `--opt-in-l1` is a warning plus a `call_model` symbol tests can watch. A live tail is a later slice; shipping a network client now would violate ponytail and claim hygiene.
+
 ## Phase R — Revise done work (2026-08-15)
 
 - A README that links files that do not exist is a documentation bug, not a roadmap. [documentation.mdc](.cursor/rules/documentation.mdc) requires the front door to match the tree.
