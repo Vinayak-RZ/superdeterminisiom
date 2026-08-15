@@ -80,4 +80,18 @@ Actions: `FlipToDet` | `FlipToNondet` | `STRENGTHEN_SDB` | `ABSTAIN`
 
 Default `--n-min 30`. A single-trace file will **ABSTAIN**. That is correct.
 
-P2 (not built): [p2-ecosystem.md](p2-ecosystem.md).
+## P2 — other adapters, batch, opt-in L1
+
+```bash
+python -m superdeterminism recommend traces.json --adapter custom --stdout json
+python -m superdeterminism recommend traces.json --adapter langfuse --stdout json
+python -m superdeterminism recommend traces.json --adapter maf --stdout json
+python -m superdeterminism recommend --traces-dir DIR --stdout json
+python -m superdeterminism recommend traces.json --opt-in-l1 --stdout json
+```
+
+`--adapter custom` needs no extra (copy [examples/custom_adapter.py](../examples/custom_adapter.py)). `--adapter crewai` requires `[crewai]`. `--adapter langgraph` on a MAF-shaped file exits 2 with a reason.
+
+`--opt-in-l1` prints a warning. It is **not** a production A/B. No model is called unless you later set `SUPERDETERMINISM_L1_MODEL` *and* a live tail exists (not implemented). Default remains L0.
+
+Spec: [p2-ecosystem.md](p2-ecosystem.md).

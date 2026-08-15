@@ -1,6 +1,6 @@
 # P2 — Lang ecosystem and other agent systems
 
-**Status:** specified, not implemented.  
+**Status:** implemented.  
 **Depends on:** P0 (done) and P1 (LangGraph adapter + the lazy `--adapter` registry).  
 **Normative for:** the implementation PR after P1.  
 **Index:** [roadmap.md](roadmap.md). Adjacent: [adapters.md](adapters.md), [ingestion.md](ingestion.md), [0004-agnostic-core.md](decisions/0004-agnostic-core.md).

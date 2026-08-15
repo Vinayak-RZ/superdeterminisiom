@@ -3,7 +3,7 @@
 This repo is an open-source advisor that **agents** (and humans) run against existing agent traces to decide where determinism belongs, then improve the architecture. It is not a LangChain plugin that only works inside one framework.
 
 ```text
-P2  Lang ecosystem + other stacks     →  docs/p2-ecosystem.md   (specified)
+P2  Lang ecosystem + other stacks     →  src/superdeterminism/adapters/  (implemented)
 P1  LangGraph / LangChain adapter     →  src/superdeterminism/adapters/langgraph.py  (implemented)
 P0  Agnostic core                     →  src/superdeterminism/  (implemented)
 ```
@@ -44,16 +44,22 @@ Full spec: **[p1-langgraph.md](p1-langgraph.md)**. Usage: [usage.md](usage.md).
 - Scaffold (keep node name). Never auto-apply
 - No LangChain types in `superdeterminism.models`
 
-## P2 — Lang ecosystem + other agent systems (specified)
+## P2 — Lang ecosystem + other agent systems (implemented)
 
-When the repo is actually pluggable. **Not implemented yet.**
+Pluggable adapters. Same P0 recommender.
 
-Full spec: **[p2-ecosystem.md](p2-ecosystem.md)**
+```bash
+python -m superdeterminism recommend traces.json --adapter custom --stdout json
+python -m superdeterminism recommend --traces-dir DIR --stdout json
+python -m superdeterminism recommend traces.json --opt-in-l1 --stdout json
+```
 
-- Track A: LangSmith / Langfuse / MLflow + batch + more of LangChain than graphs
-- Track B: CrewAI, MAF, raw/custom via one adapter contract
-- Opt-in L1 only; L0 remains default
-- A third party can add `--adapter custom` from the contract + example
+Full spec: **[p2-ecosystem.md](p2-ecosystem.md)**. Usage: [usage.md](usage.md).
+
+- Track A: Langfuse coalesce (tested); MLflow omitted ops stay UNKNOWN
+- Track B: custom example, CrewAI kickoff→workflow, MAF dedicated mapper
+- `--adapter langgraph` refuses MAF-shaped traces
+- Opt-in L1 is a gate, not a live runner; L0 remains default
 
 ## Shared rules (all tiers)
 

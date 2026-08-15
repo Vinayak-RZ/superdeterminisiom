@@ -18,7 +18,7 @@ Read in this order if you are new:
 6. [adapters.md](adapters.md) and [refactor.md](refactor.md) — LangGraph v0 surface
 7. [roadmap.md](roadmap.md) — P0 / P1 / P2 index
 8. [p1-langgraph.md](p1-langgraph.md) — P1 spec (implemented)
-9. [p2-ecosystem.md](p2-ecosystem.md) — P2 spec (not built)
+9. [p2-ecosystem.md](p2-ecosystem.md) — P2 spec (implemented)
 10. [usage.md](usage.md) — P0 CLI
 11. [references.md](references.md) — sources (dated 2026-08-15)
 

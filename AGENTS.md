@@ -15,15 +15,17 @@ Differentiation (do not weaken this):
 
 ## Current status
 
-**P0 core and P1 LangGraph adapter are implemented.** Core has no LangChain import. P1 lives in `src/superdeterminism/adapters/langgraph.py`.
+**P0, P1, and P2 are implemented.** Core has no LangChain import. Adapters live under `src/superdeterminism/adapters/`.
 
 ```bash
 python -m superdeterminism recommend traces.json --stdout json
 python -m superdeterminism recommend traces.json --adapter langgraph --stdout json
+python -m superdeterminism recommend traces.json --adapter custom --stdout json
+python -m superdeterminism recommend --traces-dir DIR --stdout json
 python -m superdeterminism scaffold report.json --out scaffold/RUN
 ```
 
-P2 is **specified, not built**: [docs/p2-ecosystem.md](docs/p2-ecosystem.md). P1 spec: [docs/p1-langgraph.md](docs/p1-langgraph.md). Usage: [docs/usage.md](docs/usage.md). Do not add framework extras to core. Do not auto-apply refactors.
+Specs: [docs/p1-langgraph.md](docs/p1-langgraph.md), [docs/p2-ecosystem.md](docs/p2-ecosystem.md). Usage: [docs/usage.md](docs/usage.md). Do not add framework extras to core. Do not auto-apply refactors. Do not call a model without `--opt-in-l1`.
 
 Read before any product work:
 
@@ -47,7 +49,7 @@ Read before any product work:
 
 - **P0 (now):** agnostic core — OTLP/flat ingest, L0 recommend, JSON/MD report
 - **P1 (now):** LangGraph / LangChain adapter — [docs/p1-langgraph.md](docs/p1-langgraph.md)
-- **P2 (specified):** Lang ecosystem sinks + CrewAI / MAF / raw custom — [docs/p2-ecosystem.md](docs/p2-ecosystem.md)
+- **P2 (now):** Langfuse / custom / CrewAI / MAF + batch + L1 gate — [docs/p2-ecosystem.md](docs/p2-ecosystem.md)
 - No auto-apply, no in-place `graph.py` rewrite, no live production-LLM re-runs by default
 
 ---
