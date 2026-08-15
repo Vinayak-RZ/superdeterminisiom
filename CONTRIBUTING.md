@@ -1,6 +1,6 @@
 # Contributing to Superdeterminism
 
-This repository is **docs-first**. There is no simulator or adapter code yet. The useful contribution is making the research contract sharper: landscape claims, ingest mapping, methodology limitations, and ADRs.
+This repository is a **working advisor** (P0 core + P1/P2 adapters) plus the research contract that keeps claims honest. Useful contributions: sharper landscape/ingest/methodology docs, extras-free tests, or an adapter that returns `list[Trace]` without forking the recommender.
 
 ## Cursor config
 
@@ -22,6 +22,7 @@ Vendor guides live in [docs/cursor-config/](docs/cursor-config/), not in `docs/`
 - Advisor-owned fields live in `advisor.*` / `det.*`. Never invent `gen_ai.*` keys.
 - Methodology docs must label estimators as interventional, observational, or proxy, and must say **simulation ≠ production**.
 - Do not add README links to files that are not in the tree yet.
+- When behaviour changes, update [README.md](README.md) and [docs/usage.md](docs/usage.md) in the same PR.
 
 ## Decisions
 
@@ -36,14 +37,16 @@ Do not silently override an existing ADR. Propose a new one or amend the old one
 
 ## Plans
 
-Non-trivial work uses [nawab-plans](.cursor/skills/nawab-plans/SKILL.md). Do not invent a thinner plan format. Do not start product code without a separate approved project-mode plan.
+Non-trivial work uses [nawab-plans](.cursor/skills/nawab-plans/SKILL.md). Do not invent a thinner plan format.
 
 ## Code
 
 - Core lives in `src/superdeterminism/`. **No LangChain / LangGraph / CrewAI imports in core.**
-- `python -m pytest -q` must pass.
+- Adapters are lazy. Register in `adapters/__init__.py`. Copy [examples/custom_adapter.py](examples/custom_adapter.py) for a house orchestrator.
+- `python -m pytest -q` must pass extras-free (`pip install -e ".[dev]"`).
 - CLI stays non-interactive (JSON in/out) so agents can drive it.
-- Do not auto-apply refactors.
+- Do not auto-apply refactors. Do not emit `create_react_agent`.
+- Do not ship a live L1 network client without an explicit plan. `SUPERDETERMINISM_L1_MODEL` is reserved.
 
 ## License
 

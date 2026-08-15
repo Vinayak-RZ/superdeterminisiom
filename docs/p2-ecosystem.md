@@ -101,22 +101,22 @@ L1 may call the user’s model. That is a paid, mutating, opt-in path. Default r
 
 ```text
 src/superdeterminism/adapters/
-  __init__.py              # Protocol + registry (lands in P2)
+  __init__.py              # Protocol + registry
   langgraph.py             # from P1
   langfuse.py              # Track A
-  mlflow.py                # Track A
-  crewai.py                # Track B (or refuse-with-reason stub)
-  maf.py                   # Track B (or refuse-with-reason stub)
+  crewai.py                # Track B
+  maf.py                   # Track B
 examples/
   custom_adapter.py
 tests/adapters/
   test_langfuse.py
-  test_mlflow.py
   test_crewai.py
   test_maf.py
   test_custom_example.py
   test_batch_dir.py
 ```
+
+MLflow is documented in [ingestion.md](ingestion.md); there is no `mlflow.py`. Omitted ops stay UNKNOWN.
 
 Each adapter file is the only place that may import that framework. Core + `models.py` + `pipeline.py` stay extras-free.
 
@@ -165,7 +165,7 @@ Track A and Track B can proceed in parallel after phase 1. Do not skip phase 1 �
 - MAF extra **or** refuse-with-reason (do not silently remap to LangGraph)
 - `recommend --traces-dir DIR` batch
 - `--opt-in-l1` behind an explicit flag and a warning
-- CI: core tests without extras; adapter tests only when extra installed
+- CI: core tests without extras; adapter tests only when extra installed (`.github/workflows/ci.yml`)
 - Coverage of planted DET-vs-open-ended fixtures
 
 ## Non-goals (P2)
@@ -180,12 +180,14 @@ Track A and Track B can proceed in parallel after phase 1. Do not skip phase 1 �
 
 ## Exit criteria
 
-- [ ] A third-party can add `--adapter custom` with only the contract + example
-- [ ] At least one non-Lang adapter (CrewAI or MAF or the custom example) has fixtures
-- [ ] Langfuse **or** MLflow ingest documented and tested
-- [ ] Batch directory → one JSON report
-- [ ] Core extras-free tests still green
-- [ ] Report still leads with simulation ≠ production
+- [x] A third-party can add `--adapter custom` with only the contract + example
+- [x] At least one non-Lang adapter (CrewAI or MAF or the custom example) has fixtures
+- [x] Langfuse **or** MLflow ingest documented and tested
+- [x] Batch directory → one JSON report
+- [x] Core extras-free tests still green
+- [x] Report still leads with simulation ≠ production
+- [x] Canary checklist in the report (text, not a deploy button)
+- [x] CI: extras-free pytest (`.github/workflows/ci.yml`)
 
 ## What “done” looks like for the open-source repo
 

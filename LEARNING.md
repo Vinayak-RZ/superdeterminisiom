@@ -2,6 +2,13 @@
 
 Phase notes per [learn-while-building](.cursor/skills/learn-while-building/SKILL.md). Two to four bullets each.
 
+## Leftover polish + README (2026-08-15)
+
+- A P2 deliverable marked YAGNI (CI, canary text) is still a leftover feature once the repo is meant to be used. Shipping them does not require a new product tier.
+- Trending technical READMEs win on badges + 30-second quickstart + mermaid + comparison table. Engagement bait and fake GIFs would violate extensive-readme’s “do not invent features.”
+- Canary belongs on the report payload, not as a CLI apply command. The moment it becomes a button, ADR 0003 is broken.
+- CONTRIBUTING still said “docs-first, no simulator.” Front-door drift is the same class of bug as linking files that do not exist.
+
 ## P2 — Ecosystem adapters (2026-08-15)
 
 - `resolve()` treated “not in `_EXTRAS`” as “extra missing.” Custom/Langfuse/MAF need the opposite: missing extras entry means no extra required.

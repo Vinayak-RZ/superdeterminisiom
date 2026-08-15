@@ -13,6 +13,7 @@ Index of significant choices. Formal ADRs land in `docs/decisions/` during Phase
 | D6 | Report + optional scaffold; never auto-apply | accepted | [0003-no-auto-apply.md](docs/decisions/0003-no-auto-apply.md) |
 | D7 | Product code requires a later project-mode nawab plan | superseded | P0 started; see D8 |
 | D8 | Agnostic core; LangGraph and other stacks are adapters | accepted | [0004-agnostic-core.md](docs/decisions/0004-agnostic-core.md) |
+| D9 | Leftover P2 items (canary text + extras-free CI) ship as OSS polish | accepted | this file |
 
 ## D0 — Naming
 
@@ -52,6 +53,13 @@ Written as ADRs in `docs/decisions/`. Do not silently override them.
 - **Alternatives:** LangGraph-only package; if-import every framework.
 - **Selected:** P0 core with zero framework deps; P1 LangGraph extra; P2 other stacks.
 - **Rationale:** Adapters translate. Agents and humans call one CLI.
+
+## D9 — Leftover polish, not a new product tier
+
+- **Context:** P2 deferred extras-free GitHub Actions as YAGNI and left the canary checklist as a one-line disclaimer.
+- **Alternatives:** Leave them; invent L1/L2/HTTP to look “complete.”
+- **Selected:** Static canary list on the report; extras-free CI; extensive README that matches the tree.
+- **Rationale:** Both were already promised. Neither changes the recommender. Live L1 / hosted sinks stay non-goals.
 
 ## D7 — No product code in this plan
 
