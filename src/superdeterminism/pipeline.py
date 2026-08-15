@@ -517,8 +517,9 @@ def _orchestrator_to_dict(orch: OrchestratorReport | None) -> dict[str, Any]:
 def recommendations_to_dict(
     recs: Iterable[Recommendation],
     orchestrator: OrchestratorReport | None = None,
+    simulation: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
-    return {
+    payload = {
         "disclaimer": DISCLAIMER,
         "estimator": "observational_l0_proxy",
         "canary": list(CANARY_CHECKLIST),
@@ -547,11 +548,15 @@ def recommendations_to_dict(
             for r in recs
         ],
     }
+    if simulation is not None:
+        payload["simulation"] = simulation
+    return payload
 
 
 def recommendations_to_markdown(
     recs: list[Recommendation],
     orchestrator: OrchestratorReport | None = None,
+    simulation_md: str | None = None,
 ) -> str:
     lines = [
         "# Architecture Advisor report",
@@ -588,6 +593,8 @@ def recommendations_to_markdown(
         for reason in r.reasons:
             lines.append(f"- {reason}")
         lines.append("")
+    if simulation_md:
+        lines.extend(["", simulation_md.rstrip(), ""])
     lines.extend(["## Canary checklist", "", "Text only. Not a deploy button.", ""])
     for item in CANARY_CHECKLIST:
         lines.append(f"- {item}")
