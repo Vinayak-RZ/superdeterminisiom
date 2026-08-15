@@ -9,6 +9,7 @@ import json
 from pathlib import Path
 from typing import Any
 
+from superdeterminism.adapters import AdapterError
 from superdeterminism.models import Span, Trace
 from superdeterminism.pipeline import load_traces, load_traces_path
 
@@ -18,7 +19,20 @@ _MODEL_NODES = frozenset({"model", "llm_call"})
 
 def load(path_or_bytes: Path | str | bytes) -> list[Trace]:
     traces = _ingest(path_or_bytes)
+    if any(_is_maf(span) for trace in traces for span in trace.spans):
+        raise AdapterError(
+            "MAF traces are not LangGraph; use --adapter maf"
+        )
     return [Trace(spans=_map_spans(t.spans)) for t in traces]
+
+
+def _is_maf(span: Span) -> bool:
+    attrs = span.attributes
+    framework = str(attrs.get("advisor.framework") or "").lower()
+    if framework in {"maf", "microsoft-agent-framework", "agent_framework"}:
+        return True
+    system = str(attrs.get("gen_ai.system") or "").lower()
+    return "agent_framework" in system or system == "azure.ai.agents"
 
 
 def _ingest(path_or_bytes: Path | str | bytes) -> list[Trace]:

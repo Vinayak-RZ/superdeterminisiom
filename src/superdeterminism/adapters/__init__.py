@@ -16,6 +16,7 @@ _MODULES = {
     "langgraph": "superdeterminism.adapters.langgraph",
     "custom": "examples.custom_adapter",
     "langfuse": "superdeterminism.adapters.langfuse",
+    "maf": "superdeterminism.adapters.maf",
 }
 _EXTRAS = {
     "langgraph": ("langgraph", "langchain"),
