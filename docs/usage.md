@@ -57,6 +57,10 @@ Either OTLP JSON (`resourceSpans`) or:
 {
   "disclaimer": "simulation != production; canary is confirmatory",
   "estimator": "observational_l0_proxy",
+  "canary": [
+    "Keep the node name; change only the callable.",
+    "Do not auto-apply a scaffold or rewrite graph.py in place."
+  ],
   "recommendations": [
     {
       "node_id": "classify",

@@ -24,6 +24,16 @@ HARD_OVERRIDE = re.compile(
     re.I,
 )
 DISCLAIMER = "simulation != production; canary is confirmatory"
+# ponytail: text only; not a deploy button; confirmatory after a human apply
+CANARY_CHECKLIST = (
+    "Keep the node name; change only the callable.",
+    "Do not auto-apply a scaffold or rewrite graph.py in place.",
+    "Re-record traces after apply — old tapes are not comparable.",
+    "Compare the same outcome vector (schema, failure rate, task success) on a held-out slice.",
+    "ABSTAIN if the canary interval includes zero or n is below n_min.",
+    "Sensitive nodes (refund/commit/payment/auth/PII) stay deterministic gates.",
+    "simulation != production; this list is confirmatory, not an A/B platform.",
+)
 
 _OP_TO_KIND = {
     "chat": NodeKind.LLM_REASONER,
@@ -325,6 +335,7 @@ def recommendations_to_dict(recs: Iterable[Recommendation]) -> dict[str, Any]:
     return {
         "disclaimer": DISCLAIMER,
         "estimator": "observational_l0_proxy",
+        "canary": list(CANARY_CHECKLIST),
         "recommendations": [
             {
                 "node_id": r.node_id,
@@ -366,4 +377,8 @@ def recommendations_to_markdown(recs: list[Recommendation]) -> str:
         for reason in r.reasons:
             lines.append(f"- {reason}")
         lines.append("")
+    lines.extend(["## Canary checklist", "", "Text only. Not a deploy button.", ""])
+    for item in CANARY_CHECKLIST:
+        lines.append(f"- {item}")
+    lines.append("")
     return "\n".join(lines)

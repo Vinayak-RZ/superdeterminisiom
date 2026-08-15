@@ -34,7 +34,9 @@ def test_scaffold_writes_out_only_and_keeps_node_name(tmp_path: Path) -> None:
     out = tmp_path / "scaffold" / "RUN"
     assert main(["scaffold", str(report_path), "--out", str(out)]) == 0
     assert graph.read_text(encoding="utf-8") == original
-    assert (out / "REPORT.md").is_file()
+    report_md = (out / "REPORT.md").read_text(encoding="utf-8")
+    assert "## Canary checklist" in report_md
+    assert "Not a deploy button" in report_md
     assert (out / "WIRING.md").is_file()
     diff = (out / "patches" / "classify.diff").read_text(encoding="utf-8")
     assert 'add_node("classify"' in diff

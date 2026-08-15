@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any
 
 from superdeterminism.models import Action
+from superdeterminism.pipeline import CANARY_CHECKLIST
 
 _REFUSE = ("send", "command", "interrupt", "checkpointer")
 _DISCLAIMER = (
@@ -57,6 +58,11 @@ def _report_md(report: dict[str, Any], recs: list[dict[str, Any]]) -> str:
         for reason in rec.get("reasons") or []:
             lines.append(f"- {reason}")
         lines.append("")
+    canary = report.get("canary") or list(CANARY_CHECKLIST)
+    lines.extend(["## Canary checklist", "", "Text only. Not a deploy button.", ""])
+    for item in canary:
+        lines.append(f"- {item}")
+    lines.append("")
     return "\n".join(lines)
 
 
