@@ -20,11 +20,11 @@ Differentiation (do not weaken this):
 Read before any product work:
 
 1. [PROJECT_OVERVIEW.md](PROJECT_OVERVIEW.md)
-2. [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md)
-3. [DECISIONS.md](DECISIONS.md)
-4. Claim hygiene in this file
-
-Research docs (`docs/overview.md`, `docs/landscape.md`, `docs/methodology.md`, ADRs) are Phase A. Read them only after those files exist.
+2. [docs/overview.md](docs/overview.md)
+3. [docs/landscape.md](docs/landscape.md) — claim hygiene
+4. [docs/methodology.md](docs/methodology.md)
+5. [docs/decisions/](docs/decisions/)
+6. [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md)
 
 ## Claim hygiene
 

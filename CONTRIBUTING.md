@@ -11,13 +11,13 @@ Vendor guides live in [docs/cursor-config/](docs/cursor-config/), not in `docs/`
 ## Before you write
 
 1. Read [PROJECT_OVERVIEW.md](PROJECT_OVERVIEW.md), [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md), and [AGENTS.md](AGENTS.md).
-2. After Phase A lands, also read `docs/overview.md` and `docs/landscape.md`. Until those files exist, use the claim-hygiene list in AGENTS.md.
+2. Read [docs/overview.md](docs/overview.md) and [docs/landscape.md](docs/landscape.md).
 3. Do not claim whitespace that landscape (or AGENTS.md) marks as **unsafe**.
 4. Differentiation must stay: counterfactual *re-typing* of nodes on ingested production graphs — not “score the path you already ran,” and not “search a new workflow from scratch.”
 
 ## Docs
 
-- Keep each research doc under ~400 lines. Put citations in `docs/references.md` once it exists.
+- Keep each research doc under ~400 lines. Put citations in [docs/references.md](docs/references.md).
 - Date any landscape or spec claim. OpenTelemetry GenAI conventions are **Development**; pin a commit, not a tag.
 - Advisor-owned fields live in `advisor.*` / `det.*`. Never invent `gen_ai.*` keys.
 - Methodology docs must label estimators as interventional, observational, or proxy, and must say **simulation ≠ production**.
@@ -25,7 +25,7 @@ Vendor guides live in [docs/cursor-config/](docs/cursor-config/), not in `docs/`
 
 ## Decisions
 
-Record significant choices in [DECISIONS.md](DECISIONS.md). Formal ADRs go in `docs/decisions/` once that directory exists:
+Record significant choices in [DECISIONS.md](DECISIONS.md). Formal ADRs go in [docs/decisions/](docs/decisions/):
 
 - Context
 - Decision

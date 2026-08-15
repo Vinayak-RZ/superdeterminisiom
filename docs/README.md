@@ -8,31 +8,40 @@ Positioning sentence:
 
 > Counterfactual *re-typing* of nodes between deterministic tools and stochastic LLM/subagents, on ingested production graphs.
 
-## Exists now
+Read in this order if you are new:
+
+1. [overview.md](overview.md) — what the product is and is not
+2. [landscape.md](landscape.md) — adjacent tools and claim hygiene
+3. [ingestion.md](ingestion.md) — how traces enter
+4. [architecture.md](architecture.md) — the domain graph
+5. [methodology.md](methodology.md) — how a flip is estimated
+6. [adapters.md](adapters.md) and [refactor.md](refactor.md) — LangGraph v0 surface
+7. [roadmap.md](roadmap.md) — what ships when
+8. [references.md](references.md) — sources (dated 2026-08-15)
+
+## Research docs
 
 | Doc | What it covers |
 |---|---|
-| [PROJECT_OVERVIEW.md](../PROJECT_OVERVIEW.md) | Purpose, architecture, constraints |
-| [IMPLEMENTATION_PLAN.md](../IMPLEMENTATION_PLAN.md) | Nawab execution contract |
-| [PROGRESS.md](../PROGRESS.md) | Phase status |
-| [DECISIONS.md](../DECISIONS.md) | Decision index |
-| [LEARNING.md](../LEARNING.md) | Phase learnings |
-| [AGENTS.md](../AGENTS.md) | Agent workflow + claim hygiene |
+| [overview.md](overview.md) | Problem, loop, audience, why now |
+| [landscape.md](landscape.md) | Adjacent tools; safe vs unsafe claims |
+| [ingestion.md](ingestion.md) | OTel GenAI substrate |
+| [architecture.md](architecture.md) | `node_kind`, `det.class` |
+| [methodology.md](methodology.md) | How a flip is estimated |
+| [adapters.md](adapters.md) | LangGraph v0 |
+| [refactor.md](refactor.md) | Report + scaffold; no auto-apply |
+| [roadmap.md](roadmap.md) | v0 scope |
+| [references.md](references.md) | Bibliography |
 
-## Research docs (Phase A — not written yet)
+## Architecture decisions
 
-These names are the contract. Files will appear in Phase A. Do not link them from README until they exist.
+| ADR | Decision |
+|---|---|
+| [0001-otel-ingest.md](decisions/0001-otel-ingest.md) | Ingest OTLP; keep Advisor fields out of `gen_ai.*` |
+| [0002-v0-offline-first.md](decisions/0002-v0-offline-first.md) | Offline L0 / historical estimators before live L2 replay |
+| [0003-no-auto-apply.md](decisions/0003-no-auto-apply.md) | Report + optional scaffold; never auto-apply |
 
-- `overview.md` — problem, loop, audience, why now
-- `landscape.md` — adjacent tools; safe vs unsafe claims
-- `ingestion.md` — OTel GenAI substrate
-- `architecture.md` — `node_kind`, `det.class`
-- `methodology.md` — how a flip is estimated
-- `adapters.md` — LangGraph v0
-- `refactor.md` — report + scaffold; no auto-apply
-- `roadmap.md` — v0 scope
-- `references.md` — bibliography
-- `decisions/0001-otel-ingest.md`, `0002-v0-offline-first.md`, `0003-no-auto-apply.md`
+Index: [DECISIONS.md](../DECISIONS.md).
 
 ## Cursor coding-config guides
 
