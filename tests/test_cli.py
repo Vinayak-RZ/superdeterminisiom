@@ -35,6 +35,8 @@ def test_cli_json_stdout(tmp_path: Path, capsys) -> None:
     assert payload["recommendations"][0]["node_id"] == "classify"
     assert "from_kind" in payload["recommendations"][0]
     assert "to_kind" in payload["recommendations"][0]
+    assert payload["simulation"]["level"] == "l0_tape_splice"
+    assert payload["simulation"]["census"]["n_traces"] == 1
 
 
 def test_cli_markdown_includes_canary(tmp_path: Path, capsys) -> None:
@@ -60,6 +62,7 @@ def test_cli_markdown_includes_canary(tmp_path: Path, capsys) -> None:
     out = capsys.readouterr().out
     assert "## Canary checklist" in out
     assert "Not a deploy button" in out
+    assert "Path census" in out
 
 
 def test_cli_bad_input(tmp_path: Path) -> None:
