@@ -35,7 +35,7 @@ Either OTLP JSON (`resourceSpans`) or:
 }
 ```
 
-`langgraph_node` is read as a generic attribute in P0. P1 will add a real LangGraph adapter.
+`langgraph_node` is read as a generic attribute in P0. P1 adds a real LangGraph adapter (`--adapter langgraph` + `scaffold`). Spec: [p1-langgraph.md](p1-langgraph.md).
 
 ## Output actions
 
@@ -45,4 +45,5 @@ Default `--n-min 30`. A single-trace file will **ABSTAIN** (Wilson lower bound w
 
 Every report includes `simulation != production; canary is confirmatory`.
 
-P1/P2: [roadmap.md](roadmap.md).
+P1 (not built): [p1-langgraph.md](p1-langgraph.md) — `--adapter langgraph` + scaffold.  
+P2 (not built): [p2-ecosystem.md](p2-ecosystem.md) — Lang sinks + CrewAI/MAF/custom.

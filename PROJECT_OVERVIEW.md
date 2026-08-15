@@ -8,7 +8,7 @@ The GitHub repository name remains `superdeterminisiom`.
 
 ## System overview
 
-P0 ships an **agnostic Python core** (`src/superdeterminism/`) with a CLI. It does not import LangChain. LangGraph is P1; other stacks and the rest of the Lang ecosystem are P2.
+P0 ships an **agnostic Python core** (`src/superdeterminism/`) with a CLI. It does not import LangChain. LangGraph is P1 ([docs/p1-langgraph.md](docs/p1-langgraph.md)); other stacks and the rest of the Lang ecosystem are P2 ([docs/p2-ecosystem.md](docs/p2-ecosystem.md)).
 
 The intended product loop:
 
@@ -29,11 +29,12 @@ Differentiation: counterfactual *re-typing* of nodes on ingested production grap
 
 ## Constraints
 
-- Docs-first until a separate project-mode plan is approved for product code.
 - Do not claim “nobody does counterfactual agent simulation.”
 - OpenTelemetry GenAI conventions are **Development**; pin a commit, not a tag.
 - Advisor fields: `advisor.*` / `det.*`. Never invent `gen_ai.*`.
 - Temperature 0 is not a seed. Simulation ≠ production.
 - Commit / spend / PII / auth nodes stay deterministic gates regardless of accuracy.
-- v0 adapter: LangGraph/LangChain 1.x `create_agent` only.
-- License: Apache-2.0.
+- Core never imports LangChain / LangGraph / CrewAI / MAF. Adapters only translate.
+- P1 adapter: LangGraph/LangChain 1.x `create_agent` (not `create_react_agent`) + custom `StateGraph`. Specified, not built.
+- P2: Lang sinks + CrewAI / MAF / custom via one adapter contract. Specified, not built.
+- No auto-apply. License: Apache-2.0.

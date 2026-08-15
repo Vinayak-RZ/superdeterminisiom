@@ -12,7 +12,8 @@ The GitHub repository is still named `superdeterminisiom`. The project name is *
 
 - Problem: teams guess whether a step should be a typed tool or an LLM/subagent.
 - Eval tools score the path you already ran. Architecture-search papers invent new graphs offline. Neither flips *determinism class* on an ingested production graph.
-- v0 (not built): ingest OTLP → map the graph → offline counterfactual → recommend or abstain → optional LangGraph scaffold. No auto-apply.
+- P0 (built): ingest OTLP → map the graph → offline L0 counterfactual → recommend or abstain. No auto-apply.
+- P1/P2 (specified, not built): LangGraph adapter + scaffold; then Lang sinks and other stacks.
 - **P0 core is agnostic** (no LangChain import). P1 is LangGraph. P2 is the rest of the Lang ecosystem and other agent stacks.
 - Cursor rules/skills are vendored from [cursor-config-coding](https://github.com/Vinayak-RZ/cursor-config-coding).
 
@@ -52,7 +53,7 @@ A later agent can implement v0 without inventing whitespace claims, ingest mappi
 
 ## 2. Architecture
 
-Documented target, not implemented. Detail: [docs/architecture.md](docs/architecture.md).
+P0 implements the ingest → map → L0 recommend loop. P1/P2 adapters are specified, not built. Detail: [docs/architecture.md](docs/architecture.md).
 
 ```text
 OTLP traces → normalize spans → architecture graph (node_kind, det.class)
@@ -89,7 +90,7 @@ tests/                    Fixtures + pytest
 .cursor/                  Vendored coding config (rules, skills, MCP)
 docs/                     Research contract + ADRs
 docs/cursor-config/       Vendored cursor-config-coding guides
-docs/decisions/           ADRs 0001–0003
+docs/decisions/           ADRs 0001–0004
 scripts/                  Vendor PowerShell helpers
 ```
 
@@ -105,10 +106,12 @@ scripts/                  Vendor PowerShell helpers
 | [docs/methodology.md](docs/methodology.md) | How a flip is estimated |
 | [docs/adapters.md](docs/adapters.md) | LangGraph v0 |
 | [docs/refactor.md](docs/refactor.md) | Report + scaffold; no auto-apply |
-| [docs/roadmap.md](docs/roadmap.md) | P0 / P1 / P2 |
-| [docs/usage.md](docs/usage.md) | CLI for agents and humans |
+| [docs/roadmap.md](docs/roadmap.md) | P0 / P1 / P2 index |
+| [docs/p1-langgraph.md](docs/p1-langgraph.md) | P1 LangGraph adapter (spec) |
+| [docs/p2-ecosystem.md](docs/p2-ecosystem.md) | P2 ecosystem + other stacks (spec) |
+| [docs/usage.md](docs/usage.md) | P0 CLI for agents and humans |
 | [docs/references.md](docs/references.md) | Bibliography (dated 2026-08-15) |
-| [docs/decisions/](docs/decisions/) | ADRs 0001–0003 |
+| [docs/decisions/](docs/decisions/) | ADRs 0001–0004 |
 | [PROJECT_OVERVIEW.md](PROJECT_OVERVIEW.md) | Purpose, constraints |
 | [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md) | Nawab plan |
 | [DECISIONS.md](DECISIONS.md) | Decision index |
@@ -120,7 +123,7 @@ Vendored from [cursor-config-coding](https://github.com/Vinayak-RZ/cursor-config
 
 ## 7. Roadmap
 
-See [docs/roadmap.md](docs/roadmap.md). Product code needs a separate approved project-mode plan.
+See [docs/roadmap.md](docs/roadmap.md). P0 is implemented. P1 and P2 are specified in [docs/p1-langgraph.md](docs/p1-langgraph.md) and [docs/p2-ecosystem.md](docs/p2-ecosystem.md); implementation follows those specs.
 
 ## 8. Glossary
 

@@ -1,8 +1,18 @@
 # Superdeterminism research contract (nawab v2)
 
-Approved execution contract. **Mode:** feature. Product simulator is out of scope.
+Approved execution contract for the **docs-only** research phase (complete). Product tiers after that:
 
-This document is the nawab 18-section plan. Skills: [nawab-plans](.cursor/skills/nawab-plans/SKILL.md), [planning.mdc](.cursor/rules/planning.mdc), [documentation.mdc](.cursor/rules/documentation.mdc), [extensive-readme](.cursor/skills/extensive-readme/SKILL.md), [learn-while-building](.cursor/skills/learn-while-building/SKILL.md), [agentic-system-design](.cursor/skills/agentic-system-design/SKILL.md).
+| Tier | Status | Spec |
+|------|--------|------|
+| P0 agnostic core | implemented | `src/superdeterminism/` |
+| P1 LangGraph adapter | specified, not built | [docs/p1-langgraph.md](docs/p1-langgraph.md) |
+| P2 ecosystem + other stacks | specified, not built | [docs/p2-ecosystem.md](docs/p2-ecosystem.md) |
+
+Index: [docs/roadmap.md](docs/roadmap.md). The sections below are the historical nawab v2 research plan; do not treat them as the P1 implementation contract.
+
+---
+
+Historical nawab 18-section plan (docs-only research; complete). Skills: [nawab-plans](.cursor/skills/nawab-plans/SKILL.md), [planning.mdc](.cursor/rules/planning.mdc), [documentation.mdc](.cursor/rules/documentation.mdc), [extensive-readme](.cursor/skills/extensive-readme/SKILL.md), [learn-while-building](.cursor/skills/learn-while-building/SKILL.md), [agentic-system-design](.cursor/skills/agentic-system-design/SKILL.md).
 
 ---
 

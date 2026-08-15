@@ -24,5 +24,6 @@ One ingest/map/recommend loop. Adapters only translate. Agents and humans call t
 
 ## Consequences
 
-- P0 cannot use `langgraph_node` until P1 (generic ops only).
+- P0 may *read* `langgraph_node` as a generic attribute. P1 owns Lang quirks (checkpoint ns, triggers, retriever→embeddings) and the scaffold. See [p1-langgraph.md](../p1-langgraph.md).
+- P2 owns the `Protocol` + registry once a second adapter exists. See [p2-ecosystem.md](../p2-ecosystem.md).
 - Optional extras must not leak into core tests.
