@@ -38,9 +38,12 @@ Do not silently override an existing ADR. Propose a new one or amend the old one
 
 Non-trivial work uses [nawab-plans](.cursor/skills/nawab-plans/SKILL.md). Do not invent a thinner plan format. Do not start product code without a separate approved project-mode plan.
 
-## Code (later)
+## Code
 
-Code conventions, test requirements, and adapter pins will land with the first implementation PR. Until then, do not add a package skeleton “for later” unless an ADR asks for it.
+- Core lives in `src/superdeterminism/`. **No LangChain / LangGraph / CrewAI imports in core.**
+- `python -m pytest -q` must pass.
+- CLI stays non-interactive (JSON in/out) so agents can drive it.
+- Do not auto-apply refactors.
 
 ## License
 

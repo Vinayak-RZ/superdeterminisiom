@@ -11,7 +11,8 @@ Index of significant choices. Formal ADRs land in `docs/decisions/` during Phase
 | D4 | Ingest OTLP; Advisor fields in `advisor.*` / `det.*` | accepted | [0001-otel-ingest.md](docs/decisions/0001-otel-ingest.md) |
 | D5 | v0 simulation is offline L0; no production-LLM re-run by default | accepted | [0002-v0-offline-first.md](docs/decisions/0002-v0-offline-first.md) |
 | D6 | Report + optional scaffold; never auto-apply | accepted | [0003-no-auto-apply.md](docs/decisions/0003-no-auto-apply.md) |
-| D7 | Product code requires a later project-mode nawab plan | accepted | [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md) |
+| D7 | Product code requires a later project-mode nawab plan | superseded | P0 started; see D8 |
+| D8 | Agnostic core; LangGraph and other stacks are adapters | accepted | [0004-agnostic-core.md](docs/decisions/0004-agnostic-core.md) |
 
 ## D0 — Naming
 
@@ -44,6 +45,13 @@ Index of significant choices. Formal ADRs land in `docs/decisions/` during Phase
 ## D4–D6
 
 Written as ADRs in `docs/decisions/`. Do not silently override them.
+
+## D8 — Agnostic core
+
+- **Context:** Need LangGraph *and* other agent stacks without locking the core.
+- **Alternatives:** LangGraph-only package; if-import every framework.
+- **Selected:** P0 core with zero framework deps; P1 LangGraph extra; P2 other stacks.
+- **Rationale:** Adapters translate. Agents and humans call one CLI.
 
 ## D7 — No product code in this plan
 

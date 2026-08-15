@@ -16,8 +16,11 @@ Read in this order if you are new:
 4. [architecture.md](architecture.md) — the domain graph
 5. [methodology.md](methodology.md) — how a flip is estimated
 6. [adapters.md](adapters.md) and [refactor.md](refactor.md) — LangGraph v0 surface
-7. [roadmap.md](roadmap.md) — what ships when
-8. [references.md](references.md) — sources (dated 2026-08-15)
+7. [roadmap.md](roadmap.md) — P0 / P1 / P2 index
+8. [p1-langgraph.md](p1-langgraph.md) — P1 spec (not built)
+9. [p2-ecosystem.md](p2-ecosystem.md) — P2 spec (not built)
+10. [usage.md](usage.md) — P0 CLI
+11. [references.md](references.md) — sources (dated 2026-08-15)
 
 ## Research docs
 
@@ -30,7 +33,10 @@ Read in this order if you are new:
 | [methodology.md](methodology.md) | How a flip is estimated |
 | [adapters.md](adapters.md) | LangGraph v0 |
 | [refactor.md](refactor.md) | Report + scaffold; no auto-apply |
-| [roadmap.md](roadmap.md) | v0 scope |
+| [roadmap.md](roadmap.md) | P0 / P1 / P2 index |
+| [p1-langgraph.md](p1-langgraph.md) | LangGraph adapter spec |
+| [p2-ecosystem.md](p2-ecosystem.md) | Lang ecosystem + other stacks spec |
+| [usage.md](usage.md) | P0 CLI for agents and humans |
 | [references.md](references.md) | Bibliography |
 
 ## Architecture decisions
@@ -40,6 +46,7 @@ Read in this order if you are new:
 | [0001-otel-ingest.md](decisions/0001-otel-ingest.md) | Ingest OTLP; keep Advisor fields out of `gen_ai.*` |
 | [0002-v0-offline-first.md](decisions/0002-v0-offline-first.md) | Offline L0 / historical estimators before live L2 replay |
 | [0003-no-auto-apply.md](decisions/0003-no-auto-apply.md) | Report + optional scaffold; never auto-apply |
+| [0004-agnostic-core.md](decisions/0004-agnostic-core.md) | Core has zero framework deps; adapters later |
 
 Index: [DECISIONS.md](../DECISIONS.md).
 

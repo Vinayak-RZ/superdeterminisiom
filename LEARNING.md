@@ -16,6 +16,18 @@ Phase notes per [learn-while-building](.cursor/skills/learn-while-building/SKILL
 - L0 is honest only if ABSTAIN is first-class. A report that always recommends a flip would be a judge in disguise.
 - LangGraph v0 is `create_agent` + `langgraph_node`, not the word “agent” and not deprecated `create_react_agent`.
 
+## P0 — Agnostic core (2026-08-15)
+
+- Splitting “LangGraph first” vs “agnostic core first” is the load-bearing product decision. Core with zero framework deps is the only way P2 (CrewAI / MAF / raw agents) stays honest.
+- Agents need JSON stdout and exit-2-on-bad-input more than they need a pretty TUI.
+- `n_min=30` plus Wilson lower-bound stops a 30-identical-JSON fixture from looking more confident than it is when n is small; tests pass `--n-min` explicitly.
+
+## P1 / P2 specs (2026-08-15)
+
+- Specifying adapters *before* code is what keeps the core honest: P1 is allowed one LangGraph file; P2 is when a `Protocol` is justified (second adapter).
+- P1 must not fork the recommender. If the mapper cannot produce P0 `Trace`s, the adapter is wrong — not the decision rules.
+- P2 “done” is pluggability (custom example + at least one non-Lang path), not “we ingested one more Lang sink.”
+
 ## Phase N — Validate (2026-08-15)
 
 - S2 found zero FIX-class claim-hygiene hits and no broken relative links. The “do not say” sentences are easy to grep as false positives; keep them in dedicated sections.

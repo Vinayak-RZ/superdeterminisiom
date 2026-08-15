@@ -1,37 +1,59 @@
-# Roadmap
+# Roadmap — P0 / P1 / P2
 
-## v0 (this research contract, then a later product plan)
+This repo is an open-source advisor that **agents** (and humans) run against existing agent traces to decide where determinism belongs, then improve the architecture. It is not a LangChain plugin that only works inside one framework.
 
-- LangGraph / LangChain 1.x adapter only
-- Read-only OTLP ingest
-- Architecture map (`node_kind`, `det.class`)
-- Offline L0 recommendations as a report
-- Optional scaffold (not auto-apply)
+```text
+P2  Lang ecosystem + other stacks     →  docs/p2-ecosystem.md   (specified)
+P1  LangGraph / LangChain adapter     →  docs/p1-langgraph.md   (specified)
+P0  Agnostic core                     →  src/superdeterminism/  (implemented)
+```
 
-## Explicit non-goals (v0)
+The **core never imports LangChain**. Adapters only translate traces (and later scaffolds) into the core model.
 
-- Live agent control
-- Production-LLM re-runs by default (L2)
-- CrewAI / MAF adapters
-- Auto-merge PRs
-- Wrapping CAR / Tracefork / counterfact as hard dependencies (needs its own ADR)
-- Renaming the GitHub repository
+## P0 — Agnostic core (implemented)
 
-## Open risks
+Package any agent or human can run on exported traces.
 
-- GenAI semantic conventions are **Development**. Schema must track commits, not assume stability.
-- L0 estimates can look more confident than they are. ABSTAIN is first-class.
-- Distribution shift after refactor is the large validity threat. Canary is confirmatory.
-- Adjacent tools will keep shipping. Re-date [landscape.md](landscape.md) before claiming whitespace.
-- Validating that recommendations improve real systems needs pilot users in staging.
+- Ingest OTLP JSON **or** a flat advisor trace list
+- Map spans → `node_kind` + `det.class`
+- L0 recommend: Wilson intervals, FlipToDet / FlipToNondet / STRENGTHEN_SDB / ABSTAIN
+- Hard override for commit / spend / PII / auth names
+- CLI JSON (agents) + Markdown (humans)
+- Stdlib only. No live LLM. No auto-apply
 
-## After v0 (not scheduled)
+```bash
+python -m superdeterminism recommend traces.json --stdout json
+```
 
-- L1 hybrid fork for high-EV candidates
-- CrewAI adapter
-- MAF ingest (only with a dedicated mapper)
-- Planted-truth CI gate as a product feature
-- Spec Kit `.specify/` for the simulator
-- CI + Cloud Agent environment build
+Usage: [usage.md](usage.md).
 
-Product code does **not** start from this document. It needs a separate approved project-mode nawab plan.
+## P1 — LangGraph / LangChain adapter (specified)
+
+Easy drop-in for LangGraph / LangChain 1.x. **Not implemented yet.**
+
+Full spec: **[p1-langgraph.md](p1-langgraph.md)**
+
+- Optional extra `[langgraph]`
+- `--adapter langgraph` maps `create_agent` and custom `StateGraph`
+- Scaffold (keep node name). Never auto-apply
+- No LangChain types in `superdeterminism.models`
+
+## P2 — Lang ecosystem + other agent systems (specified)
+
+When the repo is actually pluggable. **Not implemented yet.**
+
+Full spec: **[p2-ecosystem.md](p2-ecosystem.md)**
+
+- Track A: LangSmith / Langfuse / MLflow + batch + more of LangChain than graphs
+- Track B: CrewAI, MAF, raw/custom via one adapter contract
+- Opt-in L1 only; L0 remains default
+- A third party can add `--adapter custom` from the contract + example
+
+## Shared rules (all tiers)
+
+- Simulation ≠ production
+- Never invent `gen_ai.*` keys
+- No auto-apply / no in-place `graph.py` rewrite
+- ABSTAIN is first-class
+- Agents drive the CLI (JSON in/out, no prompts); humans can too
+- One recommender. Many adapters.

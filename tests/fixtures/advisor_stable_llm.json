@@ -1,0 +1,21 @@
+{
+  "traces": [
+    {
+      "spans": [
+        {
+          "name": "chat gpt-4.1-mini",
+          "attributes": {
+            "gen_ai.operation.name": "chat",
+            "gen_ai.request.model": "gpt-4.1-mini",
+            "langgraph_node": "classify"
+          },
+          "input": {"text": "order status"},
+          "output": {"intent": "status"},
+          "tokens": 80,
+          "latency_ms": 200,
+          "error": false
+        }
+      ]
+    }
+  ]
+}
