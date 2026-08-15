@@ -149,7 +149,16 @@ def test_dominant_path_insight_and_ranked_workflow() -> None:
                 _chat("reply", f"r-{i}"),
             ]
         )
-        for i in range(30)
+        for i in range(27)
+    ] + [
+        Trace(
+            spans=[
+                _chat("triage", f"z-{i}"),
+                _tool("other_lookup"),
+                _chat("reply", f"z-{i}"),
+            ]
+        )
+        for i in range(3)
     ]
     sim = simulate_traces(traces)
     assert any(i.kind == "dominant_path" for i in sim.insights)
@@ -159,8 +168,9 @@ def test_dominant_path_insight_and_ranked_workflow() -> None:
 
 
 def test_cassette_miss_marks_router_splice_invalid() -> None:
+    # Mode path length stays 2 so FlipToWorkflow does not outrank FlipToRouter.
     traces = [
-        Trace(spans=[_tool("start"), _chat("route", f"i-{i}"), _tool("billing")])
+        Trace(spans=[_chat("route", f"i-{i}"), _tool("billing")])
         for i in range(27)
     ] + [
         Trace(spans=[_tool("alt"), _chat("route", f"j-{i}"), _tool("other")])

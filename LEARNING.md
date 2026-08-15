@@ -8,6 +8,7 @@ Phase notes per [learn-while-building](.cursor/skills/learn-while-building/SKILL
 - Wilson on next-hop is stricter than a point estimate: 25/30 billing is not enough to FlipToRouter. Splice tests must clear the CI or they test a no-op.
 - Decision points + ranked valid splices are how the census feeds architecture advice. Insights must not become a second recommender.
 - A router splice that invents `prefix + modal_suffix` is a cassette miss. Collapsing to the modal path is valid *and* still needs a canary.
+- Deduping orchestrator CFs by `node_id` alone drops Bound/Collapse when the hub also got a leaf FlipToDet. Key on `(action, node_id)`.
 
 ## P3 — Role lattice + orchestrator (2026-08-15)
 

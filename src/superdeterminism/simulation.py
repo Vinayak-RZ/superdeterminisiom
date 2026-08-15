@@ -557,8 +557,8 @@ def counterfactuals_for(
         if cf is not None:
             out.append(cf)
     if orch is not None and orch.action is not Action.ABSTAIN and orch.node_id:
-        already = {c.node_id for c in out}
-        if orch.node_id not in already:
+        already = {(c.action, c.node_id) for c in out}
+        if (orch.action.value, orch.node_id) not in already:
             cf = _splice_action(seqs, orch.action, orch.node_id, orch)
             if cf is not None:
                 out.append(cf)
