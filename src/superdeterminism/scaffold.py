@@ -53,6 +53,21 @@ def _report_md(report: dict[str, Any], recs: list[dict[str, Any]]) -> str:
         f"estimator: {report.get('estimator', 'observational_l0_proxy')}",
         "",
     ]
+    orch = report.get("orchestrator")
+    if isinstance(orch, dict):
+        lines.extend(
+            [
+                "## Orchestrator",
+                "",
+                f"- id: `{orch.get('node_id')}`",
+                f"- kind: {orch.get('kind')}",
+                f"- action: **{orch.get('action')}**",
+                "",
+            ]
+        )
+        for reason in orch.get("reasons") or []:
+            lines.append(f"- {reason}")
+        lines.append("")
     for rec in recs:
         lines.append(f"## {rec.get('node_id')} — {rec.get('action')}")
         for reason in rec.get("reasons") or []:
@@ -96,6 +111,31 @@ def _diff_for(rec: dict[str, Any]) -> str:
             f"- builder.add_node(\"{node}\", ToolNode([{node}_regex]))\n"
             f"+ builder.add_node(\"{node}\", {node})  # create_agent subgraph "
             f"(proposer/verifier/commit/reject)\n"
+        )
+    if action == Action.FLIP_TO_WORKFLOW.value:
+        return (
+            f"- builder.add_node(\"{node}\", llm_{node})  # open ReAct hop\n"
+            f"+ builder.add_node(\"{node}\", {node}_step)  # predefined workflow step\n"
+        )
+    if action == Action.FLIP_TO_SUBAGENT.value:
+        return (
+            f"- builder.add_node(\"{node}\", llm_{node})\n"
+            f"+ builder.add_node(\"{node}\", {node}_sub)  # isolated subagent; structured return\n"
+        )
+    if action == Action.FLIP_TO_ROUTER.value:
+        return (
+            f"- builder.add_node(\"{node}\", llm_{node})\n"
+            f"+ builder.add_node(\"{node}\", {node}_route)  # code / classifier edge\n"
+        )
+    if action in {
+        Action.BOUND_ORCHESTRATOR.value,
+        Action.STRENGTHEN_ORCHESTRATOR.value,
+        Action.FLIP_ORCHESTRATOR_TO_CODE.value,
+        Action.COLLAPSE_ORCHESTRATOR.value,
+    }:
+        return (
+            f"  # orchestrator {node}: {action}\n"
+            f"+ MAX_STEPS = 8  # hard cap in code; HITL before sensitive tools\n"
         )
     # STRENGTHEN_SDB
     return (

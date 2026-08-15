@@ -1,8 +1,9 @@
-# Roadmap — P0 / P1 / P2
+# Roadmap — P0 / P1 / P2 / P3
 
-This repo is an open-source advisor that **agents** (and humans) run against existing agent traces to decide where determinism belongs, then improve the architecture. It is not a LangChain plugin that only works inside one framework.
+This repo is an open-source advisor that **agents** (and humans) run against existing agent traces to decide where roles and control flow belong, then improve the architecture. It is not a LangChain plugin that only works inside one framework.
 
 ```text
+P3  Role lattice + orchestrator       →  src/superdeterminism/pipeline.py + orchestrator.py  (implemented)
 P2  Lang ecosystem + other stacks     →  src/superdeterminism/adapters/  (implemented)
 P1  LangGraph / LangChain adapter     →  src/superdeterminism/adapters/langgraph.py  (implemented)
 P0  Agnostic core                     →  src/superdeterminism/  (implemented)
@@ -60,6 +61,15 @@ Full spec: **[p2-ecosystem.md](p2-ecosystem.md)**. Usage: [usage.md](usage.md).
 - Track B: custom example, CrewAI kickoff→workflow, MAF dedicated mapper
 - `--adapter langgraph` refuses MAF-shaped traces
 - Opt-in L1 is a gate, not a live runner; L0 remains default
+
+## P3 — Role lattice + orchestrator (implemented)
+
+Widen the recommender. Same ingest. Same no-auto-apply.
+
+- Path-shape (`p_path`) and next-hop (`p_next`) join output `p_mode`
+- Node actions: FlipToWorkflow / FlipToSubagent / FlipToRouter (FlipToDet kept)
+- Report-level `orchestrator` block: Bound / Strengthen / FlipToCode / Collapse
+- Doctrine: [agent-architectures.md](agent-architectures.md), [type-lattice.md](type-lattice.md), [orchestrator.md](orchestrator.md)
 
 ## Shared rules (all tiers)
 

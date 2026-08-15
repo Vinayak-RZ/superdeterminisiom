@@ -6,25 +6,31 @@ This document exists so we do not claim false whitespace.
 
 ## The claim we make
 
-No shipping product takes production traces, reconstructs the agent graph, and recommends *determinism-class* refactors (tool ↔ LLM ↔ subagent) backed by counterfactual evidence.
+No shipping product takes production traces, reconstructs the agent graph (including the control-flow owner), and recommends *architectural-role* refactors (workflow ↔ subagent ↔ tool ↔ router ↔ LLM, plus orchestrator bound/collapse/code-route) backed by counterfactual evidence.
 
 Differentiation:
 
-> Counterfactual *re-typing* of nodes between deterministic tools and stochastic LLM/subagents, on ingested production graphs — not “score the path you already ran,” and not “search a new workflow from scratch.”
+> Counterfactual *re-typing* of nodes — and of the orchestrator that owns control flow — on ingested production graphs — not “score the path you already ran,” and not “search a new workflow from scratch.”
+
+Determinism-class (tool ↔ LLM) is a *subset* of that lattice.
 
 ## Claims we will not make
 
 Do **not** say “nobody does counterfactual agent simulation.” CAR, CausalFlow, Tracefork, AgentReplay, and counterfact already intervene on traces.
 
-Do **not** say “nobody does agent architecture search.” MaAS, AFlow, ScoreFlow, ADAS, EvoAgentX exist. They search operator graphs offline; they do not ingest a production graph and flip tool vs LLM.
+Do **not** say “nobody does agent architecture search.” MaAS, AFlow, ScoreFlow, ADAS, EvoAgentX exist. They search operator graphs offline; they do not ingest a production graph and re-type roles.
 
 Do **not** say “nobody lints agent architecture.” AgentLint, isolint, ArchRails, and arch-advisor lint harness files or interview the user. They do not simulate flips on traces.
 
 Do **not** say “nobody advises tool vs LLM.” WHEN2TOOL, MeCo, and “To Call or Not to Call” decide *at generation time* whether to emit a tool call. Galileo Tool Selection Quality scores a turn. None output “refactor node X from `invoke_agent` to `execute_tool`.”
 
+Do **not** say “nobody advises workflow vs agent.” Anthropic’s [Building effective agents](https://www.anthropic.com/engineering/building-effective-agents) *is* that doctrine.
+
+Do **not** say “nobody does multi-agent orchestration.” LangGraph supervisor, CrewAI, MAF, and the OpenAI Agents SDK already do.
+
 ## Closeness matrix
 
-| System | Ingest traces | Map architecture | Simulate counterfactuals | Recommend refactor | Flip **determinism class** |
+| System | Ingest traces | Map architecture | Simulate counterfactuals | Recommend refactor | Flip **role** (incl. hub) |
 |---|---|---|---|---|---|
 | LangSmith + LangGraph time-travel | Yes | Partial | Manual fork | No | No |
 | AgentEvals / OpenEvals | Via LangSmith | No | No | No | No |
@@ -62,8 +68,8 @@ Nothing has Yes in the last column **and** ingest-traces **and** recommend-refac
 
 ## How to talk about this
 
-Safe: “No product flips determinism class on an ingested production graph and recommends a refactor.”
+Safe: “No product re-types architectural roles (including the orchestrator) on an ingested production graph and recommends a refactor.”
 
-Unsafe: “Nobody does counterfactual traces / architecture search / tool-correctness / when-to-use-an-agent advising / agent simulation.” Those phrases already belong to other products (and “simulation” often means *user* simulation).
+Unsafe: “Nobody does counterfactual traces / architecture search / tool-correctness / when-to-use-an-agent advising / agent simulation / orchestration / workflow-vs-agent advising.” Those phrases already belong to other products (and “simulation” often means *user* simulation).
 
 Full bibliography: [references.md](references.md).

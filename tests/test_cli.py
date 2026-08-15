@@ -30,7 +30,11 @@ def test_cli_json_stdout(tmp_path: Path, capsys) -> None:
     assert payload["disclaimer"].startswith("simulation")
     assert payload["canary"]
     assert all(isinstance(item, str) and item for item in payload["canary"])
+    assert "orchestrator" in payload
+    assert payload["orchestrator"]["action"]
     assert payload["recommendations"][0]["node_id"] == "classify"
+    assert "from_kind" in payload["recommendations"][0]
+    assert "to_kind" in payload["recommendations"][0]
 
 
 def test_cli_markdown_includes_canary(tmp_path: Path, capsys) -> None:

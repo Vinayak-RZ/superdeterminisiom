@@ -1,13 +1,13 @@
 # Superdeterminism
 
-**Determinism Advisor** — counterfactual re-typing of agent graph nodes (tool ↔ LLM) from production traces.
+**Architecture Advisor** — counterfactual re-typing of agent graph roles (workflow ↔ subagent ↔ tool ↔ router ↔ LLM, plus the orchestrator) from production traces.
 
 [![CI](https://github.com/Vinayak-RZ/superdeterminisiom/actions/workflows/ci.yml/badge.svg)](https://github.com/Vinayak-RZ/superdeterminisiom/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.10%2B-blue.svg)](pyproject.toml)
 [![Core](https://img.shields.io/badge/core-stdlib%20only-brightgreen.svg)](#2-architecture)
 
-> **What it is:** An open-source design-time advisor that ingests production agent traces, reconstructs the architecture graph, and estimates which nodes should be deterministic tools versus stochastic LLM/subagents.  
+> **What it is:** An open-source design-time advisor that ingests production agent traces, reconstructs the architecture graph (including who owns control flow), and estimates which roles nodes — and the orchestrator — should have.  
 > **What it is not:** A runtime eval platform, a workflow searcher, or a LangChain-only plugin.  
 > **Primary interface:** CLI — `python -m superdeterminism recommend` (JSON in/out). Agents drive it; humans can too.
 
@@ -20,11 +20,11 @@ The GitHub repository is still named `superdeterminisiom`. The project name is *
 
 **TL;DR**
 
-- Teams guess whether a step should be a typed tool or an LLM/subagent. That guess is expensive in regulated and cost-sensitive systems.
-- Eval tools score the path you already ran. Architecture-search papers invent new graphs offline. Neither flips *determinism class* on an ingested production graph.
-- Adjacent counterfactual simulators (CAR, CausalFlow, Tracefork, AgentReplay, counterfact) exist. The unclaimed layer is the **determinism-class flip + refactor recommendation**.
+- Teams guess workflow vs subagent vs tool vs router vs open LLM — and whether the orchestrator should exist at all. That guess is expensive in regulated and cost-sensitive systems.
+- Eval tools score the path you already ran. Architecture-search papers invent new graphs offline. Neither re-types *roles* on an ingested production graph.
+- Adjacent counterfactual simulators (CAR, CausalFlow, Tracefork, AgentReplay, counterfact) exist. The unclaimed layer is the **role flip + orchestrator recommendation**.
 - P0 core is **stdlib-only**. No LangChain import. Adapters translate traces into the same recommender.
-- Decision rules: FlipToDet, FlipToNondet, STRENGTHEN_SDB, or **ABSTAIN**. ABSTAIN is first-class.
+- Node actions: FlipToDet, FlipToWorkflow, FlipToSubagent, FlipToRouter, FlipToNondet, STRENGTHEN_SDB, or **ABSTAIN**. Hub actions: Bound / Strengthen / FlipToCode / Collapse orchestrator.
 - Hard override: refund / commit / payment / auth / PII names stay deterministic gates.
 - CLI is non-interactive. Exit `0` on a report (including all-ABSTAIN). Exit `2` on bad input.
 - Scaffold writes under `--out` only. It never edits `graph.py`.
@@ -56,7 +56,7 @@ Omitted until they exist: HTTP API, Docker, deployment, PyPI publish.
 
 ### 1.1 What it is
 
-An advisor that takes production agent traces, reconstructs the architecture, and estimates counterfactual **re-typing** of nodes between deterministic tools and stochastic LLM/subagents — with evidence, not gut feel.
+An advisor that takes production agent traces, reconstructs the architecture (including the control-flow owner), and estimates counterfactual **re-typing** of roles — workflow vs subagent vs tool vs router vs LLM, plus orchestrator bound/collapse/code-route — with evidence, not gut feel.
 
 ### 1.2 What it is not
 
@@ -169,9 +169,11 @@ Writes `REPORT.md`, `WIRING.md`, and `patches/*.diff` under `--out`. Never touch
 
 ### 4.3 Report shape
 
-JSON includes `disclaimer`, `estimator`, `canary` (confirmatory checklist, not a deploy button), and `recommendations[]`.
+JSON includes `disclaimer`, `estimator`, `canary`, `orchestrator` (hub metrics + action), and `recommendations[]` (each row has `from_kind` / `to_kind`).
 
-Actions: `FlipToDet` | `FlipToNondet` | `STRENGTHEN_SDB` | `ABSTAIN`
+Node actions: `FlipToDet` | `FlipToWorkflow` | `FlipToSubagent` | `FlipToRouter` | `FlipToNondet` | `STRENGTHEN_SDB` | `ABSTAIN`
+
+Hub actions: `BoundOrchestrator` | `StrengthenOrchestrator` | `FlipOrchestratorToCode` | `CollapseOrchestrator` | `ABSTAIN`
 
 Full examples: [docs/usage.md](docs/usage.md).
 
@@ -189,7 +191,7 @@ Thresholds live in [`src/superdeterminism/pipeline.py`](src/superdeterminism/pip
 
 ## 6. Decision rules
 
-Implemented in `_decide()` — observational L0 proxy, not L2 `do_policy`.
+Implemented in `_decide()` and `_decide_orchestrator()` — observational L0 proxy, not L2 `do_policy`. Prefer the lowest Anthropic rung the tape supports. Full table: [docs/type-lattice.md](docs/type-lattice.md), [docs/orchestrator.md](docs/orchestrator.md).
 
 | Condition | Action |
 |---|---|
@@ -197,7 +199,14 @@ Implemented in `_decide()` — observational L0 proxy, not L2 `do_policy`.
 | Sensitive DET node has failures | `STRENGTHEN_SDB` |
 | `n < n_min` | `ABSTAIN` |
 | LLM + `schema_ok ≥ 0.80` + `p_mode` and Wilson lower ≥ `0.70` | `FlipToDet` |
+| Path length ≥ 3, `p_path` + Wilson ≥ `0.70`, output not mode-stable | `FlipToWorkflow` |
+| Nested checkpoint ns, structured return, output not mode-stable | `FlipToSubagent` |
+| Next-hop `p_next` + Wilson ≥ `0.70` | `FlipToRouter` |
 | DET `failure_rate ≥ 0.30` and not sensitive | `FlipToNondet` |
+| Hub reaches sensitive tool with no DET gate | `StrengthenOrchestrator` |
+| Hub hops high or `revisit_rate ≥ 0.30` | `BoundOrchestrator` |
+| LLM supervisor next-hop stable | `FlipOrchestratorToCode` |
+| Supervisor + workers, path stable, no isolation win | `CollapseOrchestrator` |
 | Point estimate meets threshold but Wilson lower does not | `ABSTAIN` |
 | Nothing else fires | `ABSTAIN` |
 
@@ -207,9 +216,13 @@ flowchart TD
   Sens -->|LLM or failing DET| SDB[STRENGTHEN_SDB]
   Sens -->|no| N{n >= n_min?}
   N -->|no| Abs[ABSTAIN]
-  N -->|yes| LLM{stable LLM?}
-  LLM -->|yes| Flip[FlipToDet]
-  LLM -->|no| Det{DET fail >= 0.30?}
+  N -->|yes| Tool{stable output?}
+  Tool -->|yes| Flip[FlipToDet]
+  Tool -->|no| Path{stable path?}
+  Path -->|yes| Wf[FlipToWorkflow]
+  Path -->|no| Next{stable next?}
+  Next -->|yes| Rt[FlipToRouter]
+  Next -->|no| Det{DET fail >= 0.30?}
   Det -->|yes| Non[FlipToNondet]
   Det -->|no| Abs
 ```
@@ -244,7 +257,7 @@ pip install -e ".[dev,crewai]"
 
 | | Superdeterminism | LangSmith / Langfuse / MLflow | MaAS / AFlow | CAR / Tracefork / counterfact |
 |---|---|---|---|---|
-| Job | Re-type nodes on an ingested graph | Score the path you already ran | Search a new workflow | Counterfactual replay of the **same** types |
+| Job | Re-type roles + orchestrator on an ingested graph | Score the path you already ran | Search a new workflow | Counterfactual replay of the **same** types |
 | Input | Exported OTLP / advisor JSON | Live traces | Spec / search space | Recorded trajectory / tape |
 | Output | Flip / strengthen / ABSTAIN + canary text | Scores, spans, evals | A new graph | What-if on the existing policy |
 | Apply | Human copies scaffold | n/a | Search output | Replay / diagnose |
@@ -299,6 +312,9 @@ Import hygiene: no `langchain` / `langgraph` import outside `adapters/langgraph.
 | [docs/ingestion.md](docs/ingestion.md) | OTel GenAI substrate + MLflow gaps |
 | [docs/architecture.md](docs/architecture.md) | `node_kind`, `det.class` |
 | [docs/methodology.md](docs/methodology.md) | How a flip is estimated |
+| [docs/agent-architectures.md](docs/agent-architectures.md) | Workflow vs agent doctrine |
+| [docs/type-lattice.md](docs/type-lattice.md) | Role actions |
+| [docs/orchestrator.md](docs/orchestrator.md) | Control-flow owner |
 | [docs/adapters.md](docs/adapters.md) | LangGraph + other stacks |
 | [docs/refactor.md](docs/refactor.md) | Report + scaffold; no auto-apply |
 | [docs/roadmap.md](docs/roadmap.md) | P0 / P1 / P2 index |
@@ -324,7 +340,8 @@ Cursor rules/skills are vendored from [cursor-config-coding](https://github.com/
 | P0 | Agnostic L0 core + CLI | ✅ |
 | P1 | LangGraph adapter + write-only scaffold | ✅ |
 | P2 | Adapter Protocol, Langfuse, MAF, CrewAI, batch, L1 gate | ✅ |
-| Polish | Canary checklist, extras-free CI, extensive README | ✅ this PR |
+| Polish | Canary checklist, extras-free CI, extensive README | ✅ |
+| P3 | Role lattice + first-class orchestrator | ✅ this PR |
 
 ### 12.2 Possible future directions
 
@@ -363,7 +380,8 @@ Historical. Project name is Superdeterminism. Repo URL stays `superdeterminisiom
 | Term | Meaning |
 |---|---|
 | Determinism class / `det.class` | Whether a node is a function, an LLM, a composite, etc. Advisor-owned. |
-| Flip | Counterfactual re-typing of a node (FlipToDet / FlipToNondet). |
+| Flip | Counterfactual re-typing of a node role (FlipToDet / FlipToWorkflow / FlipToSubagent / FlipToRouter / FlipToNondet). |
+| Orchestrator | Graph-level control-flow owner (supervisor / kickoff / root workflow). |
 | L0 / L1 / L2 | Tape splice / hybrid fork / live policy swap. v0 default is L0. |
 | ABSTAIN | First-class recommendation: evidence too weak. |
 | STRENGTHEN_SDB | Keep the proposer; harden the deterministic gate. |

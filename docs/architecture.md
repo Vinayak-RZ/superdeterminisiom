@@ -1,6 +1,6 @@
 # Architecture
 
-Domain model for Superdeterminism. OTel is the interchange ([ingestion.md](ingestion.md)); this file is the contract we persist.
+Domain model for Superdeterminism. OTel is the interchange ([ingestion.md](ingestion.md)); this file is the contract we persist. Role flips: [type-lattice.md](type-lattice.md). Hub: [orchestrator.md](orchestrator.md).
 
 ## Graph
 
@@ -56,7 +56,9 @@ node_kind ∈ {
 | `router` | `deterministic` if code-edge; `llm` if the model chose the next node |
 | `workflow` | `composite` |
 
-A **determinism flip** changes `det.class` (and usually `node_kind`) at a *decision* node, not at the side-effecting descendant. CAR’s point-of-commitment rule: flip the latest step whose interval still excludes zero, not the tool that executed the harm.
+A **role flip** changes `node_kind` and usually `det.class` at a *decision* node, not at the side-effecting descendant. A **determinism flip** is the subset that only changes `det.class` (tool ↔ LLM). CAR’s point-of-commitment rule: flip the latest step whose interval still excludes zero, not the tool that executed the harm.
+
+The **orchestrator** is not a seventh `node_kind`. It is a graph-level envelope identified from root `invoke_workflow` / parent `invoke_agent` / kickoff. Advisor labels: `advisor.orchestrator.id`, `advisor.orchestrator.kind`. Never invent `gen_ai.orchestrator.*`.
 
 ## Example — LangGraph ReAct + subgraph
 
@@ -81,5 +83,5 @@ Missing on the wire and inferred: `det.class`, handoff, conditional edges, “ch
 
 - Send / map-reduce fan-out
 - Command-returning tools as first-class control
-- Microsoft Agent Framework traces (refuse; do not pretend they are LangGraph)
-- Invented `gen_ai.agent.handoff.*` until the spec ships
+- Microsoft Agent Framework traces as LangGraph (dedicated `--adapter maf` or refuse)
+- Invented `gen_ai.agent.handoff.*` or `gen_ai.orchestrator.*`

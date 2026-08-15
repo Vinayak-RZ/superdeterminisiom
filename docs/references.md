@@ -19,6 +19,11 @@ Bibliography for Superdeterminism research. **Dated 2026-08-15.** All URLs below
 
 - *Multi-agent Architecture Search via Agentic Supernet* (MaAS). arXiv:2502.04180. https://arxiv.org/abs/2502.04180
 
+## Agent architecture doctrine (not our whitespace)
+
+- Anthropic. *Building effective agents.* 19 Dec 2024. https://www.anthropic.com/engineering/building-effective-agents — workflows vs agents; prompt chaining, routing, parallelization, orchestrator–workers, evaluator–optimizer.
+- Repo skill: [agentic-system-design](../.cursor/skills/agentic-system-design/SKILL.md) — orchestrator owns step budget, branching, HITL.
+
 ## Observability and eval
 
 - LangSmith + OpenTelemetry. https://docs.langchain.com/langsmith/trace-with-opentelemetry
