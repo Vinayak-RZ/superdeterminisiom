@@ -6,6 +6,7 @@ Agents and humans use the same CLI. No prompts. No auto-apply. Core has **no** L
 pip install -e ".[dev]"
 python -m superdeterminism recommend traces.json --stdout json
 python -m superdeterminism recommend traces.json --json out.json --md out.md --n-min 30
+python -m superdeterminism simulate traces.json --stdout json
 ```
 
 Exit `0` if a report was produced (including all-ABSTAIN). Exit `2` on bad input, unknown adapter, or missing extra.
@@ -92,7 +93,7 @@ Node actions: `FlipToDet` | `FlipToWorkflow` | `FlipToSubagent` | `FlipToRouter`
 
 Hub actions: `BoundOrchestrator` | `StrengthenOrchestrator` | `FlipOrchestratorToCode` | `CollapseOrchestrator` | `ABSTAIN`
 
-Doctrine: [type-lattice.md](type-lattice.md), [orchestrator.md](orchestrator.md).
+Doctrine: [type-lattice.md](type-lattice.md), [orchestrator.md](orchestrator.md). Path census + decision points + L0 splices: [simulation.md](simulation.md). `recommend` includes a `simulation` block (`census`, `insights`, `ranked`, `counterfactuals`); `simulate` emits only that block.
 
 Default `--n-min 30`. A single-trace file will **ABSTAIN**. That is correct.
 

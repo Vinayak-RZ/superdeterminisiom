@@ -3,6 +3,7 @@
 This repo is an open-source advisor that **agents** (and humans) run against existing agent traces to decide where roles and control flow belong, then improve the architecture. It is not a LangChain plugin that only works inside one framework.
 
 ```text
+P4  L0 path simulation                →  src/superdeterminism/simulation.py  (implemented)
 P3  Role lattice + orchestrator       →  src/superdeterminism/pipeline.py + orchestrator.py  (implemented)
 P2  Lang ecosystem + other stacks     →  src/superdeterminism/adapters/  (implemented)
 P1  LangGraph / LangChain adapter     →  src/superdeterminism/adapters/langgraph.py  (implemented)
@@ -70,6 +71,21 @@ Widen the recommender. Same ingest. Same no-auto-apply.
 - Node actions: FlipToWorkflow / FlipToSubagent / FlipToRouter (FlipToDet kept)
 - Report-level `orchestrator` block: Bound / Strengthen / FlipToCode / Collapse
 - Doctrine: [agent-architectures.md](agent-architectures.md), [type-lattice.md](type-lattice.md), [orchestrator.md](orchestrator.md)
+
+## P4 — L0 path simulation (implemented)
+
+Enumerate every observed path. Rank common vs rare. Splice recommended flips on the tape.
+
+```bash
+python -m superdeterminism simulate traces.json --stdout json
+```
+
+- Path census: unique paths, entropy, modal path, transitions, cycles
+- Decision points + common prefixes (where the graph actually splits)
+- Observational notes + ranked valid splices (entropy drop, then mode-mass gain)
+- Counterfactuals: modal-suffix / modal-path / bound / collapse / gate
+- Cassette miss → splice `valid=false` (excluded from `ranked`)
+- Not L1. Not L2. Spec: [simulation.md](simulation.md)
 
 ## Shared rules (all tiers)
 

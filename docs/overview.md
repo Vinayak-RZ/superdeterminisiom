@@ -52,4 +52,4 @@ Developers and coding agents past prototype who need evidence for where control 
 
 ## Status
 
-P0–P2 are implemented (core, LangGraph adapter, ecosystem). P3 expands the recommender from tool-vs-LLM to the role lattice and a first-class orchestrator block. CLI: [usage.md](usage.md).
+P0–P4 are implemented (core, LangGraph adapter, ecosystem, role lattice, L0 path simulation). P3 expands the recommender from tool-vs-LLM to the role lattice and a first-class orchestrator block. P4 enumerates observed paths and splices recommended flips. CLI: [usage.md](usage.md).

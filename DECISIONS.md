@@ -15,6 +15,7 @@ Index of significant choices. Formal ADRs land in `docs/decisions/` during Phase
 | D8 | Agnostic core; LangGraph and other stacks are adapters | accepted | [0004-agnostic-core.md](docs/decisions/0004-agnostic-core.md) |
 | D9 | Leftover P2 items (canary text + extras-free CI) ship as OSS polish | accepted | this file |
 | D10 | Widen re-typing to roles + first-class orchestrator | accepted | [0005-architecture-role-lattice.md](docs/decisions/0005-architecture-role-lattice.md) |
+| D11 | Extensive simulation is L0 path census + tape splice | accepted | [0006-l0-path-simulation.md](docs/decisions/0006-l0-path-simulation.md) |
 
 ## D0 — Naming
 
@@ -61,6 +62,13 @@ Written as ADRs in `docs/decisions/`. Do not silently override them.
 - **Alternatives:** Stay narrow; become a linter/searcher; widen re-typing on traces.
 - **Selected:** Role lattice + graph-level orchestrator. ADR 0005.
 - **Rationale:** Keeps the differentiator. Matches workflow vs subagent vs tool plus “improve the orchestrator.”
+
+## D11 — L0 is the extensive-simulation contract
+
+- **Context:** “Simulate the architecture” can be read as live replay or invented tails.
+- **Alternatives:** Default L1/L2; invent unobserved paths; census-only.
+- **Selected:** Observed-path census + tape-splice CFs + ranked valid splices. ADR 0006.
+- **Rationale:** Honest L0. Same differentiator (re-type on ingested graphs). No model call.
 
 ## D9 — Leftover polish, not a new product tier
 

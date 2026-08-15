@@ -141,7 +141,8 @@ Two commands. No prompts. No auto-apply.
 
 | Command | What it does |
 |---|---|
-| `recommend` | Ingest traces → L0 report on stdout |
+| `recommend` | Ingest traces → L0 report on stdout (includes path simulation) |
+| `simulate` | Path census + tape-splice counterfactuals only |
 | `scaffold` | Write illustrative files under `--out` only |
 
 ### 4.1 `recommend`
@@ -159,7 +160,15 @@ Two commands. No prompts. No auto-apply.
 
 Exit `0` if a report was produced (including all-ABSTAIN). Exit `2` on bad input, unknown adapter, or missing extra.
 
-### 4.2 `scaffold`
+### 4.2 `simulate`
+
+```bash
+python -m superdeterminism simulate traces.json --stdout json
+```
+
+Same flags as `recommend` for input (`traces`, `--traces-dir`, `--adapter`, `--n-min`) and output (`--stdout`, `--json`, `--md`). Emits only the simulation block: path census, decision points, observational notes, tape-splice counterfactuals, and ranked valid splices. No live model.
+
+### 4.3 `scaffold`
 
 ```bash
 python -m superdeterminism scaffold report.json --out scaffold/RUN
@@ -167,9 +176,9 @@ python -m superdeterminism scaffold report.json --out scaffold/RUN
 
 Writes `REPORT.md`, `WIRING.md`, and `patches/*.diff` under `--out`. Never touches user `graph.py`. All-ABSTAIN reports get reasons only (no patches). Do not apply a patch unless a human asked.
 
-### 4.3 Report shape
+### 4.4 Report shape
 
-JSON includes `disclaimer`, `estimator`, `canary`, `orchestrator` (hub metrics + action), and `recommendations[]` (each row has `from_kind` / `to_kind`).
+JSON includes `disclaimer`, `estimator`, `canary`, `orchestrator`, `simulation` (path census, decision points, L0 splices, ranked improvements), and `recommendations[]` (each row has `from_kind` / `to_kind`).
 
 Node actions: `FlipToDet` | `FlipToWorkflow` | `FlipToSubagent` | `FlipToRouter` | `FlipToNondet` | `STRENGTHEN_SDB` | `ABSTAIN`
 
@@ -315,6 +324,7 @@ Import hygiene: no `langchain` / `langgraph` import outside `adapters/langgraph.
 | [docs/agent-architectures.md](docs/agent-architectures.md) | Workflow vs agent doctrine |
 | [docs/type-lattice.md](docs/type-lattice.md) | Role actions |
 | [docs/orchestrator.md](docs/orchestrator.md) | Control-flow owner |
+| [docs/simulation.md](docs/simulation.md) | L0 path census + tape-splice CFs |
 | [docs/adapters.md](docs/adapters.md) | LangGraph + other stacks |
 | [docs/refactor.md](docs/refactor.md) | Report + scaffold; no auto-apply |
 | [docs/roadmap.md](docs/roadmap.md) | P0 / P1 / P2 index |
@@ -341,7 +351,8 @@ Cursor rules/skills are vendored from [cursor-config-coding](https://github.com/
 | P1 | LangGraph adapter + write-only scaffold | ✅ |
 | P2 | Adapter Protocol, Langfuse, MAF, CrewAI, batch, L1 gate | ✅ |
 | Polish | Canary checklist, extras-free CI, extensive README | ✅ |
-| P3 | Role lattice + first-class orchestrator | ✅ this PR |
+| P3 | Role lattice + first-class orchestrator | ✅ |
+| P4 | L0 path census + tape-splice counterfactuals | ✅ this PR |
 
 ### 12.2 Possible future directions
 

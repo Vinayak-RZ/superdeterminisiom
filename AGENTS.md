@@ -15,7 +15,7 @@ Differentiation (do not weaken this):
 
 ## Current status
 
-**P0, P1, P2, and P3 (role lattice + orchestrator) are implemented.** Core has no LangChain import. Adapters live under `src/superdeterminism/adapters/`.
+**P0–P4 are implemented** (P4 = L0 path census + tape-splice counterfactuals). Core has no LangChain import. Adapters live under `src/superdeterminism/adapters/`.
 
 ```bash
 python -m superdeterminism recommend traces.json --stdout json
@@ -23,6 +23,7 @@ python -m superdeterminism recommend traces.json --adapter langgraph --stdout js
 python -m superdeterminism recommend traces.json --adapter custom --stdout json
 python -m superdeterminism recommend --traces-dir DIR --stdout json
 python -m superdeterminism scaffold report.json --out scaffold/RUN
+python -m superdeterminism simulate traces.json --stdout json
 ```
 
 Specs: [docs/p1-langgraph.md](docs/p1-langgraph.md), [docs/p2-ecosystem.md](docs/p2-ecosystem.md). Usage: [docs/usage.md](docs/usage.md). Do not add framework extras to core. Do not auto-apply refactors. Do not call a model without `--opt-in-l1`.
@@ -53,6 +54,7 @@ Read before any product work:
 - **P1 (now):** LangGraph / LangChain adapter — [docs/p1-langgraph.md](docs/p1-langgraph.md)
 - **P2 (now):** Langfuse / custom / CrewAI / MAF + batch + L1 gate — [docs/p2-ecosystem.md](docs/p2-ecosystem.md)
 - **P3 (now):** role lattice + first-class orchestrator — [docs/type-lattice.md](docs/type-lattice.md), [docs/orchestrator.md](docs/orchestrator.md)
+- **P4 (now):** L0 path census + tape-splice counterfactuals — [docs/simulation.md](docs/simulation.md)
 - No auto-apply, no in-place `graph.py` rewrite, no live production-LLM re-runs by default
 
 ---
