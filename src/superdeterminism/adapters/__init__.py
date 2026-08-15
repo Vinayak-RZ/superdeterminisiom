@@ -15,6 +15,7 @@ from superdeterminism.models import Trace
 _MODULES = {
     "langgraph": "superdeterminism.adapters.langgraph",
     "custom": "examples.custom_adapter",
+    "langfuse": "superdeterminism.adapters.langfuse",
 }
 _EXTRAS = {
     "langgraph": ("langgraph", "langchain"),
