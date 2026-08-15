@@ -4,7 +4,7 @@ MCP connects Cursor's agent to **live external tools**. This coding config ships
 
 ## Default configuration
 
-File: [`.cursor/mcp.json`](../.cursor/mcp.json)
+File: [`.cursor/mcp.json`](../../.cursor/mcp.json)
 
 ```json
 {
@@ -40,7 +40,7 @@ Troubleshooting: **Output panel → MCP Logs** for connection errors.
 | Team vocabulary / ADRs | Cite stable **catalog pattern ids** |
 | Learn agentic design | `glossary_term`, walk recipes from a seed pattern |
 
-Rule: [`.cursor/rules/mcp-architecture.mdc`](../.cursor/rules/mcp-architecture.mdc)  
+Rule: [`.cursor/rules/mcp-architecture.mdc`](../../.cursor/rules/mcp-architecture.mdc)  
 Skill: `agentic-system-design` (MCP section)
 
 **Prefer MCP catalog data over guessing** when designing or reviewing agentic systems.
@@ -70,7 +70,7 @@ and give concrete fixes.
 
 ## Optional MCP servers
 
-See [mcp-catalog.json](./mcp-catalog.json) and [`.cursor/mcp.json.example`](../.cursor/mcp.json.example).
+See [mcp-catalog.json](./mcp-catalog.json) and [`.cursor/mcp.json.example`](../../.cursor/mcp.json.example).
 
 | Server | Purpose | Auth |
 |--------|---------|------|

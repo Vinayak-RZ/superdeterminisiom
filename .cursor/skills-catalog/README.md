@@ -2,7 +2,7 @@
 
 This folder documents **optional** skills for specific tech stacks. Nothing here is loaded by Cursor automatically.
 
-- **Full reference:** [docs/TECH_STACK_SKILLS.md](../../docs/TECH_STACK_SKILLS.md)
+- **Full reference:** [docs/cursor-config/TECH_STACK_SKILLS.md](../../docs/cursor-config/TECH_STACK_SKILLS.md)
 - **Machine-readable index:** [stacks.json](./stacks.json)
 - **Install script:** [scripts/install-catalog-skill.ps1](../../scripts/install-catalog-skill.ps1)
 

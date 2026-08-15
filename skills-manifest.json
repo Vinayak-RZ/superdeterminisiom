@@ -4,14 +4,14 @@
   "mcp": {
     "default_server": "agent-patterns",
     "url": "https://mcp.agentpatternscatalog.org/mcp",
-    "docs": "docs/MCP_SETUP.md",
-    "catalog": "docs/mcp-catalog.json"
+    "docs": "docs/cursor-config/MCP_SETUP.md",
+    "catalog": "docs/cursor-config/mcp-catalog.json"
   },
   "spec_kit": {
     "source": "https://github.com/github/spec-kit",
     "pinned_version": "v0.12.11",
     "install_script": "scripts/install-spec-kit.ps1",
-    "docs": "docs/SPEC_KIT.md",
+    "docs": "docs/cursor-config/SPEC_KIT.md",
     "rule": "speckit"
   },
   "preinstalled": {
@@ -93,7 +93,7 @@
   "workflows": {
     "implementation": "nawab-plans → approve → phase → validate → commit",
     "spec_driven": "constitution → specify → plan → tasks → implement (ponytail on code)",
-    "learning": "docs/LEARNING_AND_RESEARCH.md",
+    "learning": "docs/cursor-config/LEARNING_AND_RESEARCH.md",
     "commits": "conventional commits after milestones; auto-push at 10 unpushed or when user asks"
   },
   "optional_catalog": [

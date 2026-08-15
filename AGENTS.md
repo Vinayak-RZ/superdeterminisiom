@@ -19,10 +19,12 @@ Differentiation (do not weaken this):
 
 Read before any product work:
 
-1. [docs/overview.md](docs/overview.md)
-2. [docs/landscape.md](docs/landscape.md) — claim hygiene
-3. [docs/methodology.md](docs/methodology.md)
-4. [docs/decisions/](docs/decisions/)
+1. [PROJECT_OVERVIEW.md](PROJECT_OVERVIEW.md)
+2. [docs/overview.md](docs/overview.md)
+3. [docs/landscape.md](docs/landscape.md) — claim hygiene
+4. [docs/methodology.md](docs/methodology.md)
+5. [docs/decisions/](docs/decisions/)
+6. [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md)
 
 ## Claim hygiene
 
@@ -76,7 +78,7 @@ Do not invent a thinner plan format. Collapse unused sections as `N/A` — do no
 
 ## Spec Kit — Spec-Driven Development (features / greenfield)
 
-From [github/spec-kit](https://github.com/github/spec-kit). Pre-installed skills: `speckit-*`. Rule: `speckit.mdc`. Guide: [docs/SPEC_KIT.md](docs/SPEC_KIT.md).
+From [github/spec-kit](https://github.com/github/spec-kit). Pre-installed skills: `speckit-*`. Rule: `speckit.mdc`. Guide: [docs/cursor-config/SPEC_KIT.md](docs/cursor-config/SPEC_KIT.md).
 
 Use for **new features / greenfield**, not one-line fixes. Target repo needs `.specify/`.
 
@@ -111,9 +113,9 @@ Before large refactors, consider `graphify` on the affected directory.
 |------|-------------|
 | Learn while building | `learn-while-building` |
 | Exhaustive README | `extensive-readme` |
-| Workflow guide | [docs/LEARNING_AND_RESEARCH.md](docs/LEARNING_AND_RESEARCH.md) |
+| Workflow guide | [docs/cursor-config/LEARNING_AND_RESEARCH.md](docs/cursor-config/LEARNING_AND_RESEARCH.md) |
 
-End each phase with a short **What you learned** summary. Optional: maintain `LEARNING.md` in the project.
+End each phase with a short **What you learned** summary in [LEARNING.md](LEARNING.md).
 
 ## Git commits and pushes
 
@@ -125,7 +127,7 @@ After each validated phase or meaningful feature:
 ## MCP (live architecture patterns)
 
 Default server: **agent-patterns** → [Agent Patterns Catalog](https://www.agentpatternscatalog.org/)
-Config: `.cursor/mcp.json` | Guide: [docs/MCP_SETUP.md](docs/MCP_SETUP.md)
+Config: `.cursor/mcp.json` | Guide: [docs/cursor-config/MCP_SETUP.md](docs/cursor-config/MCP_SETUP.md)
 
 For agentic design, **query MCP first** (`find_pattern`, `recommend_recipe`, `pattern_for_symptom`) then apply `agentic-system-design` + `system-design-tradeoffs`.
 
@@ -136,7 +138,7 @@ Reload Cursor after changing `mcp.json`.
 ## During implementation
 
 7. Apply `execution.mdc` — phase-based work only; minimal scope; **read `ponytail` skill** on every edit.
-8. Stack-specific optional skills: [docs/TECH_STACK_SKILLS.md](docs/TECH_STACK_SKILLS.md).
+8. Stack-specific optional skills: [docs/cursor-config/TECH_STACK_SKILLS.md](docs/cursor-config/TECH_STACK_SKILLS.md).
 9. UI polish: `impeccable`. Animation: `gsap-*` skills.
 10. Before marking done on non-trivial changes: consider `ponytail-review` on the diff.
 

@@ -14,4 +14,4 @@ When editing UI files:
 4. Animation: prefer `gsap-*` skills for scroll/timelines; see tech catalog for Framer Motion
 5. Every interactive surface needs loading, error, and empty states where applicable
 
-Stack-specific skills: [docs/TECH_STACK_SKILLS.md](../../docs/TECH_STACK_SKILLS.md)
+Stack-specific skills: [docs/cursor-config/TECH_STACK_SKILLS.md](../../docs/cursor-config/TECH_STACK_SKILLS.md)

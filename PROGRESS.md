@@ -4,18 +4,26 @@ Last updated: 2026-08-15
 
 | Phase | Status | Notes |
 |-------|--------|-------|
-| 0 — Cursor config + improved plan | in progress | Config pushed; waiting on plan approval |
-| A — Research docs | blocked | Blocked on approval of `IMPLEMENTATION_PLAN.md` |
+| R — Revise done work | done | `bb0ac00`, `fede695` |
+| A — Research docs | done | commits 3–7 |
+| N — Validate | in progress | S2 clean; this commit |
 | Product v0 | not started | Needs a separate project-mode plan |
 
-## Done
+## Completed
 
-- README, LICENSE (Apache-2.0), CONTRIBUTING
-- Vendored `cursor-config-coding@437a548` into `.cursor/`
-- `AGENTS.md` with Superdeterminism facts + coding workflow
-- `.cursor/environment.json` presence-check install
-- Pushed `cursor/determinism-advisor-docs-329f`
+- Front door no longer lied about missing files; then re-linked once files existed
+- `PROJECT_OVERVIEW.md`, `DECISIONS.md`, `LEARNING.md`
+- Vendor guides under `docs/cursor-config/`
+- Research set: overview, landscape, ingestion, architecture, methodology, adapters, refactor, roadmap, references
+- ADRs 0001–0003
+- S1 citation recheck (all 23 URLs HTTP 200 on 2026-08-15)
+- S2 claim hygiene (no FIX items)
 
-## Next
+## Remaining
 
-Wait for approval of [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md), then Phase A docs only.
+- Update PR #1
+- Product project-mode plan (P1, not this contract)
+
+## Blockers
+
+None.
