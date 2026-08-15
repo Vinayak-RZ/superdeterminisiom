@@ -19,4 +19,4 @@ Last updated: 2026-08-15
 - [x] Orchestrator report block
 - [x] Planted lattice tests
 - [x] extras-free pytest green (45 passed, 2 skipped)
-- [ ] stacked PR open
+- [x] stacked PR open (#7)
