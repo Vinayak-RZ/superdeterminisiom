@@ -218,12 +218,12 @@ N/A — documentation feature.
 - [x] This plan approved before remaining writes
 - [x] PROJECT_OVERVIEW.md, DECISIONS.md, LEARNING.md exist
 - [x] Vendor guides live under docs/cursor-config/
-- [ ] All Phase A research paths exist
-- [x] Front door links only to files that exist (until commit 7 re-links the real set)
-- [ ] Landscape safe vs unsafe claims
-- [ ] Methodology names L0/L1/L2 and ABSTAIN
-- [ ] ADRs 0001–0003 exist
-- [ ] LEARNING.md has Phase R and Phase A notes
+- [x] All Phase A research paths exist
+- [x] Front door links only to files that exist
+- [x] Landscape safe vs unsafe claims
+- [x] Methodology names L0/L1/L2 and ABSTAIN
+- [x] ADRs 0001–0003 exist
+- [x] LEARNING.md has Phase R and Phase A notes
 - [ ] PR #1 updated
 
 P1: product project-mode plan; CI; environment build.

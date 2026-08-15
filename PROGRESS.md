@@ -4,26 +4,26 @@ Last updated: 2026-08-15
 
 | Phase | Status | Notes |
 |-------|--------|-------|
-| R — Revise done work | in progress | Commit 1 done (`bb0ac00`). Commit 2 is this file. |
-| A — Research docs | pending | Starts after Phase R |
-| N — Validate | pending | After Phase A |
+| R — Revise done work | done | `bb0ac00`, `fede695` |
+| A — Research docs | done | commits 3–7 |
+| N — Validate | in progress | S2 clean; this commit |
 | Product v0 | not started | Needs a separate project-mode plan |
 
 ## Completed
 
-- README, LICENSE (Apache-2.0), CONTRIBUTING (later revised)
-- Vendored `cursor-config-coding@437a548`
-- Front door no longer links missing research files
+- Front door no longer lied about missing files; then re-linked once files existed
 - `PROJECT_OVERVIEW.md`, `DECISIONS.md`, `LEARNING.md`
 - Vendor guides under `docs/cursor-config/`
-- This nawab v2 contract
+- Research set: overview, landscape, ingestion, architecture, methodology, adapters, refactor, roadmap, references
+- ADRs 0001–0003
+- S1 citation recheck (all 23 URLs HTTP 200 on 2026-08-15)
+- S2 claim hygiene (no FIX items)
 
 ## Remaining
 
-- Phase A research docs (commits 3–7)
-- Phase N validation (commit 8)
 - Update PR #1
+- Product project-mode plan (P1, not this contract)
 
 ## Blockers
 
-None for Phase A.
+None.
