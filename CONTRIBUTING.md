@@ -2,6 +2,10 @@
 
 This repository is **docs-first**. There is no simulator or adapter code yet. The useful contribution right now is making the research contract sharper: landscape claims, ingest mapping, methodology limitations, and ADRs.
 
+## Cursor config
+
+Rules and skills come from the vendored [cursor-config-coding](https://github.com/Vinayak-RZ/cursor-config-coding) tree under `.cursor/`. Read [AGENTS.md](AGENTS.md) first. Prefer updating the upstream config repo, then re-vendor and bump [`.cursor/VENDOR.md`](.cursor/VENDOR.md), over editing a one-off copy here.
+
 ## Before you write
 
 1. Read [docs/overview.md](docs/overview.md) and [docs/landscape.md](docs/landscape.md).

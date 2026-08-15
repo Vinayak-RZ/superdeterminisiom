@@ -44,6 +44,17 @@ None of them flip *determinism class* on an ingested production graph and recomm
 
 v0 (when implemented) is LangGraph/LangChain only, read-only OTLP ingest, recommendation as a report. See [docs/roadmap.md](docs/roadmap.md).
 
+## Cursor coding config
+
+This repo vendors [cursor-config-coding](https://github.com/Vinayak-RZ/cursor-config-coding) so Cloud Agents and local Cursor load the same rules and skills:
+
+- [AGENTS.md](AGENTS.md) — project facts + engineering workflow
+- [`.cursor/rules/`](.cursor/rules/) — 21 project rules
+- [`.cursor/skills/`](.cursor/skills/) — ponytail, nawab-plans, spec-kit, architecture skills
+- [`.cursor/mcp.json`](.cursor/mcp.json) — Agent Patterns Catalog MCP
+- [`.cursor/environment.json`](.cursor/environment.json) — Cloud Agent bootstrap
+- Pin: [`.cursor/VENDOR.md`](.cursor/VENDOR.md)
+
 ## Documentation
 
 | Doc | What it covers |

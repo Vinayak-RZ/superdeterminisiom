@@ -1,0 +1,4 @@
+{
+  "name": "Superdeterminism",
+  "install": "test -d .cursor/rules && test -d .cursor/skills && test -f AGENTS.md && test -f skills-manifest.json"
+}

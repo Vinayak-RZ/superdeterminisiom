@@ -24,3 +24,13 @@ Architecture decisions:
 Positioning sentence used everywhere:
 
 > Counterfactual *re-typing* of nodes between deterministic tools and stochastic LLM/subagents, on ingested production graphs.
+
+Cursor coding-config guides (vendored from [cursor-config-coding](https://github.com/Vinayak-RZ/cursor-config-coding)):
+
+| Doc | What it covers |
+|---|---|
+| [LEARNING_AND_RESEARCH.md](LEARNING_AND_RESEARCH.md) | Learn-while-building workflow |
+| [SPEC_KIT.md](SPEC_KIT.md) | Spec-driven development |
+| [TECH_STACK_SKILLS.md](TECH_STACK_SKILLS.md) | Optional stack skills |
+| [MCP_SETUP.md](MCP_SETUP.md) | Agent Patterns Catalog MCP |
+| [INDUSTRY_PRACTICES.md](INDUSTRY_PRACTICES.md) | Industry practices the rules encode |
