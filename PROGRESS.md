@@ -27,5 +27,5 @@ Last updated: 2026-08-15
 - [x] README matches the tree (no invented features)
 - [x] CONTRIBUTING, examples/README, `.env.example`, pyproject metadata
 - [x] P2 exit-criteria checkboxes marked
-- [ ] extras-free pytest green
-- [ ] stacked PR open
+- [x] extras-free pytest green (36 passed, 2 skipped)
+- [x] stacked PR open (#6)
