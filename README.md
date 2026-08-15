@@ -3,8 +3,8 @@
 **Determinism Advisor** — a design-time advisor for agentic architectures.
 
 > **What it is:** A research contract (and, later, a tool) that estimates which steps in an existing agent graph should be deterministic tools versus stochastic LLM/subagents.
-> **What it is not:** A runtime eval platform, a workflow searcher, or a shipping simulator. There is no application code in this repository yet.
-> **Primary interface today:** Markdown research docs and Cursor agent config.
+> **What it is not:** A runtime eval platform, a workflow searcher, or a LangChain-only plugin.
+> **Primary interface today:** `python -m superdeterminism recommend` (JSON in/out) plus the research docs.
 
 The GitHub repository is still named `superdeterminisiom`. The project name is **Superdeterminism**.
 
@@ -13,7 +13,7 @@ The GitHub repository is still named `superdeterminisiom`. The project name is *
 - Problem: teams guess whether a step should be a typed tool or an LLM/subagent.
 - Eval tools score the path you already ran. Architecture-search papers invent new graphs offline. Neither flips *determinism class* on an ingested production graph.
 - v0 (not built): ingest OTLP → map the graph → offline counterfactual → recommend or abstain → optional LangGraph scaffold. No auto-apply.
-- This repo is **docs-first**. The research contract is in `docs/`.
+- **P0 core is agnostic** (no LangChain import). P1 is LangGraph. P2 is the rest of the Lang ecosystem and other agent stacks.
 - Cursor rules/skills are vendored from [cursor-config-coding](https://github.com/Vinayak-RZ/cursor-config-coding).
 
 ## Table of contents
@@ -28,7 +28,7 @@ The GitHub repository is still named `superdeterminisiom`. The project name is *
 8. [Glossary](#8-glossary)
 9. [License](#9-license)
 
-Omitted (nothing to document yet): API/CLI, data model, testing, deployment.
+Omitted until they exist: HTTP API, deployment. CLI: [docs/usage.md](docs/usage.md). Tests: `python -m pytest -q`.
 
 ## 1. Vision
 
@@ -63,13 +63,15 @@ Advisor-owned fields live in `advisor.*` / `det.*`. Never invent `gen_ai.*` keys
 
 ## 3. Quickstart
 
-There is nothing to install or run. Clone the repo and read:
+```bash
+pip install -e ".[dev]"
+python -m superdeterminism recommend tests/fixtures/advisor_stable_llm.json --n-min 1 --stdout json
+python -m pytest -q
+```
 
-1. [PROJECT_OVERVIEW.md](PROJECT_OVERVIEW.md)
-2. [docs/overview.md](docs/overview.md)
-3. [docs/landscape.md](docs/landscape.md)
-4. [docs/methodology.md](docs/methodology.md)
-5. [AGENTS.md](AGENTS.md)
+Agents: always `--stdout json`. Humans can add `--md report.md`. Details: [docs/usage.md](docs/usage.md).
+
+Read [docs/overview.md](docs/overview.md) and [docs/methodology.md](docs/methodology.md) before changing decision rules.
 
 ## 4. Project structure
 
@@ -81,6 +83,9 @@ PROGRESS.md               Live phase status
 DECISIONS.md              Decision index
 LEARNING.md               Phase learnings
 LICENSE                   Apache-2.0
+pyproject.toml            P0 package (stdlib only)
+src/superdeterminism/     Agnostic core
+tests/                    Fixtures + pytest
 .cursor/                  Vendored coding config (rules, skills, MCP)
 docs/                     Research contract + ADRs
 docs/cursor-config/       Vendored cursor-config-coding guides
@@ -100,7 +105,8 @@ scripts/                  Vendor PowerShell helpers
 | [docs/methodology.md](docs/methodology.md) | How a flip is estimated |
 | [docs/adapters.md](docs/adapters.md) | LangGraph v0 |
 | [docs/refactor.md](docs/refactor.md) | Report + scaffold; no auto-apply |
-| [docs/roadmap.md](docs/roadmap.md) | v0 scope |
+| [docs/roadmap.md](docs/roadmap.md) | P0 / P1 / P2 |
+| [docs/usage.md](docs/usage.md) | CLI for agents and humans |
 | [docs/references.md](docs/references.md) | Bibliography (dated 2026-08-15) |
 | [docs/decisions/](docs/decisions/) | ADRs 0001–0003 |
 | [PROJECT_OVERVIEW.md](PROJECT_OVERVIEW.md) | Purpose, constraints |

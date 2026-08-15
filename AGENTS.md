@@ -15,7 +15,13 @@ Differentiation (do not weaken this):
 
 ## Current status
 
-**Docs and research first.** There is no simulator, CLI, or adapter code yet. Do not scaffold a Python package “for later” unless an ADR asks for it.
+**P0 core is implemented** (`src/superdeterminism/`). Framework-agnostic. No LangChain import. LangGraph adapter is P1.
+
+```bash
+python -m superdeterminism recommend traces.json --stdout json
+```
+
+See [docs/usage.md](docs/usage.md) and [docs/roadmap.md](docs/roadmap.md). Do not add framework extras to core. Do not auto-apply refactors.
 
 Read before any product work:
 
@@ -35,11 +41,11 @@ Read before any product work:
 - Temperature 0 is not a seed. Do not promise bit-exact architecture advice from a single replay.
 - Simulation ≠ production. A canary with the same outcome vector is confirmatory.
 
-## v0 scope (when implementation is approved)
+## Scope
 
-- LangGraph / LangChain 1.x adapter only (`create_agent`, not deprecated `create_react_agent`)
-- Read-only OTLP ingest
-- Recommendation as a report (+ optional scaffold)
+- **P0 (now):** agnostic core — OTLP/flat ingest, L0 recommend, JSON/MD report
+- **P1:** LangGraph / LangChain adapter (`create_agent`, not `create_react_agent`); optional scaffold
+- **P2:** Lang ecosystem sinks + CrewAI / MAF / raw custom agents
 - No auto-apply, no in-place `graph.py` rewrite, no live production-LLM re-runs by default
 
 ---

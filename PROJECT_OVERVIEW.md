@@ -8,7 +8,7 @@ The GitHub repository name remains `superdeterminisiom`.
 
 ## System overview
 
-Today the system is a **documentation and Cursor-config repository**. No simulator, CLI, or adapter runs.
+P0 ships an **agnostic Python core** (`src/superdeterminism/`) with a CLI. It does not import LangChain. LangGraph is P1; other stacks and the rest of the Lang ecosystem are P2.
 
 The intended product loop:
 
