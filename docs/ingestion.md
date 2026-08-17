@@ -59,6 +59,12 @@ OTEL_SEMCONV_STABILITY_OPT_IN=gen_ai_latest_experimental
 
 LangGraph injects `langgraph_node`, `langgraph_step`, `langgraph_triggers`, `langgraph_path`, `langgraph_checkpoint_ns`. v0 classifies with **`langgraph_node` + child ops**, not the word “agent.” SIG comment: LangGraph nodes are Python functions; there is no `invoke_agent` unless metadata asks for it.
 
+## P2 ingest — Langfuse and MLflow
+
+**Langfuse.** File/OTLP export (default). Cloud sink is `POST /api/public/otel`. Adapter `--adapter langfuse` coalesces `langfuse.observation.type` onto existing `gen_ai.operation.name` when the GenAI key is missing (`generation`→`chat`, `tool`→`execute_tool`, `retriever`→`retrieval`). Do not invent new `gen_ai.*` keys. Live collector is out of scope.
+
+**MLflow.** Trace tables often omit `invoke_workflow`, `plan`, `retrieval`, and memory ops. Do **not** guess those names. Unknown ops stay `NodeKind.UNKNOWN` and the recommender **ABSTAINS**. Use generic OTLP / advisor JSON (`recommend` without a framework adapter) or export OTLP that already carries `gen_ai.operation.name`.
+
 ## Gaps OTel does not cover
 
 | Advisor concept | In spec? | Closest signal |

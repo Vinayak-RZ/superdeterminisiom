@@ -5,7 +5,7 @@ from pathlib import Path
 import superdeterminism.adapters as adapters_pkg
 import pytest
 
-from superdeterminism.adapters import AdapterError, extra_installed, resolve
+from superdeterminism.adapters import Adapter, AdapterError, extra_installed, resolve
 
 
 def test_registry_does_not_eager_import_langgraph() -> None:
@@ -18,6 +18,11 @@ def test_registry_does_not_eager_import_langgraph() -> None:
 def test_resolve_unknown_adapter() -> None:
     with pytest.raises(AdapterError, match="unknown adapter"):
         resolve("nope")
+
+
+def test_extra_optional_when_not_listed() -> None:
+    assert extra_installed("custom") is True
+    assert hasattr(Adapter, "load")
 
 
 def test_resolve_langgraph_without_extra() -> None:

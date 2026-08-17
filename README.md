@@ -13,7 +13,7 @@ The GitHub repository is still named `superdeterminisiom`. The project name is *
 - Problem: teams guess whether a step should be a typed tool or an LLM/subagent.
 - Eval tools score the path you already ran. Architecture-search papers invent new graphs offline. Neither flips *determinism class* on an ingested production graph.
 - P0 (built): ingest OTLP → map the graph → offline L0 counterfactual → recommend or abstain. No auto-apply.
-- P1 (built): LangGraph adapter + write-only scaffold. P2 (specified): Lang sinks and other stacks.
+- P1 (built): LangGraph adapter + write-only scaffold. P2 (built): Langfuse/custom/CrewAI/MAF + batch + L1 gate.
 - **P0 core is agnostic** (no LangChain import). P1 is LangGraph. P2 is the rest of the Lang ecosystem and other agent stacks.
 - Cursor rules/skills are vendored from [cursor-config-coding](https://github.com/Vinayak-RZ/cursor-config-coding).
 
@@ -53,7 +53,7 @@ A later agent can implement v0 without inventing whitespace claims, ingest mappi
 
 ## 2. Architecture
 
-P0 implements the ingest → map → L0 recommend loop. P1 is the LangGraph adapter. P2 is specified, not built. Detail: [docs/architecture.md](docs/architecture.md).
+P0 implements the ingest → map → L0 recommend loop. P1 is the LangGraph adapter. P2 is the rest of the adapters. Detail: [docs/architecture.md](docs/architecture.md).
 
 ```text
 OTLP traces → normalize spans → architecture graph (node_kind, det.class)

@@ -1,0 +1,26 @@
+{
+  "resourceSpans": [
+    {
+      "scopeSpans": [
+        {
+          "spans": [
+            {
+              "name": "chat gpt",
+              "attributes": [
+                {"key": "langfuse.observation.type", "value": {"stringValue": "generation"}},
+                {"key": "langfuse.observation.output", "value": {"stringValue": "{\"intent\":\"status\"}"}}
+              ]
+            },
+            {
+              "name": "lookup",
+              "attributes": [
+                {"key": "langfuse.observation.type", "value": {"stringValue": "tool"}},
+                {"key": "gen_ai.tool.name", "value": {"stringValue": "lookup_order"}}
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

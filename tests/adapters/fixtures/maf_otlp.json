@@ -1,0 +1,32 @@
+{
+  "traces": [
+    {
+      "spans": [
+        {
+          "name": "invoke_agent support",
+          "attributes": {
+            "gen_ai.operation.name": "invoke_agent",
+            "advisor.framework": "maf",
+            "gen_ai.system": "azure.ai.agents"
+          }
+        },
+        {
+          "name": "chat",
+          "attributes": {
+            "gen_ai.operation.name": "chat",
+            "advisor.framework": "maf"
+          },
+          "output": {"text": "hello"}
+        },
+        {
+          "name": "execute_tool lookup",
+          "attributes": {
+            "gen_ai.operation.name": "execute_tool",
+            "gen_ai.tool.name": "lookup_order",
+            "advisor.framework": "maf"
+          }
+        }
+      ]
+    }
+  ]
+}
