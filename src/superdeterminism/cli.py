@@ -16,12 +16,17 @@ from superdeterminism.pipeline import (
     recommendations_to_dict,
     recommendations_to_markdown,
 )
+from superdeterminism.simulation import (
+    simulate_traces,
+    simulation_to_dict,
+    simulation_to_markdown,
+)
 
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="superdeterminism",
-        description="Agnostic determinism advisor. JSON in/out. No prompts. No auto-apply.",
+        description="Agnostic architecture advisor. JSON in/out. No prompts. No auto-apply.",
     )
     sub = parser.add_subparsers(dest="cmd", required=True)
     rec = sub.add_parser("recommend", help="ingest traces and emit L0 recommendations")
@@ -60,6 +65,17 @@ def build_parser() -> argparse.ArgumentParser:
     scaf = sub.add_parser("scaffold", help="write illustrative scaffold; never edits user source")
     scaf.add_argument("report", type=Path, help="recommend JSON report")
     scaf.add_argument("--out", type=Path, required=True, help="directory to write (created)")
+    sim = sub.add_parser(
+        "simulate",
+        help="L0 path census + tape-splice counterfactuals; no live model",
+    )
+    sim.add_argument("traces", type=Path, nargs="?", default=None)
+    sim.add_argument("--traces-dir", type=Path, default=None)
+    sim.add_argument("--adapter", default=None)
+    sim.add_argument("--n-min", type=int, default=N_MIN_DEFAULT)
+    sim.add_argument("--json", dest="json_out", type=Path, default=None)
+    sim.add_argument("--md", dest="md_out", type=Path, default=None)
+    sim.add_argument("--stdout", choices=("json", "md"), default="json")
     return parser
 
 
@@ -67,6 +83,8 @@ def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     if args.cmd == "scaffold":
         return _scaffold(args)
+    if args.cmd == "simulate":
+        return _simulate(args)
     if args.cmd != "recommend":
         return 2
     try:
@@ -78,9 +96,14 @@ def main(argv: list[str] | None = None) -> int:
     except (OSError, ValueError, json.JSONDecodeError) as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 2
-    payload = recommendations_to_dict(recs, orchestrator=orch)
+    sim = simulate_traces(traces, recs, orch)
+    payload = recommendations_to_dict(
+        recs, orchestrator=orch, simulation=simulation_to_dict(sim)
+    )
     payload = apply_l1(payload, opt_in=args.opt_in_l1)
-    markdown = recommendations_to_markdown(recs, orchestrator=orch)
+    markdown = recommendations_to_markdown(
+        recs, orchestrator=orch, simulation_md=simulation_to_markdown(sim)
+    )
     if args.json_out:
         args.json_out.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
     if args.md_out:
@@ -143,6 +166,33 @@ def _load_recommend_input(args: argparse.Namespace):
     for path in paths:
         traces.extend(loader(path))
     return traces
+
+
+def _simulate(args: argparse.Namespace) -> int:
+    try:
+        traces = _load_recommend_input(args)
+        recs, orch = recommend_full(traces, n_min=args.n_min)
+        report = simulate_traces(traces, recs, orch)
+    except AdapterError as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 2
+    except (OSError, ValueError, json.JSONDecodeError) as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 2
+    payload = simulation_to_dict(report)
+    markdown = simulation_to_markdown(report)
+    if args.json_out:
+        args.json_out.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
+    if args.md_out:
+        args.md_out.write_text(markdown, encoding="utf-8")
+    if args.stdout == "json":
+        json.dump(payload, sys.stdout, indent=2)
+        sys.stdout.write("\n")
+    else:
+        sys.stdout.write(markdown)
+        if not markdown.endswith("\n"):
+            sys.stdout.write("\n")
+    return 0
 
 
 def _scaffold(args: argparse.Namespace) -> int:

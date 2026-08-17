@@ -2,6 +2,14 @@
 
 Phase notes per [learn-while-building](.cursor/skills/learn-while-building/SKILL.md). Two to four bullets each.
 
+## P4 — L0 path simulation (2026-08-15)
+
+- “Extensive simulation” on this product is a **path census + tape splice**, not a live agent farm. Enumerating observed paths is the honest L0; inventing unobserved tails would be L1/L2.
+- Wilson on next-hop is stricter than a point estimate: 25/30 billing is not enough to FlipToRouter. Splice tests must clear the CI or they test a no-op.
+- Decision points + ranked valid splices are how the census feeds architecture advice. Insights must not become a second recommender.
+- A router splice that invents `prefix + modal_suffix` is a cassette miss. Collapsing to the modal path is valid *and* still needs a canary.
+- Deduping orchestrator CFs by `node_id` alone drops Bound/Collapse when the hub also got a leaf FlipToDet. Key on `(action, node_id)`.
+
 ## P3 — Role lattice + orchestrator (2026-08-15)
 
 - The domain model already had `workflow` / `subagent` / `router`. The gap was `_decide()` collapsing them to tool-vs-LLM. Expanding actions is smaller than inventing a new graph model.

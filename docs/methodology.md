@@ -47,7 +47,7 @@ Label every estimator: **interventional**, **observational**, or **proxy**.
 1. Reconstruct \(G\). Build a hash-verified tape (Tracefork / AgentReplay style). Abort if verify fails.
 2. **Observational / proxy:** historical variance as a coarsened `do_resample` (canonicalized keys, \(p_{\mathrm{mode}}\), \(p_{\mathrm{path}}\), \(p_{\mathrm{next}}\), entropy, Wilson CIs). Stratify by model / prompt / graph version. Require \(n_{\min} = 30\). Output-only \(p_{\mathrm{mode}}\) is not enough for workflow / router / orchestrator-to-code.
 3. Synthesize \(f_v\) from majority vote, schema check, or a user-supplied function. Coverage is first-class — most wins are **hybrids** (function + LLM fallback).
-4. **L0 splice.** If the tail stays cassette-stable, you have a bound. If it diverges, stop and say so.
+4. **L0 splice.** Enumerate every observed path; splice each non-ABSTAIN flip on the tape (modal suffix / modal path / bound / gate). If the tail stays cassette-stable, you have a bound. If it diverges, mark the splice invalid. See [simulation.md](simulation.md).
 5. Optional cheap judge on recorded I/O, gated on Cohen’s \(\kappa \ge 0.8\). Never use a judge for *attribution* (Who&When step-level accuracy is ~14%; that is why CAR exists).
 6. Spend **L1** only on divergent, high-EV candidates. **L2** and live Shapley are off by default.
 7. Planted-truth fixtures (DET-vs-open-ended) before any customer-facing number.

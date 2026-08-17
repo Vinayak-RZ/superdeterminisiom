@@ -8,7 +8,7 @@ The GitHub repository name remains `superdeterminisiom`. Determinism class is on
 
 ## System overview
 
-P0 is an **agnostic Python core** (`src/superdeterminism/`) with a CLI. It does not import LangChain. P1 is LangGraph. P2 is other stacks. P3 widens the recommender from tool-vs-LLM to the role lattice and a graph-level orchestrator.
+P0 is an **agnostic Python core** (`src/superdeterminism/`) with a CLI. It does not import LangChain. P1 is LangGraph. P2 is other stacks. P3 widens the recommender from tool-vs-LLM to the role lattice and a graph-level orchestrator. P4 adds L0 path census and tape-splice counterfactuals.
 
 The product loop:
 
