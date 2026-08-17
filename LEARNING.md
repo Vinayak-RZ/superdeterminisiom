@@ -2,6 +2,13 @@
 
 Phase notes per [learn-while-building](.cursor/skills/learn-while-building/SKILL.md). Two to four bullets each.
 
+## Vendor README skills (2026-08-17)
+
+- The `readme` skill chooses; it does not write. Product landing stays in `README.md`. Extensive is a companion at `docs/EXTENSIVE.md`, never the GitHub front door unless the user overrides.
+- Re-vendoring `skills-manifest.json` from upstream would restore `docs/MCP_SETUP.md` paths. D3 remaps to `docs/cursor-config/` must be merged by hand.
+- An ABSTAIN CLI capture (`n=1`, Wilson lower 0.21) teaches the product better than a fixture that always flips.
+- Copy, not symlink: Cloud Agents only see skills that are committed in this repo ([`.cursor/VENDOR.md`](.cursor/VENDOR.md)).
+
 ## Phase R — Revise done work (2026-08-15)
 
 - A README that links files that do not exist is a documentation bug, not a roadmap. [documentation.mdc](.cursor/rules/documentation.mdc) requires the front door to match the tree.
