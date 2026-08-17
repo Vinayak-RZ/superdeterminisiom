@@ -101,4 +101,4 @@ Do not withhold answers indefinitely when the user is blocked — teach, then un
 - `learn-and-research.mdc` — always-on lightweight behavior
 - `communication.mdc` — decision and risk reporting
 - `planning.mdc` — approval before non-trivial work
-- `extensive-readme` — document what was built for future-you
+- `readme` — choose product vs readable, and whether `extensive-readme` is also needed

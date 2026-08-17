@@ -1,39 +1,27 @@
 # Extensive README — pre-ship checklist
 
-Run before delivering or merging README changes.
+## Routing and file
+
+- [ ] Wrote `docs/EXTENSIVE.md` (or the path the user named), **not** as a replacement for a product/readable `README.md`
+- [ ] Main `README.md` has a top banner link here (added or already present)
+- [ ] If the user wanted a product or readable main README, that was a different skill
+
+## Coverage
+
+- [ ] End-to-end "how this repository runs" with a diagram
+- [ ] **Every first-party package** has its own section (or every top-level module in a single-package repo)
+- [ ] Each package: what it is for, how it is used, how it works
+- [ ] File map for important files: path, **why it exists**, what it does
+- [ ] No "and other utilities" instead of a section
+- [ ] Generated/vendor trees mentioned once, not file-listed
 
 ## Accuracy
 
-- [ ] Every feature mentioned exists in the codebase (no invented capabilities)
-- [ ] Env var names match `.env.example` or config module exactly
-- [ ] Tool/API/endpoint counts verified from source (registry, routes, OpenAPI)
-- [ ] File paths and module names are current
-- [ ] Tech stack names match actual dependencies (no stale DB/vector store names)
-- [ ] Version constraints match `package.json` / lockfile / `pyproject.toml`
+- [ ] Every path exists in the tree
+- [ ] Package list matches workspaces / folders
+- [ ] No invented features or URLs
 
-## Structure
+## Teaching and future
 
-- [ ] Major sections numbered sequentially (`## 1.` … `## N.`)
-- [ ] Subsections use `### N.M` matching parent
-- [ ] Physical section order matches numeric order
-- [ ] TOC links resolve to correct heading anchors
-- [ ] Skipped sections omitted (no empty "TBD" placeholders)
-
-## Diagrams
-
-- [ ] Mermaid renders (valid syntax, ≤15 nodes per diagram)
-- [ ] Diagrams match current architecture (no removed services)
-- [ ] Split large diagrams into 2.1, 2.2 subsections if needed
-
-## Usability
-
-- [ ] New contributor can run project from Quickstart alone
-- [ ] TL;DR captures differentiators in first screen
-- [ ] Vision clarifies what the project is **not**
-- [ ] Roadmap distinguishes shipped vs planned
-
-## Maintenance
-
-- [ ] Changelog row added if this update reflects shipped work
-- [ ] Completed roadmap items moved to changelog
-- [ ] Related code changes in same commit/PR as README update
+- [ ] Non-obvious ideas explained simply; hard ones link a verified blog or wiki
+- [ ] Future advancements: at least 3, prefer 4, grounded in this repo
