@@ -2,6 +2,20 @@
 
 Phase notes per [learn-while-building](.cursor/skills/learn-while-building/SKILL.md). Two to four bullets each.
 
+## P3 — Role lattice + orchestrator (2026-08-15)
+
+- The domain model already had `workflow` / `subagent` / `router`. The gap was `_decide()` collapsing them to tool-vs-LLM. Expanding actions is smaller than inventing a new graph model.
+- FlipToDet must stay the lower rung when output is mode-stable. Otherwise a one-node stable classifier becomes FlipToWorkflow and every existing fixture breaks.
+- The orchestrator is a report-level object, not a seventh `node_kind`. Competing roots ABSTAIN on the hub and still recommend leaves.
+- `p_path` and `p_next` are the load-bearing new estimators. Output-only `p_mode` cannot justify a workflow or code-router flip.
+
+## Leftover polish + README (2026-08-15)
+
+- A P2 deliverable marked YAGNI (CI, canary text) is still a leftover feature once the repo is meant to be used. Shipping them does not require a new product tier.
+- Trending technical READMEs win on badges + 30-second quickstart + mermaid + comparison table. Engagement bait and fake GIFs would violate extensive-readme’s “do not invent features.”
+- Canary belongs on the report payload, not as a CLI apply command. The moment it becomes a button, ADR 0003 is broken.
+- CONTRIBUTING still said “docs-first, no simulator.” Front-door drift is the same class of bug as linking files that do not exist.
+
 ## P2 — Ecosystem adapters (2026-08-15)
 
 - `resolve()` treated “not in `_EXTRAS`” as “extra missing.” Custom/Langfuse/MAF need the opposite: missing extras entry means no extra required.

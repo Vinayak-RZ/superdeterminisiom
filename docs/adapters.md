@@ -36,7 +36,7 @@ Wrapping these as dependencies is **not** a P0/P1 decision. That needs a later A
 
 ## P2 adapters
 
-**CrewAI.** Role/task loop, not `StateGraph`. CAR wraps `Agent(llm=...)`; Tracefork binds LiteLLM. Real eval depth comes from DeepEval / Langfuse / MLflow. Specified in [p2-ecosystem.md](p2-ecosystem.md).
+**CrewAI.** Role/task loop, not `StateGraph`. Implemented: kickoff → `invoke_workflow` via `--adapter crewai` (`[crewai]` extra). CAR wraps `Agent(llm=...)`; Tracefork binds LiteLLM. Real eval depth comes from DeepEval / Langfuse / MLflow. Spec: [p2-ecosystem.md](p2-ecosystem.md).
 
 **Microsoft Agent Framework (MAF).** Autogen + Semantic Kernel unified; 1.0 GA April 2026. Native OTel (`invoke_agent`, `chat`, `execute_tool`). No CAR/Tracefork/counterfact adapter today. **Refuse MAF traces as LangGraph.** Dedicated mapper or refuse-with-reason.
 

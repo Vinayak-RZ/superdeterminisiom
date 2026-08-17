@@ -1,4 +1,4 @@
-"""Agnostic determinism advisor (P0). No framework imports."""
+"""Agnostic architecture advisor. No framework imports."""
 
 from superdeterminism.models import (
     DetClass,

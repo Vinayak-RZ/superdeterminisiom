@@ -12,7 +12,7 @@ from superdeterminism.scaffold import write_scaffold
 from superdeterminism.pipeline import (
     N_MIN_DEFAULT,
     load_traces_path,
-    recommend_traces,
+    recommend_full,
     recommendations_to_dict,
     recommendations_to_markdown,
 )
@@ -71,16 +71,16 @@ def main(argv: list[str] | None = None) -> int:
         return 2
     try:
         traces = _load_recommend_input(args)
-        recs = recommend_traces(traces, n_min=args.n_min)
+        recs, orch = recommend_full(traces, n_min=args.n_min)
     except AdapterError as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 2
     except (OSError, ValueError, json.JSONDecodeError) as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 2
-    payload = recommendations_to_dict(recs)
+    payload = recommendations_to_dict(recs, orchestrator=orch)
     payload = apply_l1(payload, opt_in=args.opt_in_l1)
-    markdown = recommendations_to_markdown(recs)
+    markdown = recommendations_to_markdown(recs, orchestrator=orch)
     if args.json_out:
         args.json_out.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
     if args.md_out:

@@ -1,52 +1,55 @@
 # Overview
 
-**Superdeterminism** / **Determinism Advisor** is a design-time advisor for existing agentic architectures.
+**Superdeterminism** / **Architecture Advisor** is a design-time advisor for existing agentic architectures.
 
-It will take production traces, reconstruct the graph, and estimate what would happen if a step flipped from stochastic (LLM / subagent) to deterministic (tool / function), or the reverse — then recommend a refactor with evidence.
+It takes production traces, reconstructs the graph (including who owns control flow), and estimates what would happen if a step — or the orchestrator — flipped architectural *role*: predefined workflow vs subagent vs tool vs router vs LLM — then recommends a refactor with evidence.
 
-> Counterfactual *re-typing* of nodes between deterministic tools and stochastic LLM/subagents, on ingested production graphs.
+> Counterfactual *re-typing* of nodes — and of the orchestrator that owns control flow — on ingested production graphs.
 
-This document is the product brief. Methodology lives in [methodology.md](methodology.md). Adjacent tools live in [landscape.md](landscape.md).
+This document is the product brief. Doctrine: [agent-architectures.md](agent-architectures.md). Lattice: [type-lattice.md](type-lattice.md). Hub: [orchestrator.md](orchestrator.md). Adjacent tools: [landscape.md](landscape.md).
+
+Determinism class (`det.class`) is one *axis* of the lattice, not the whole product. The package name stays `superdeterminism`.
 
 ## The problem
 
-Every team on LangChain, LangGraph, CrewAI, or a custom stack eventually asks: *should this step be a typed tool call, or should I hand it to the model?*
+Every team on LangChain, LangGraph, CrewAI, or a custom stack eventually asks more than *tool vs LLM*:
 
-Today that decision is intuition, then (maybe) validated after the fact. Eval platforms score what a trace **did**. They do not simulate what it **would do** under a different determinism split, and they do not recommend a structural change.
+- Should this envelope be a **predefined workflow** or an open agent loop?
+- Should this hop be a **sub-agent** (isolated context) or stay in the parent?
+- Should next-hop be a **code router** or a model choice?
+- Is the **orchestrator** unbounded, over-orchestrating, or reaching a refund with no gate?
 
-The failure modes are symmetric:
+Today those decisions are intuition. Eval platforms score what a trace **did**. Architecture-search papers invent new graphs offline. Neither re-types roles on an ingested production graph.
 
-- Over-delegate to LLMs where a function would be cheaper, faster, and auditable.
-- Over-constrain with rigid tools where the task needs judgment, and the agent breaks on the first uncoded edge case.
+Failure modes are symmetric and now wider than over/under-using tools:
 
-In regulated or cost-sensitive systems, non-determinism has to be justified (audit) or minimized (tokens, latency). There is no tooling that closes that loop with evidence.
+- Over-delegate to LLMs or supervisors where a function or DAG would be cheaper and auditable.
+- Over-constrain with rigid tools or a supervisor-of-one where the task needs judgment or a single agent + tools.
 
 ## What it does
 
-1. **Ingest** — read existing execution traces over OTLP / GenAI semantic conventions. No new instrumentation if you already emit LangSmith, Langfuse, MLflow, or raw OTel. See [ingestion.md](ingestion.md).
-2. **Map** — reconstruct the architecture as a graph. Tag each step as currently deterministic or non-deterministic from observed behavior. See [architecture.md](architecture.md).
-3. **Simulate** — for ambiguous or high-variance steps, estimate the counterfactual. v0 is offline (historical variance + tape splice). It does not re-run the production LLM by default. See [methodology.md](methodology.md).
-4. **Recommend** — a ranked list of flips with estimated deltas (cost, latency, failure, variance, auditability, compliance) and confidence intervals. Abstain when the evidence is weak.
-5. **Assist the refactor** — for LangGraph/LangChain, emit a report and an optional scaffold. v0 does **not** rewrite the graph or open a PR. See [refactor.md](refactor.md).
+1. **Ingest** — OTLP / GenAI semantic conventions. See [ingestion.md](ingestion.md).
+2. **Map** — reconstruct the architecture graph. Tag `node_kind`, `det.class`, and the orchestrator envelope. See [architecture.md](architecture.md).
+3. **Simulate** — offline L0 (historical variance + path shape). No production-LLM re-run by default. See [methodology.md](methodology.md).
+4. **Recommend** — role flips, orchestrator bound/strengthen/collapse/code-route, or **ABSTAIN**, with CIs.
+5. **Assist** — report + optional write-only scaffold. Never rewrite the graph. See [refactor.md](refactor.md).
 
 ## Who it is for
 
-Developers and teams operating production agentic systems who are past the prototype stage and need to decide, with evidence, where determinism belongs — especially where non-determinism must be justified or minimized.
+Developers and coding agents past prototype who need evidence for where control flow and determinism belong — especially in regulated or cost-sensitive systems.
 
 ## Why now
 
-- OTel / GenAI semantic conventions matured enough in 2026 that traces are portable across LangSmith, Langfuse, and MLflow. A simulator can plug into existing telemetry instead of requiring new instrumentation. The spec is still **Development**; we pin a commit. See [ingestion.md](ingestion.md).
-- Existing evaluation tooling observes and scores runs. Counterfactual replay tools intervene on actions or agents. Architecture-search papers invent new workflows offline. None flip *determinism class* on an ingested production graph and recommend a refactor. See [landscape.md](landscape.md).
+- OTel / GenAI conventions are portable enough (still **Development**; we pin a commit).
+- Eval tools observe. Replay tools intervene on the *same* types. Search papers invent graphs. None flip *role* (including the hub) on an ingested graph. See [landscape.md](landscape.md).
 
 ## v0 scope
 
-- LangGraph / LangChain 1.x only (`create_agent`, not deprecated `create_react_agent`)
-- Read-only OTLP ingest
-- Recommendation as a report (which steps, why, estimated delta) before any scaffold
+- Agnostic core + optional adapters (LangGraph, Langfuse, MAF, CrewAI, custom)
+- Read-only ingest
+- Report before any scaffold
 - No live agent control, no auto-apply
-
-Details: [roadmap.md](roadmap.md), [adapters.md](adapters.md).
 
 ## Status
 
-This repository is the research contract. There is no simulator code yet. Product implementation needs a separate approved project-mode plan.
+P0–P2 are implemented (core, LangGraph adapter, ecosystem). P3 expands the recommender from tool-vs-LLM to the role lattice and a first-class orchestrator block. CLI: [usage.md](usage.md).

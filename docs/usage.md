@@ -57,10 +57,22 @@ Either OTLP JSON (`resourceSpans`) or:
 {
   "disclaimer": "simulation != production; canary is confirmatory",
   "estimator": "observational_l0_proxy",
+  "canary": [
+    "Keep the node name; change only the callable.",
+    "Do not auto-apply a scaffold or rewrite graph.py in place."
+  ],
+  "orchestrator": {
+    "node_id": null,
+    "kind": "unknown",
+    "action": "ABSTAIN",
+    "reasons": ["no single control-flow owner"]
+  },
   "recommendations": [
     {
       "node_id": "classify",
       "node_kind": "llm_reasoner",
+      "from_kind": "llm_reasoner",
+      "to_kind": "llm_reasoner",
       "det_class": "llm",
       "action": "ABSTAIN",
       "n": 1,
@@ -76,7 +88,11 @@ Either OTLP JSON (`resourceSpans`) or:
 }
 ```
 
-Actions: `FlipToDet` | `FlipToNondet` | `STRENGTHEN_SDB` | `ABSTAIN`
+Node actions: `FlipToDet` | `FlipToWorkflow` | `FlipToSubagent` | `FlipToRouter` | `FlipToNondet` | `STRENGTHEN_SDB` | `ABSTAIN`
+
+Hub actions: `BoundOrchestrator` | `StrengthenOrchestrator` | `FlipOrchestratorToCode` | `CollapseOrchestrator` | `ABSTAIN`
+
+Doctrine: [type-lattice.md](type-lattice.md), [orchestrator.md](orchestrator.md).
 
 Default `--n-min 30`. A single-trace file will **ABSTAIN**. That is correct.
 

@@ -6,33 +6,17 @@ Last updated: 2026-08-15
 |-------|--------|-------|
 | Research docs (nawab v2) | done | PR #2 |
 | P0 — Agnostic core | done | PR #3 merged |
-| P1 — LangGraph adapter | done | PR #4 (open) |
-| P2 — Lang ecosystem + other stacks | done | this PR |
+| P1 — LangGraph adapter | done | PR #4 |
+| P2 — Lang ecosystem + other stacks | done | PR #5 |
+| Leftover polish + README | done | PR #6 |
+| P3 — Role lattice + orchestrator | done | this branch |
 
-## P2 commit matrix
+## P3 done when
 
-| # | Commit | Status |
-|---|--------|--------|
-| 1 | nawab contract | done |
-| 2 | Protocol + extra-optional resolve | done |
-| 3 | custom adapter example | done |
-| 4 | `--traces-dir` | done |
-| 5 | Langfuse mapper | done |
-| 6 | MLflow docs | done |
-| 7 | MAF refuse on langgraph | done |
-| 8 | CrewAI kickoff→workflow | done |
-| 9 | `--opt-in-l1` | done |
-| 10 | planted fixtures | done |
-| 11 | usage docs | done |
-| 12 | validate + LEARNING | this commit |
-
-## P2 done when
-
-- [x] `--adapter custom` from contract + example
-- [x] Non-Lang adapter fixtures (custom, CrewAI, MAF)
-- [x] Langfuse fixture tested; MLflow gaps documented
-- [x] `--traces-dir` → one JSON
-- [x] langgraph refuses MAF
-- [x] `--opt-in-l1` omitted never calls a model
-- [x] extras-free pytest: 35 passed, 2 skipped
-- [x] draft P2 PR
+- [x] Doctrine docs + ADR 0005
+- [x] Front doors say Architecture Advisor
+- [x] Role actions + path-shape / next-hop metrics
+- [x] Orchestrator report block
+- [x] Planted lattice tests
+- [x] extras-free pytest green (45 passed, 2 skipped)
+- [x] stacked PR open (#7)

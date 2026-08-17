@@ -1,6 +1,6 @@
 # Methodology
 
-How Superdeterminism estimates a **determinism flip**. This is a citable design, not a guarantee.
+How Superdeterminism estimates a **role flip** (including determinism-class and orchestrator actions). This is a citable design, not a guarantee. Lattice: [type-lattice.md](type-lattice.md). Hub: [orchestrator.md](orchestrator.md).
 
 **Simulation ≠ production.** The only confirmatory estimator is a canary with the same outcome vector. Every number in a v0 report is an estimate with a confidence interval, or we **ABSTAIN**.
 
@@ -9,8 +9,13 @@ How Superdeterminism estimates a **determinism flip**. This is a citable design,
 A node \(v\) has a determinism class \(\delta(v)\). The intervention is CAR’s `do_policy` ([Shah 2026, arXiv:2606.08275](https://arxiv.org/abs/2606.08275)):
 
 ```text
-FlipToDet(v):    replace stochastic policy π_v(· | s) with a function f_v(s)
-FlipToNondet(v): replace deterministic function f_v(s) with a stochastic policy
+FlipToDet(v):         replace stochastic policy π_v(· | s) with a function f_v(s)
+FlipToNondet(v):      replace deterministic function f_v(s) with a stochastic policy
+FlipToWorkflow(v):    replace an open loop with a predefined code path
+FlipToSubagent(v):    isolate the hop; child returns one structured result
+FlipToRouter(v):      replace model-chosen next-hop with a classifier / code edge
+BoundOrchestrator:    add a hard step/turn/token cap in code
+FlipOrchestratorToCode: replace an LLM supervisor with a code router / DAG
 ```
 
 These are *policy interventions* ([Pearl 2009](https://doi.org/10.1017/CBO9780511803161)), not log inspection. After the swap, everything downstream re-decides. Because policies are stochastic, one intervention yields a **distribution** over outcomes, never a single path.
@@ -40,7 +45,7 @@ Hosted temperature-0 is not a seed. Thinking Machines measured 80 unique complet
 Label every estimator: **interventional**, **observational**, or **proxy**.
 
 1. Reconstruct \(G\). Build a hash-verified tape (Tracefork / AgentReplay style). Abort if verify fails.
-2. **Observational / proxy:** historical variance as a coarsened `do_resample` (canonicalized keys, \(p_{\mathrm{mode}}\), entropy, Wilson CIs). Stratify by model / prompt / graph version. Require \(n_{\min} = 30\).
+2. **Observational / proxy:** historical variance as a coarsened `do_resample` (canonicalized keys, \(p_{\mathrm{mode}}\), \(p_{\mathrm{path}}\), \(p_{\mathrm{next}}\), entropy, Wilson CIs). Stratify by model / prompt / graph version. Require \(n_{\min} = 30\). Output-only \(p_{\mathrm{mode}}\) is not enough for workflow / router / orchestrator-to-code.
 3. Synthesize \(f_v\) from majority vote, schema check, or a user-supplied function. Coverage is first-class — most wins are **hybrids** (function + LLM fallback).
 4. **L0 splice.** If the tail stays cassette-stable, you have a bound. If it diverges, stop and say so.
 5. Optional cheap judge on recorded I/O, gated on Cohen’s \(\kappa \ge 0.8\). Never use a judge for *attribution* (Who&When step-level accuracy is ~14%; that is why CAR exists).
@@ -64,15 +69,23 @@ Do not collapse \(Y\) to a single score in the report. Show per-metric deltas wi
 
 ## Decision rules
 
-**FlipToDet** when the output is schema-shaped (`schema_ok ≥ 0.80`), the mode is stable (\(p_{\mathrm{mode}} \ge 0.70\)), failure does not worsen on the L0 tail-stable set, and at least one of cost / latency / variance / compliance improves. Flip the commitment node.
+Prefer the **lowest** Anthropic rung the tape supports. Full table: [type-lattice.md](type-lattice.md).
 
-**Hard override:** policy / commit / spend / PII / auth nodes become deterministic gates regardless of accuracy (proposer, verifier, commit, reject).
+**FlipToDet** when the output is schema-shaped (`schema_ok ≥ 0.80`) and \(p_{\mathrm{mode}}\) + Wilson ≥ `0.70`. This is the lower rung when a hop is already a function.
+
+**FlipToWorkflow** when path *shape* is stable (`p_path` + Wilson ≥ `0.70`), path length ≥ 3, and this hop’s output is *not* mode-stable (else FlipToDet).
+
+**FlipToRouter** when next-hop id is mode-stable (`p_next` + Wilson ≥ `0.70`).
+
+**FlipToSubagent** when a nested checkpoint ns has a structured return but unstable output — isolate context.
+
+**Hard override:** policy / commit / spend / PII / auth nodes become deterministic gates regardless of accuracy (proposer, verifier, commit, reject). If the *hub* reaches those leaves ungated, that is `StrengthenOrchestrator`.
 
 **FlipToNondet** only when a DET node’s unhandled tail is the failure cluster, judgment actually flips those failures, **and** the new LLM is wrapped in that four-part gate. Bare FlipToNondet of a commit path is forbidden.
 
 **STRENGTHEN_SDB** (keep the proposer, harden the gate) is a first-class recommendation, not a consolation prize.
 
-**ABSTAIN** when the primary-metric CI includes 0, coverage is incomplete, the graph was scraped, L0 diverged and L1 was not run, or \(n < n_{\min}\).
+**ABSTAIN** when the primary-metric CI includes the threshold, coverage is incomplete, the graph was scraped, L0 diverged and L1 was not run, or \(n < n_{\min}\).
 
 ## Threats the report must attach
 
