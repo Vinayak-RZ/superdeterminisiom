@@ -6,7 +6,7 @@ P0 has **no** adapter package. P1 is LangGraph / LangChain. P2 is every other st
 
 P0/P1 do not install adapters into the user’s graph or re-bind transports. They read exported traces.
 
-## P1: LangGraph / LangChain 1.x (specified, not built)
+## P1: LangGraph / LangChain 1.x (implemented)
 
 Use `langchain.agents.create_agent`. Pins used by CAR’s LangGraph adapter: `langchain>=1.3,<2`, `langgraph>=1.2,<2`, `langchain-core>=1.4,<2`.
 

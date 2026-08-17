@@ -17,7 +17,7 @@ Read in this order if you are new:
 5. [methodology.md](methodology.md) — how a flip is estimated
 6. [adapters.md](adapters.md) and [refactor.md](refactor.md) — LangGraph v0 surface
 7. [roadmap.md](roadmap.md) — P0 / P1 / P2 index
-8. [p1-langgraph.md](p1-langgraph.md) — P1 spec (not built)
+8. [p1-langgraph.md](p1-langgraph.md) — P1 spec (implemented)
 9. [p2-ecosystem.md](p2-ecosystem.md) — P2 spec (not built)
 10. [usage.md](usage.md) — P0 CLI
 11. [references.md](references.md) — sources (dated 2026-08-15)
@@ -34,9 +34,9 @@ Read in this order if you are new:
 | [adapters.md](adapters.md) | LangGraph v0 |
 | [refactor.md](refactor.md) | Report + scaffold; no auto-apply |
 | [roadmap.md](roadmap.md) | P0 / P1 / P2 index |
-| [p1-langgraph.md](p1-langgraph.md) | LangGraph adapter spec |
+| [p1-langgraph.md](p1-langgraph.md) | LangGraph adapter spec (implemented) |
 | [p2-ecosystem.md](p2-ecosystem.md) | Lang ecosystem + other stacks spec |
-| [usage.md](usage.md) | P0 CLI for agents and humans |
+| [usage.md](usage.md) | P0/P1 CLI for agents and humans |
 | [references.md](references.md) | Bibliography |
 
 ## Architecture decisions

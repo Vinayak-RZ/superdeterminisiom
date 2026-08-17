@@ -1,18 +1,6 @@
-# Superdeterminism research contract (nawab v2)
+# P1 LangGraph adapter — nawab execution contract
 
-Approved execution contract for the **docs-only** research phase (complete). Product tiers after that:
-
-| Tier | Status | Spec |
-|------|--------|------|
-| P0 agnostic core | implemented | `src/superdeterminism/` |
-| P1 LangGraph adapter | specified, not built | [docs/p1-langgraph.md](docs/p1-langgraph.md) |
-| P2 ecosystem + other stacks | specified, not built | [docs/p2-ecosystem.md](docs/p2-ecosystem.md) |
-
-Index: [docs/roadmap.md](docs/roadmap.md). The sections below are the historical nawab v2 research plan; do not treat them as the P1 implementation contract.
-
----
-
-Historical nawab 18-section plan (docs-only research; complete). Skills: [nawab-plans](.cursor/skills/nawab-plans/SKILL.md), [planning.mdc](.cursor/rules/planning.mdc), [documentation.mdc](.cursor/rules/documentation.mdc), [extensive-readme](.cursor/skills/extensive-readme/SKILL.md), [learn-while-building](.cursor/skills/learn-while-building/SKILL.md), [agentic-system-design](.cursor/skills/agentic-system-design/SKILL.md).
+Approved feature-mode plan. Authority for product behaviour is [docs/p1-langgraph.md](docs/p1-langgraph.md). Lead follows §18. Historical research plan (nawab v2 docs-only) is superseded for execution; keep research docs as read-only authority.
 
 ---
 
@@ -21,72 +9,107 @@ Historical nawab 18-section plan (docs-only research; complete). Skills: [nawab-
 | Field | Value |
 |-------|-------|
 | **Mode** | feature |
-| **Stack** | Markdown / git only. No application package. |
-| **Base branch** | `main` |
-| **Feature branch** | `cursor/determinism-advisor-docs-329f` |
-| **Authority** | this file |
-| **Estimated commits** | 8 (medium docs feature) |
-| **Lead agent** | orchestrate, write, commit, push, update PR #1 |
-
-Already on the branch: `0898037` README/LICENSE; `4d41000` vendored cursor-config-coding@437a548; `0619eff` nawab v1; `bb0ac00` Phase R commit 1 (front door).
+| **Stack** | Python 3.10+, stdlib P0 core; optional `langchain>=1.3,<2`, `langgraph>=1.2,<2`, `langchain-core>=1.4,<2`; pytest via `[dev]` |
+| **Base branch** | `main` (PR #3 merged) |
+| **Feature branch** | `cursor/p1-langgraph-adapter-329f` |
+| **Authority docs** | [docs/p1-langgraph.md](docs/p1-langgraph.md), [docs/refactor.md](docs/refactor.md), [docs/decisions/0003-no-auto-apply.md](docs/decisions/0003-no-auto-apply.md), [docs/decisions/0004-agnostic-core.md](docs/decisions/0004-agnostic-core.md), this file |
+| **Estimated commits** | 8 |
+| **Lead agent** | Orchestrate, write, test, commit, push, PR |
 
 ---
 
 ## §1 North star and scope
 
-**Objective:** A research contract any later agent can execute without inventing whitespace, ingest mappings, or flip methodology — and a repo front door that does not lie about missing files.
+**Objective:** Agents and humans can run `--adapter langgraph` on exported LangGraph / LangChain 1.x traces, get the **same** P0 L0 recommendations, and optionally write an illustrative scaffold — never an auto-applied patch.
 
-**Deliverables:** revised front door; `PROJECT_OVERVIEW.md`, `DECISIONS.md`, `LEARNING.md`; research docs; ADRs; vendor guides under `docs/cursor-config/`; this plan; `PROGRESS.md`.
+**Deliverables:**
 
-**Non-goals:** simulator/CLI/package; auto-refactor; repo rename; re-vendor unless pin breaks; Cloud environment build; product project-mode plan (P1).
+- Optional extra `[langgraph]` in `pyproject.toml`
+- Lazy registry in `src/superdeterminism/adapters/` (no import of `langgraph.py` at package load)
+- Mapper `adapters/langgraph.py` — attribute-only; may import LangChain only here
+- CLI: `recommend --adapter langgraph` and `scaffold report.json --out DIR`
+- Fixtures + tests under `tests/adapters/`
+- Agent docs in `docs/usage.md`
 
-| P0 | P1 |
-|----|----|
-| Front door + required nawab files + research set + ADRs | Product v0 plan; Spec Kit `.specify/`; CI; environment snapshot |
+**Non-goals:**
+
+- Second recommender or decision-rule fork in `pipeline.py`
+- LangChain types in `models.py`
+- `typing.Protocol` (P2)
+- Live LLM / L1 / L2, LangSmith/Langfuse/MLflow APIs, CrewAI/MAF/custom
+- Auto-apply, auto-PR, in-place `graph.py` rewrite
+- `create_react_agent`, `MessageGraph`, `ValidationNode`, `prompt=`, `pre_model_hook`
+- Wrapping CAR / Tracefork / counterfact as deps
+- GitHub Actions CI
+
+**Priority:**
+
+| Priority | Items |
+|----------|-------|
+| **Must ship** | extra + lazy `--adapter` + both graph-shape mappings + LangSmith retriever quirk + write-only `scaffold` + extras-free core tests |
+| **Defer** | Protocol, `--traces-dir`, L1, other stacks |
 
 ---
 
-## §2 Prerequisites
+## §2 Prerequisites and blockers
 
 | Item | Status | Blocks | Resolution |
 |------|--------|--------|------------|
-| cursor-config-coding vendored | done | agent skills | keep; guides moved to `docs/cursor-config/` |
-| User approval of this plan | **done** | — | implement requested |
-| Phase R commit 1 | **done** | — | `bb0ac00` |
-| Agent Patterns MCP | unavailable here | pattern ids | do not invent ids |
-| OTel GenAI | Development | ingest pin | pin a commit in `docs/ingestion.md` |
+| P0 package + CLI + tests | done (PR #3) | all | call `recommend_traces`; do not rewrite |
+| P1 spec | done | Phase A | [docs/p1-langgraph.md](docs/p1-langgraph.md) |
+| This plan approved | done | commit 1 | user approved |
+| Agent Patterns MCP | unavailable | — | do not invent catalog IDs |
+| LangGraph 1.x pins | specified | extras-on tests | install only on extras-on path |
 
 ---
 
-## §3 Authority map
+## §3 Authority and artifact map
 
-| Doc | Path | Role |
-|-----|------|------|
-| This plan | `IMPLEMENTATION_PLAN.md` | writable contract |
-| Overview | `PROJECT_OVERVIEW.md` | purpose / constraints |
-| Decisions | `DECISIONS.md` + `docs/decisions/` | ADRs |
-| Progress / learning | `PROGRESS.md`, `LEARNING.md` | live status |
-| Agent rules | `AGENTS.md` | claim hygiene |
-| Vendor pin | `.cursor/VENDOR.md` | read-only |
+| Document | Path | Role |
+|----------|------|------|
+| P1 spec | `docs/p1-langgraph.md` | read-only product spec |
+| Methodology | `docs/methodology.md` | read-only decision rules |
+| This plan | `IMPLEMENTATION_PLAN.md` | writable execution contract |
+| Progress / learning | `PROGRESS.md`, `LEARNING.md` | writable per phase |
+| Decisions | `DECISIONS.md` + ADRs | writable only if a new choice appears |
+| Core models / pipeline | `src/superdeterminism/models.py`, `pipeline.py` | read-only unless a one-line hook is unavoidable |
+| Spec Kit | `.specify/` | N/A |
 
-Subagents are read-only. Lead writes all files.
+Subagents: authority docs read-only. Lead writes plan, progress, and code.
 
 ---
 
-## §4 Architecture (documented, not built)
+## §4 Architecture and system map
 
-```mermaid
-flowchart LR
-  traces[OTLP_traces] --> ingest[Normalize]
-  ingest --> graph[node_kind_and_det_class]
-  graph --> sim[L0_offline_counterfactual]
-  sim --> recs[Recommend_or_ABSTAIN]
-  recs --> report[Report_optional_scaffold]
+```text
+traces.json → cli.recommend
+  ├─ adapter omitted → pipeline.load_traces
+  └─ --adapter langgraph → adapters.lazy_load → adapters.langgraph.load
+        → list[Trace] → pipeline.recommend_traces → JSON/MD
+report.json → cli.scaffold → --out REPORT.md + WIRING.md + patches/*.diff
 ```
 
-Differentiation: counterfactual **re-typing** of nodes on ingested production graphs — not score-the-path, not search-a-new-workflow.
+**Target layout (new paths):**
 
-Trust: no secrets; never invent `gen_ai.*`; Advisor fields `advisor.*` / `det.*`; simulation ≠ production.
+```text
+src/superdeterminism/adapters/__init__.py
+src/superdeterminism/adapters/langgraph.py
+src/superdeterminism/scaffold.py
+tests/adapters/test_langgraph.py
+tests/adapters/test_scaffold.py
+tests/adapters/test_adapter_cli.py
+tests/adapters/fixtures/create_agent_otlp.json
+tests/adapters/fixtures/stategraph_otlp.json
+tests/adapters/fixtures/langsmith_retriever_quirk.json
+```
+
+**Design rules:**
+
+- Mapper is attribute-only. Do not instantiate `StateGraph` or call a model.
+- Extra is pin documentation + lazy presence check. Missing extra → stderr + exit 2.
+- One recommender. Adapter returns `list[Trace]`.
+- Scaffold writes under `--out` only. A tmp user `graph.py` must be bitwise unchanged.
+- Trust: no network, no secrets, no prompts, never invent `gen_ai.*`.
 
 ---
 
@@ -94,179 +117,206 @@ Trust: no secrets; never invent `gen_ai.*`; Advisor fields `advisor.*` / `det.*`
 
 | ID | Name | Owns | Depends | Agent |
 |----|------|------|---------|-------|
-| WS-R | Revise done work | front door, root nawab files, vendor doc move | approval | lead |
-| WS-A | Research docs | `docs/overview.md` … ADRs | WS-R | lead |
-| WS-B | Product v0 | future `src/` | later plan | — |
+| WS-A | Adapter | `adapters/`, CLI flags, scaffold, adapter tests, usage | P0 + this plan | lead |
 
 ---
 
-## §6 Spawn map
+## §6 Agent orchestration and spawn map
 
-**Parallel limit:** 2. Lead commits.
+| ID | Trigger | Type | readonly | Task | Sync |
+|----|---------|------|----------|------|------|
+| S1 | Phase A start | explore | true | P0 hooks; models/pipeline need no Lang types | before commit 2 |
+| S2 | Phase B start | explore / docs | true | `create_agent` nodes still `model`+`tools`; `create_react_agent` deprecated | before commit 4 |
+| S3 | Phase N | lead | true | import leak + `create_react_agent` grep | before PR update |
 
-### S1 — citation recheck
-
-- **Type:** explore, readonly
-- **Trigger:** start of Phase A
-- **Read:** citation list in §11
-- **Write:** none
-- **Return:** URL → status / title drift
-- **Do NOT:** edit files
-- **Sync:** before landscape + ingestion commits
-
-### S2 — claim hygiene
-
-- **Type:** generalPurpose, readonly
-- **Trigger:** after research docs exist
-- **Read:** `docs/**/*.md`, README, AGENTS
-- **Return:** forbidden-phrase hits; broken relative links
-- **Do NOT:** edit files
-- **Sync:** Phase N commit
+**Parallel limit:** 2. Lead commits everything. Subagents do not edit.
 
 ---
 
-## §7 Phase map
+## §7 Phase map and dependencies
 
-| Phase | Objective | WS | Exit gate |
-|-------|-----------|-----|-----------|
-| R | Fix completed artifacts | WS-R | no dangling research links; required root files; vendor guides moved |
-| A | Write research contract | WS-A | all research paths exist; each ≤ ~400 lines |
-| N | Validate | both | S2 clean; forbidden-claim grep; LEARNING.md notes |
-| Cutover | N/A — docs feature | — | — |
+```text
+Phase 0 (plan) → A (registry) → B (mapper) → C (scaffold) → D (docs) → N (validate) → P1 PR
+```
 
----
-
-## §8 Todos
-
-- `approve-plan` — done
-- `phase-r-front-door` — done (`bb0ac00`)
-- `phase-r-replace-impl-plan` — this commit
-- `phase-a-overview-landscape` — pending
-- `phase-a-ingest-arch` — pending
-- `phase-a-methodology` — pending
-- `phase-a-adapters-refactor` — pending
-- `phase-a-roadmap-adrs` — pending
-- `phase-n-validate` — pending
-- `product-v0-plan` — deferred
+| Phase | Objective | Commits | Exit gate |
+|-------|-----------|---------|-----------|
+| 0 | This contract in-repo | 1 | §0–§18 present |
+| A | Extra + lazy `--adapter` | 2–3 | extras-free pytest; unknown/missing adapter exit 2 |
+| B | Mapper + three fixtures | 4 | both graph shapes + retriever quirk |
+| C | `scaffold` | 5 | `--out` only; ABSTAIN has no patches; graph.py unchanged |
+| D | Docs | 6 | usage one JSON command |
+| N | Hardening | 7–8 | extras-free + extras-on + import grep |
+| Cutover | N/A | — | library CLI |
 
 ---
 
-## §9 Commit matrix (8 rows)
+## §8 Todo registry
 
-| # | WS | Commit | Status |
-|---|-----|--------|--------|
-| 1 | R | `docs: revise front door and add nawab required files` | done `bb0ac00` |
-| 2 | R | `docs: replace implementation plan with nawab v2` | this commit |
-| 3 | A | `docs: add overview and landscape` | pending |
-| 4 | A | `docs: add ingest and architecture` | pending |
-| 5 | A | `docs: add determinism-flip methodology` | pending |
-| 6 | A | `docs: add adapters, refactor, roadmap, references, ADRs` | pending |
-| 7 | A | `docs: point front door at finished research set` | pending |
-| 8 | N | `docs: validate research contract` | pending |
-
-Gates: see original nawab v2 plan. Do not pad. Do not start product commits.
+```yaml
+todos:
+  - id: approve-plan
+    status: done
+  - id: phase-0-impl-plan
+    content: "Commit 1: IMPLEMENTATION_PLAN.md + PROGRESS"
+    status: in_progress
+  - id: phase-a-registry
+    content: "Commits 2-3: extra, lazy registry, --adapter CLI"
+    status: pending
+  - id: phase-b-mapper
+    content: "Commit 4: mapper + fixtures"
+    status: pending
+  - id: phase-c-scaffold
+    content: "Commit 5: scaffold command"
+    status: pending
+  - id: phase-d-docs
+    content: "Commit 6: usage / AGENTS / roadmap"
+    status: pending
+  - id: phase-n-validate
+    content: "Commits 7-8: gates, LEARNING, PR"
+    status: pending
+```
 
 ---
 
-## §10 Test and CI
+## §9 Commit matrix
 
-- Fast: `test -f` for promised paths; `rg` for forbidden whitespace claims
-- Medium: every link in README / docs/README / AGENTS resolves
-- Slow / CI: N/A until a product plan
+Work class: medium feature → **8 commits**. One row = one commit.
+
+| # | Commit | Contents | Gate |
+|---|--------|----------|------|
+| 1 | `docs: replace implementation plan with P1 nawab contract` | this file, PROGRESS | §0–§18 present |
+| 2 | `chore(adapters): add lazy registry and langgraph extra` | pyproject extras, `adapters/` stub | extras-free `pytest -q` |
+| 3 | `feat(cli): add --adapter with missing-extra exit 2` | cli `--adapter`, adapter CLI tests | `pytest -q` |
+| 4 | `feat(adapters): map create_agent and StateGraph traces` | mapper + three fixtures | extras-free green; extras-on or skip |
+| 5 | `feat(cli): add scaffold command` | scaffold writer + tests | `pytest -q`; graph.py unchanged |
+| 6 | `docs: document P1 CLI and scaffold` | usage, AGENTS, roadmap | links resolve |
+| 7 | `test: extras-free import grep and adapter acceptance` | grep tests | `pytest -q` |
+| 8 | `docs: validate P1 and record learnings` | LEARNING, PROGRESS, PR | §16 checklist |
 
 ---
 
-## §11 Research log
+## §10 Test and CI strategy
+
+| Tier | Purpose | Command |
+|------|---------|---------|
+| Fast | extras-free unit | `python -m pytest -q` with only `[dev]` |
+| Medium | extras-on mapper | `pip install -e ".[dev,langgraph]"` then pytest; no network |
+| Slow | N/A | no live graph / LLM |
+| CI | N/A this plan | commands above are the gates |
+
+Adapter tests that need the extra use `pytest.importorskip` / skip. Core tests stay in `tests/test_*.py`. Adapter tests live under `tests/adapters/`.
+
+---
+
+## §11 Research log and decisions
 
 | Topic | Choice | Source |
 |-------|--------|--------|
-| Whitespace | Tight claim only (determinism-class flip on ingested graphs) | CAR 2606.08275, CausalFlow 2605.25338, Tracefork, counterfact, MaAS, DeepEval, Galileo |
-| Ingest | OTLP + `advisor.*` / `det.*` | OTel semantic-conventions-genai (Development; core v1.42 moved GenAI) |
-| Sim | v0 offline L0; no production LLM re-run | CAR `do_policy`; Tracefork/AgentReplay tapes; WHEN2TOOL 2605.09252 |
-| Refactor | Report + scaffold; keep node name | LangGraph `create_agent` |
-| README | Honest now; extensive-readme pass in commit 7 | extensive-readme skill |
-| Required root docs | PROJECT_OVERVIEW + DECISIONS | documentation.mdc |
-| Vendor docs | `docs/cursor-config/` | avoid colliding with research |
-| MCP | Skip live query this session | server not connected |
+| Claim hygiene | re-typing on ingested graphs only | `docs/landscape.md` |
+| Pins | langchain>=1.3,<2; langgraph>=1.2,<2; langchain-core>=1.4,<2 | `docs/adapters.md` / CAR |
+| create_agent nodes | `model` + `tools`; never emit `create_react_agent` | LangChain agents docs + S2 |
+| Mapper vs runtime | attribute-only; extra is presence + pins | ponytail + ADR 0004 |
+| No Protocol | one implementation does not get an interface | `docs/p2-ecosystem.md` |
+| Scaffold | keep node name; never auto-apply | ADR 0003 |
+| MCP | skip; do not invent pattern IDs | server unavailable |
 
 ---
 
-## §12 Doc sync
+## §12 Documentation and artifact sync
 
 | Event | Update |
 |-------|--------|
-| Approved | this file |
-| Phase R/A/N done | PROGRESS.md + LEARNING.md |
-| Arch choice | DECISIONS.md + docs/decisions |
+| Plan approved | this file (commit 1) |
+| Phase complete | PROGRESS.md, LEARNING.md |
+| Arch choice | DECISIONS.md + ADR (none expected) |
+| Phase D | docs/usage.md, docs/roadmap.md |
+| Phase N | P1 PR body |
 
 ---
 
-## §13 Gates
+## §13 Quality gates and checkpoints
 
-- Human: this plan approved (done)
-- Human: separate approval before simulator code
-- Phase R: no dangling research links (commit 1)
-- Phase A: all research files exist, ≤ ~400 lines
-- Phase N: S2 + grep
+| Gate | When | Blocks |
+|------|------|--------|
+| §0–§18 in this file | end Phase 0 | Phase A |
+| extras-free pytest; missing/unknown adapter → 2 | end A | Phase B |
+| three fixture mappings | end B | Phase C |
+| scaffold isolation; ABSTAIN no patches | end C | Phase D |
+| usage one-command JSON | end D | Phase N |
+| extras-free + extras-on + import grep | end N | PR ready |
 
----
-
-## §14 Hardening
-
-Walk README, AGENTS, docs/README, all research files. Forbidden-claim grep. No `gen_ai.*` inventions. ponytail-review N/A (prose). speckit-converge N/A (no `.specify/`).
-
----
-
-## §15 Cutover
-
-N/A — documentation feature.
+Human: this plan approved (done).
 
 ---
 
-## §16 Exit criteria (P0)
+## §14 Validation and hardening
 
-- [x] This plan approved before remaining writes
-- [x] PROJECT_OVERVIEW.md, DECISIONS.md, LEARNING.md exist
-- [x] Vendor guides live under docs/cursor-config/
-- [x] All Phase A research paths exist
-- [x] Front door links only to files that exist
-- [x] Landscape safe vs unsafe claims
-- [x] Methodology names L0/L1/L2 and ABSTAIN
-- [x] ADRs 0001–0003 exist
-- [x] LEARNING.md has Phase R and Phase A notes
-- [x] PR #1 updated
+```text
+python -m pytest -q
+rg -n "import langchain|import langgraph" src/superdeterminism --glob '!adapters/langgraph.py'
+rg -n "create_react_agent" src
+```
 
-P1: product project-mode plan; CI; environment build.
+Also: claim-hygiene grep on new docs; ponytail-review on the P1 diff; run the two usage commands on fixtures.
 
 ---
 
-## §17 Risks
+## §15 Rollout and cutover
 
-| Risk | Mitigation |
-|------|------------|
-| Adjacent tool ships a determinism advisor | Date landscape; S1 recheck |
-| OTel names move | Pin commit |
-| L0 overconfidence | Limitations first; ABSTAIN |
-| extensive-readme invents a product | Discover-only; skip empty API/test sections |
-| Vendor move breaks AGENTS links | Fixed in `bb0ac00` |
+N/A — no production consumer switch. Ship is a draft PR on `cursor/p1-langgraph-adapter-329f`. Rollback = revert the PR.
+
+---
+
+## §16 Exit criteria
+
+**Must pass:**
+
+- [x] `pip install -e ".[dev]"` ; `python -m pytest -q` green (no langgraph extra)
+- [x] `--adapter langgraph` without extra → exit 2
+- [x] `--adapter langgraph` maps `create_agent` and custom `StateGraph` fixtures
+- [x] LangSmith retriever quirk → `retriever`
+- [x] `scaffold` writes REPORT + illustrative diff; never touches user source; ABSTAIN has no patch
+- [x] Agent docs: one command, JSON, no prompts
+- [x] No LangChain import outside `adapters/langgraph.py`
+- [x] P0 decision rules unchanged
+- [x] Draft P1 PR with gate evidence
+
+**Defer:** Protocol, `--traces-dir`, `--opt-in-l1`, CrewAI/MAF, GitHub Actions.
+
+---
+
+## §17 Risks and contingencies
+
+| Risk | Mitigation | Contingency |
+|------|------------|-------------|
+| Lang extra install fails | mapper tests skip; missing-extra CLI still tested | ship extras-free gates |
+| `create_agent` node names drift | S2 recheck | map `model`/`tools`; refuse `agent` envelope |
+| Fork `recommend_traces` | pipeline read-only | revert decision-rule edits |
+| Scaffold looks like auto-apply | graph.py unchanged test | docs say copy-only |
+| Import leak | commit 2 + commit 7 grep | fix before PR |
+| P2 scope creep | §1 non-goals | descope |
 
 ---
 
 ## §18 Execution protocol
 
 ```text
-1. Approval received
-2. Phase R commits 1–2
-3. Spawn S1; Phase A commits 3–7
-4. Spawn S2; Phase N commit 8
-5. Update PR #1
-6. Stop. No product code.
+1. Approval received. Load this plan + ponytail on every code edit.
+2. Branch cursor/p1-langgraph-adapter-329f from main.
+3. Commit 1: write IMPLEMENTATION_PLAN.md. Push. Open draft P1 PR.
+4. Spawn S1. Commits 2–3 (Phase A). Gate. PROGRESS + LEARNING.
+5. Spawn S2. Commit 4 (Phase B). Gate.
+6. Commit 5 (Phase C). Gate.
+7. Commit 6 (Phase D). Gate.
+8. Commits 7–8 (Phase N): grep, both pytest modes, LEARNING, update PR.
+9. Stop. Do not start P2.
 ```
 
-## Open questions
+One §9 row per commit. Never batch rows.
 
-- After Phase N, draft the product project-mode plan next, or stop at the research contract?
+---
 
 ## Approval
 
-Mode: feature. Approved. Lead follows §18.
+Mode: feature. Approved. Lead follows §18. No adapter code before commit 1.

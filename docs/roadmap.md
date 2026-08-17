@@ -4,7 +4,7 @@ This repo is an open-source advisor that **agents** (and humans) run against exi
 
 ```text
 P2  Lang ecosystem + other stacks     →  docs/p2-ecosystem.md   (specified)
-P1  LangGraph / LangChain adapter     →  docs/p1-langgraph.md   (specified)
+P1  LangGraph / LangChain adapter     →  src/superdeterminism/adapters/langgraph.py  (implemented)
 P0  Agnostic core                     →  src/superdeterminism/  (implemented)
 ```
 
@@ -27,11 +27,17 @@ python -m superdeterminism recommend traces.json --stdout json
 
 Usage: [usage.md](usage.md).
 
-## P1 — LangGraph / LangChain adapter (specified)
+## P1 — LangGraph / LangChain adapter (implemented)
 
-Easy drop-in for LangGraph / LangChain 1.x. **Not implemented yet.**
+Easy drop-in for LangGraph / LangChain 1.x.
 
-Full spec: **[p1-langgraph.md](p1-langgraph.md)**
+```bash
+pip install -e ".[langgraph]"
+python -m superdeterminism recommend traces.json --adapter langgraph --stdout json
+python -m superdeterminism scaffold report.json --out scaffold/RUN
+```
+
+Full spec: **[p1-langgraph.md](p1-langgraph.md)**. Usage: [usage.md](usage.md).
 
 - Optional extra `[langgraph]`
 - `--adapter langgraph` maps `create_agent` and custom `StateGraph`
