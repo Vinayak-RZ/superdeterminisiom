@@ -8,6 +8,8 @@ Positioning sentence:
 
 > Counterfactual *re-typing* of nodes between deterministic tools and stochastic LLM/subagents, on ingested production graphs.
 
+Package-by-package internals: [EXTENSIVE.md](EXTENSIVE.md).
+
 Read in this order if you are new:
 
 1. [overview.md](overview.md) — what the product is and is not
@@ -26,6 +28,7 @@ Read in this order if you are new:
 
 | Doc | What it covers |
 |---|---|
+| [EXTENSIVE.md](EXTENSIVE.md) | Internals: how the repo runs, file maps |
 | [overview.md](overview.md) | Problem, loop, audience, why now |
 | [landscape.md](landscape.md) | Adjacent tools; safe vs unsafe claims |
 | [ingestion.md](ingestion.md) | OTel GenAI substrate |
