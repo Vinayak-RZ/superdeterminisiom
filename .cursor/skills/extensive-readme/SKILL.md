@@ -1,173 +1,110 @@
 ---
 name: extensive-readme
 description: >-
-  Authors exhaustive, production-grade README.md files for any software project.
-  Produces structured docs with vision, architecture diagrams, setup, configuration
-  tables, API/tool catalogs, data models, testing, cookbook, roadmap, FAQ, glossary,
-  and changelog. Use when creating or rewriting README, project documentation,
-  onboarding docs, or when the user wants a comprehensive repo overview like a
-  reference manual.
+  Authors a separate extensive internals document covering every package, how the
+  repo actually runs, high-level source workflow, and why each important file
+  exists. Default output docs/EXTENSIVE.md, linked from the main README. Use when
+  the user asks for an extensive README, internals dump, package-by-package map,
+  or a companion to a readable or product README. Do not use for the human main
+  README.md (readable-readme) or a product landing page (product-readme).
 ---
 
 # Extensive README Authoring
 
-Create README files that serve as the **single source of truth** for a project — not a
-marketing blurb. The reader should understand what the system is, how it works, how to run
-it, and how to extend it without opening the codebase first.
+Write the **deep companion**, not the main GitHub landing page. A reader who opens
+this file should be able to understand **the whole repository**: how a request or
+build actually flows, what every package is for, and why the important files exist.
+
+Default output: **`docs/EXTENSIVE.md`**. Do **not** overwrite `README.md` unless the
+user explicitly said the main file should be this dump.
 
 ## When to apply
 
-- User asks for a README, project docs, or "document this repo"
-- User wants exhaustive / reference-style documentation
-- Onboarding docs for a new contributor or future-you
-- Rewriting a thin README into a proper manual
+- User asks for an extensive README, internals, or package-by-package documentation
+- The `readme` skill asked for an extensive companion
+- Someone needs to understand source layout without opening every file
 
-## Workflow
-
-### Phase 1 — Discover (before writing)
-
-Explore the codebase systematically. Do not invent features.
-
-1. **Entry points** — `main`, CLI, server bootstrap, package.json scripts
-2. **Config** — `.env.example`, config modules, required vs optional vars
-3. **Architecture** — major packages/modules and how data flows
-4. **Interfaces** — APIs, CLI commands, UI routes, events, webhooks
-5. **Persistence** — databases, files, external services
-6. **Tests** — how to run them, what they cover
-7. **Deployment** — Docker, CI, cloud targets if present
-8. **Git history** — skim recent commits for changelog and roadmap phases
-
-Capture: exact tool/API counts, file paths, env var names, ports, and version constraints.
-
-### Phase 2 — Draft structure
-
-Use the section order in [templates.md](templates.md). Adapt sections to the project:
-
-| Always include | Include when relevant |
-|----------------|----------------------|
-| Title + positioning hook | Concept → implementation map |
-| TL;DR bullets | Turn/request lifecycle diagram |
-| Table of contents | Full API/tool appendix |
-| Vision (is / is not) | Agentic-AI or domain concept glossary |
-| Architecture diagram(s) | Multi-interface (web + CLI + bot) |
-| Quickstart | Worlds/domains/multi-tenant model |
-| Configuration reference | Approval gates / safety stack |
-| Directory tree | Self-evolution / eval harness |
-| Testing | Cost model |
-| Roadmap + changelog | Cookbook with example prompts |
-
-**Skip** sections that don't apply — mark them omitted, don't leave empty placeholders.
-
-### Phase 3 — Write with quality bar
-
-**Opening (first 30 lines)**
-
-- One-line title + subtitle explaining *what* and *for whom*
-- Blockquote positioning statement: what it is, what it is not, primary interface
-- Deployment target or runtime context if relevant
-- Horizontal rule, then **TL;DR** — 8–12 bullets of differentiators
-
-**Body principles**
-
-1. **Tables over prose** for catalogs (tools, env vars, tables, endpoints)
-2. **Mermaid diagrams** for architecture, data flow, lifecycle, safety stacks
-3. **Concrete paths** — `src/foo/bar.py`, not "the foo module"
-4. **Accurate counts** — tools, endpoints, tables; verify from code
-5. **What it is / is not** — prevents misuse and wrong expectations
-6. **Today vs roadmap** — honest about what works now vs planned
-7. **Graceful degradation** — note optional deps and fallbacks
-8. **Cross-links** — TOC anchors, `see §N` for related sections
-
-**Tone**
-
-- Technical blog quality: complete sentences, precise, scannable
-- No engagement bait, no filler adjectives
-- Present tense for behavior; past tense for changelog only
-
-### Phase 4 — Validate
-
-Run [checklist.md](checklist.md) before delivering. Fix:
-
-- Stale tech (e.g. Chroma when project uses Qdrant)
-- Wrong section numbering (must be sequential 1…N)
-- TOC links that don't match heading anchors
-- Required env vars that don't match `config` / `.env.example`
-- Tool/API counts that don't match registry or routes
-
-### Phase 5 — Maintain
-
-When updating an existing extensive README:
-
-- Update counts, paths, and diagrams in the same PR as code changes
-- Append changelog row; don't rewrite history
-- Move completed roadmap items to changelog; keep future directions realistic
-
-## Section numbering rules
-
-- Number all major `##` sections sequentially: `## 1.`, `## 2.`, …
-- Subsections use `### N.M` matching parent (e.g. `### 5.1`, `### 5.2`)
-- TOC must list every major section with working anchor links
-- Physical order in file must match numeric order (no `## 31` before `## 22`)
-
-## Mermaid defaults
-
-Use mermaid for:
-
-- **High-level architecture** — `flowchart TD` or `flowchart LR`
-- **Request/turn lifecycle** — `sequenceDiagram`
-- **Memory or data layers** — `flowchart TD` with labeled edges
-- **Safety/control stack** — decision diamonds for gates
-
-Keep diagrams readable: ≤15 nodes per diagram; split into 3.1, 3.2, 3.3 if needed.
-
-## Catalog sections (tools, APIs, CLI)
-
-For each item in a catalog table:
-
-| Column | Content |
-|--------|---------|
-| Name | Exact identifier |
-| Approval / Auth | If gated, say how |
-| What it does | One line, outcome-focused |
-
-Group by category. Show category counts and verify total.
-
-Optional **Appendix** with full parameter tables for power users.
-
-## Roadmap section shape
-
-```markdown
-## N. Roadmap & build history
-
-### Build phases (completed)
-| Phase | Theme | Status |
-|-------|-------|--------|
-| 0 | … | ✅ |
-
-### Possible future directions
-- Bullet list of realistic next steps (not wishlist noise)
-```
-
-Distinguish **shipped** (changelog) from **planned** (roadmap).
-
-## Anti-patterns
-
-- ❌ Generic "Features" bullet list with no file paths
-- ❌ README shorter than the project's complexity warrants
-- ❌ Copying package.json description as the whole README
-- ❌ Stale diagrams showing removed interfaces
-- ❌ "76 tools" when registry has 81 — always verify
-- ❌ Mixing Chroma/Qdrant/Postgres without checking `vector_store` or DB config
-- ❌ Numbered sections out of order in the file body
+**Not this skill:** human main `README.md` → `readable-readme`. Product landing →
+`product-readme`. Unspecified "make a README" → `readme`.
 
 ## Output
 
-Deliver a single `README.md` unless the user asks for split docs (`PRODUCT.md`, `docs/`).
+| File | Role |
+|------|------|
+| `docs/EXTENSIVE.md` | This document (create `docs/` if needed) |
+| `README.md` | Unchanged unless the user said otherwise |
 
-For monorepos: one root README with links to per-package READMEs; each package README
-follows the same skill at reduced scope.
+If the main README is being written in the same turn (`readable-readme` or
+`product-readme`), that skill puts a **top banner** linking here. If you only write
+the extensive file, add or keep that banner on the existing `README.md` (one short
+blockquote; do not rewrite the rest).
+
+Banner:
+
+```markdown
+> Full internals (every package, file map, how the repo runs): [Extensive README](docs/EXTENSIVE.md)
+```
+
+## Workflow
+
+### Phase 1 — Discover (walk the tree)
+
+Do not invent packages or files. List what exists.
+
+1. **Repo kind** — app, library, monorepo, config, mixed
+2. **Packages / top-level modules** — workspaces, `src/*`, `packages/*`, apps, services, `cmd/`, crates
+3. **Entry points** — `main`, CLI, server, scripts in package.json / Makefile / pyproject
+4. **Runtime path** — what happens from "user runs X" to "result comes back"
+5. **Config, persistence, tests, CI, deploy**
+6. **Per package:** purpose, public API, important files (skip generated noise: `dist/`, `.next/`, `__pycache__`, lockfile internals)
+
+Capture a **package inventory** (every first-party package) and a **file map** of
+files that matter (entry, config, core logic, tests). Generated and vendor trees:
+one line each, not a file list.
+
+### Phase 2 — Draft
+
+Follow [templates.md](templates.md). **Every first-party package gets its own
+section.** Tiny repos: treat top-level folders (`src/`, `lib/`, `app/`) as packages.
+
+### Phase 3 — Write
+
+**Coverage (mandatory)**
+
+- **How the repository runs** — end-to-end workflow (mermaid sequence or flowchart)
+- **Package catalog** — one subsection per package:
+  - What it is for
+  - How it is invoked / who depends on it
+  - High-level how it works
+  - **File map:** each important file — path, what it does, **why it is there**
+- **Cross-package edges** — imports, APIs, events, shared types
+- **Config, tests, CI** in enough detail to operate, not a paste of every flag
+
+**Teaching.** Still explain non-obvious bets (simple paragraph + verified blog/wiki
+when hard). Citation rules: [further-reading.md](further-reading.md).
+
+**Future advancements.** At least 3, prefer 4, grounded in this repo.
+
+**Length.** This file is **allowed to be long**. Skip noise (generated dirs, copy-paste
+lockfiles). Prefer tables for file maps. Do not skip a first-party package because
+the file is getting large.
+
+**Accuracy.** Every path in the doc must exist. Counts must match the tree.
+
+### Phase 4 — Validate
+
+Run [checklist.md](checklist.md).
+
+## Anti-patterns
+
+- Writing this content into `README.md` as the main landing page
+- Skipping packages or saying "and other utils"
+- File lists with no "why this file exists"
+- Invented files, packages, or URLs
+- Dumping `node_modules` or build output
 
 ## Additional resources
 
-- Section templates and starter text: [templates.md](templates.md)
-- Pre-ship validation: [checklist.md](checklist.md)
+- [templates.md](templates.md)
+- [checklist.md](checklist.md)
+- [further-reading.md](further-reading.md)

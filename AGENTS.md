@@ -120,7 +120,10 @@ Before large refactors, consider `graphify` on the affected directory.
 | Need | Skill / doc |
 |------|-------------|
 | Learn while building | `learn-while-building` |
-| Exhaustive README | `extensive-readme` |
+| Make a README (choose type) | `readme` |
+| Readable / general README.md | `readable-readme` |
+| Extensive internals companion | `extensive-readme` |
+| Product / OSS landing README | `product-readme` |
 | Workflow guide | [docs/cursor-config/LEARNING_AND_RESEARCH.md](docs/cursor-config/LEARNING_AND_RESEARCH.md) |
 
 End each phase with a short **What you learned** summary in [LEARNING.md](LEARNING.md).

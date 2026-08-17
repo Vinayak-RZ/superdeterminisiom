@@ -1,12 +1,13 @@
 # Progress
 
-Last updated: 2026-08-15
+Last updated: 2026-08-17
 
 | Phase | Status | Notes |
 |-------|--------|-------|
 | Research docs (nawab v2) | done | PR #2 |
 | P0 — Agnostic core | done | PR #3 merged |
-| P1 — LangGraph adapter | done | this PR |
+| P1 — LangGraph adapter | done | PR #4 |
+| Vendor README skills + product docs | done | pin `5ecaca9`; product `README.md` + `docs/EXTENSIVE.md` |
 | P2 — Lang ecosystem + other stacks | specified | [docs/p2-ecosystem.md](docs/p2-ecosystem.md) |
 
 ## P1 commit matrix

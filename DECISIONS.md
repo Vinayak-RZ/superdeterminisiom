@@ -13,6 +13,7 @@ Index of significant choices. Formal ADRs land in `docs/decisions/` during Phase
 | D6 | Report + optional scaffold; never auto-apply | accepted | [0003-no-auto-apply.md](docs/decisions/0003-no-auto-apply.md) |
 | D7 | Product code requires a later project-mode nawab plan | superseded | P0 started; see D8 |
 | D8 | Agnostic core; LangGraph and other stacks are adapters | accepted | [0004-agnostic-core.md](docs/decisions/0004-agnostic-core.md) |
+| D9 | Re-vendor cursor-config-coding at 5ecaca9; product README + EXTENSIVE companion | accepted | this file |
 
 ## D0 — Naming
 
@@ -52,6 +53,13 @@ Written as ADRs in `docs/decisions/`. Do not silently override them.
 - **Alternatives:** LangGraph-only package; if-import every framework.
 - **Selected:** P0 core with zero framework deps; P1 LangGraph extra; P2 other stacks.
 - **Rationale:** Adapters translate. Agents and humans call one CLI.
+
+## D9 — README skills vendor + product landing
+
+- **Context:** cursor-config-coding added `readme`, `product-readme`, `readable-readme`, and moved extensive output to `docs/EXTENSIVE.md`. This repo was pinned at 437a548.
+- **Alternatives:** Cherry-pick only `product-readme`; keep a single exhaustive `README.md`; symlink to the config repo.
+- **Selected:** Copy upstream at `5ecaca9c5a6e85be8ede01ef33e0af10651c622e`. Main `README.md` is a product landing. Internals live in `docs/EXTENSIVE.md`. Keep `docs/cursor-config/` remaps in `skills-manifest.json` (D3).
+- **Rationale:** Cloud Agents load skills from this clone. The `readme` router forbids dumping internals into `README.md`.
 
 ## D7 — No product code in this plan
 

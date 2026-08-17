@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 120" role="img" aria-label="Superdeterminism">
+  <rect width="560" height="120" fill="none"/>
+  <path d="M22 38 L48 60 L22 82" fill="none" stroke="#1f6feb" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M50 38 L76 60 L50 82" fill="none" stroke="#1f6feb" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="96" y="72" font-family="ui-sans-serif, system-ui, sans-serif"
+        font-size="32" font-weight="700" fill="#1f2328">Superdeterminism</text>
+</svg>
